@@ -52,6 +52,8 @@ body {
   background-color: #4a6572;
   padding: 10px;
   border-radius: 20px;
+  width: 95%;
+  margin: 0 auto;
 }
 
 .left-side {
@@ -76,6 +78,8 @@ body {
   background-color: #4a6572;
   padding: 10px;
   border-radius: 20px;
+  width: 95%;
+  margin: 0 auto;
 }
 
 .right-top {

@@ -43,3 +43,30 @@ body {
   margin: 1rem 1rem;
 
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 25% 25%;
+  grid-gap: 10px;
+  background-color: #2196F3;
+  padding: 10px;
+}
+
+.left-side {
+  grid-column: 1 / 2;
+  grid-row: 1 / 4;
+  background-color: #f1f1f1; /* Example background color */
+}
+
+.right-top {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  background-color: #f1f1f1; /* Example background color */
+}
+
+.right-bottom {
+  grid-column: 2 / 3;
+  grid-row: 2 / 4;
+  background-color: #f1f1f1; /* Example background color */
+}

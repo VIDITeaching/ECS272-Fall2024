@@ -38,6 +38,7 @@ export const Graph3_DetailView = ( // equivalent to <template> in Vue
     </div>`
 );
 export const VisualizeLayout_grid = (`
+  <br>
   <div>
     <div class="grid-container">
       <div class="left-side">${ Graph1_OverallView }</div>

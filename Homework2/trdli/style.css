@@ -59,15 +59,17 @@ body {
 .left-side {
   grid-column: 1 / 2;
   grid-row: 1 / 4;
-  background-color: #718792; /* Example background color */
+  background-color: #718792;
   border-radius: 20px;
+  justify-content: safe center; /* Center the content */
 }
 
 .right-side {
   grid-column: 2 / 3;
   grid-row: 1 / 4;
-  background-color: #718792; /* Example background color */
+  background-color: #718792;
   border-radius: 20px;
+  justify-content: safe center; /* Center the content */
 }
 
 .detail-container {
@@ -85,15 +87,17 @@ body {
 .right-top {
   grid-column: 2 / 3;
   grid-row: 1 / 2;
-  background-color: #718792; /* Example background color */
+  background-color: #718792;
   border-radius: 20px;
+  justify-content: safe center; /* Center the content */
 }
 
 .right-bottom {
   grid-column: 2 / 3;
   grid-row: 2 / 4;
-  background-color: #718792; /* Example background color */
+  background-color: #718792;
   border-radius: 20px;
+  justify-content: safe center; /* Center the content */
 }
 
 .Greeting_div {

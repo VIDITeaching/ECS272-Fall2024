@@ -1,5 +1,5 @@
 import { Title } from './src/greetings';
-import { VisualizeLayout_grid, mountChart1 } from './src/VisualizeLayout';
+import { VisualizeLayout_grid, mountChart1, Graph1_Detail, Graph2_Detail_explaination, Graph3_Detail_explaionation } from './src/VisualizeLayout';
 import { footer_layout } from './src/footer';
 import './style.css';
 
@@ -7,11 +7,14 @@ import './style.css';
 // Materialize: https://materializecss.com/getting-started.html
 
 document.querySelector('#app').innerHTML = `
-  <div id='main-container' class='d-flex flex-column flex-nowrap'>
-  ${ Title }
-  ${ VisualizeLayout_grid }
+  <div id='main-container' class='d-flex flex-column flex-nowrap' style='min-height: 100vh;'>
+    ${ Title }
+    ${ VisualizeLayout_grid }
+    ${ Graph1_Detail }
+    ${ Graph2_Detail_explaination }
+    ${ Graph3_Detail_explaionation }
+    ${ footer_layout }
   </div>
-  ${ footer_layout }
 `;
 
 mountChart1();

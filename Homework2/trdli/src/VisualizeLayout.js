@@ -174,7 +174,6 @@ function Graph1_Overall()
     .text('Year')
     .style('font-size', '.8rem');
 
-  console.log("hey");
   // "g" is grouping element that does nothing but helps avoid DOM looking like a mess
   // We iterate through each <CategoricalBar> element in the array, create a rectangle for each and indicate the coordinates, the rectangle, and the color.
   const barEles = chartContainer.append('g')
@@ -188,7 +187,7 @@ function Graph1_Overall()
     .attr('width', (d) => Math.abs(xScale(0) - xScale(d.year)))
     .attr('height', yScale.bandwidth()) // this substraction is reversed so the result is non-negative
     .attr('fill', 'teal');
-
+  console.log("hey");
   // For transform, check out https://www.tutorialspoint.com/d3js/d3js_svg_transformation.htm, but essentially we are adjusting the positions of the selected elements.
   const title = chartContainer.append('g')
     .append('text') // adding the text

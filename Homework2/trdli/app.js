@@ -1,5 +1,5 @@
 import { Title } from './src/greetings';
-import { VisualizeLayout_grid, mountChart1, Graph1_Detail, Graph2_Detail_explaination, Graph3_Detail_explaionation } from './src/VisualizeLayout';
+import { VisualizeLayout_grid, mountChart1, Graph1_Detail, Graph2_Detail_explaination, Graph3_Detail_explaionation, mountChart2, mountChart3 } from './src/VisualizeLayout';
 import { footer_layout } from './src/footer';
 import './style.css';
 
@@ -18,4 +18,6 @@ document.querySelector('#app').innerHTML = `
 `;
 
 mountChart1();
+mountChart2();
+mountChart3();
 

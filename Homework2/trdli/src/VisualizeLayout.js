@@ -9,9 +9,9 @@ const onResize = (targets) =>
     const targetId = target.target.getAttribute('id');
     if (targetId !== 'bar-container-graph1' && targetId !== 'bar-container-graph2' && targetId !== 'bar-container-graph3') return;
     size = { width: target.contentRect.width, height: target.contentRect.height };
-    if (!isEmpty(size) && !isEmpty(dataFromCSV))
+    if (!isEmpty(size))
     {
-      if (targetId === 'bar-container-graph1')
+      if (targetId === 'bar-container-graph1' && !isEmpty(graph_1_value))
       {
         d3.select('#Graph1').selectAll('*').remove();
         Graph1_Overall();
@@ -100,13 +100,17 @@ export const VisualizeLayout_grid = (`
 `);
 
 const chartObserver = new ResizeObserver(debounce(onResize, 100));
-let dataFromCSV = await d3.csv('../data/car_prices.csv', (d) =>
+let graph_1_value = await d3.csv('../data/car_prices.csv', (d) =>
 {
-  // This callback allows you to rename the keys, format values, and drop columns you don't need
-  return { year: +d.year, make: d.make, model: d.model, trim: d.trim, transmission: d.transmission, odometer: +d.odometer, sellingprice: +d.sellingprice };
+  return {
+    year: +d.year,
+    make: d.make,
+    model: d.model,
+    trim: d.trim
+  };
 });
 // Sort the data by year
-dataFromCSV.sort((a, b) => a.year - b.year);
+graph_1_value.sort((a, b) => a.year - b.year);
 export function mountChart1()
 { // registering this element to watch its size change
   let Graph1Container = document.querySelector('#bar-container-graph1');
@@ -127,9 +131,8 @@ export function mountChart3()
 
 function Graph1_Overall()
 {
-  const margin = { left: 60, right: 0, top: 20, bottom: 0 };
-
-  let graph_1_value = dataFromCSV.map((d) => ({ year: +d.year, make: d.make, model: d.model, trim: d.trim }));
+  const margin = { top: 10, right: 100, bottom: 30, left: 50 };
+  const height = 500;
   // select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.
   let chartContainer = d3.select('#Graph1');
   // Y axis is the make of the car, X axis is the year. The intersection of the two is the model of the car, and the trim of the car.
@@ -143,7 +146,7 @@ function Graph1_Overall()
   // We have the margin here just to leave some space
   // In viewport (our screen), the leftmost side always refer to 0 in the horizontal coordinates in pixels (x).
   let xScale = d3.scaleLinear()
-    .range([size.height - margin.bottom, margin.top]) //bottom side to the top side on the screen
+    .range([height - margin.bottom, margin.top]) //bottom side to the top side on the screen
     .domain(xCategories);
 
   // In viewport (our screen), the topmost side always refer to 0 in the vertical coordinates in pixels (y).
@@ -155,7 +158,7 @@ function Graph1_Overall()
   // This following part visualizes the axes along with axis labels.
   // Check out https://observablehq.com/@d3/margin-convention?collection=@d3/d3-axis for more details
   const xAxis = chartContainer.append('g')
-    .attr('transform', `translate(0, ${ size.height - margin.bottom })`)
+    .attr('transform', `translate(0, ${ height - margin.bottom })`)
     .call(d3.axisBottom(xScale));
 
   const yAxis = chartContainer.append('g')
@@ -163,13 +166,13 @@ function Graph1_Overall()
     .call(d3.axisLeft(yScale));
 
   const yLabel = chartContainer.append('g')
-    .attr('transform', `translate(${ 10 }, ${ size.height / 2 }) rotate(-90)`)
+    .attr('transform', `translate(${ 10 }, ${ height / 2 }) rotate(-90)`)
     .append('text')
     .text('Make')
     .style('font-size', '.8rem');
 
   const xLabel = chartContainer.append('g')
-    .attr('transform', `translate(${ size.width / 2 - margin.left }, ${ size.height - margin.top - 5 })`)
+    .attr('transform', `translate(${ size.width / 2 - margin.left }, ${ height - margin.top - 5 })`)
     .append('text')
     .text('Year')
     .style('font-size', '.8rem');
@@ -191,7 +194,7 @@ function Graph1_Overall()
   // For transform, check out https://www.tutorialspoint.com/d3js/d3js_svg_transformation.htm, but essentially we are adjusting the positions of the selected elements.
   const title = chartContainer.append('g')
     .append('text') // adding the text
-    .attr('transform', `translate(${ size.width / 2 }, ${ size.height - margin.top + 5 })`)
+    .attr('transform', `translate(${ size.width / 2 }, ${ height - margin.top + 5 })`)
     .attr('dy', '0.5rem') // relative distance from the indicated coordinates.
     .style('text-anchor', 'middle')
     .style('font-weight', 'bold')

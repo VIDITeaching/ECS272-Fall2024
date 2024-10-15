@@ -45,8 +45,8 @@
   padding: 20px;
   border-radius: 20px;
   width: 100%;
-  height: auto;
-  margin: auto;
+  height: 100%;
+  margin: 20px;
 }
 
 .left-side {

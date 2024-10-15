@@ -15,6 +15,6 @@ document.querySelector('#app').innerHTML = `
 `;
 
 mountChart1();
-mountChart2();
-mountChart3();
+// mountChart2();
+// mountChart3();
 

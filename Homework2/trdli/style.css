@@ -14,13 +14,6 @@
   width: 100vw;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-}
-
 .d-flex{
   display: flex;
   height: auto;

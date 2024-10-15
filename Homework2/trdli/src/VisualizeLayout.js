@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { isEmpty, debounce } from 'lodash';
 
-let size = { width: 800, height: 400 };
+let size = { width: 800, height: 800 };
 const onResize = (targets) =>
 {
   targets.forEach(target =>
@@ -30,20 +30,20 @@ const onResize = (targets) =>
 
 export const Graph1_OverallView = (
   `<div class='chart-container d-flex' id='bar-container-graph1'>
-        <svg id='Graph1' width='100%' height='100%'>
+        <svg id='Graph1'>
         </svg>
     </div>`
 );
 export const Graph2_DetailView = (
   `<div class='chart-container d-flex' id='bar-container-graph2'>
-        <svg id='Graph2' width='100%' height='100%'>
+        <svg id='Graph2'>
         </svg>
         <p> Here we place the chart 2 </p>
     </div>`
 );
 export const Graph3_DetailView = (
   `<div class='chart-container d-flex' id='bar-container-graph3'>
-        <svg id='Graph3' width='100%' height='100%'>
+        <svg id='Graph3'>
         </svg>
         <p> Here we place the chart 3 </p>
     </div>`
@@ -102,73 +102,76 @@ export function mountChart3()
 // Graph 1 - Parallel Coordinates. Used columns: year, make, model, Body, odometer, price.
 function Graph1_Overall()
 {
-  // set the dimensions and margins of the graph
+  // set the columns and margins of the graph
   console.log("Start Graph1_Overall");
-  let chartContainer = d3.select("#Graph1")
-    .attr("viewBox", `0 0 ${ size.width } ${ size.height }`)
+  let chartContainer = d3.select("#Graph1").attr("viewBox", [0, 0, size.width, size.height])
     .attr("preserveAspectRatio", "xMidYMid meet"); // This will scale the SVG to always fit the parent element
-  const dimensions = ["year", "make", "model", "body", "odometer", "price"];
+  // Set the columns, those are we care when choosing a used car.
+  const columns = ["year", "make", "model", "body", "odometer", "price"];
 
-  // Create Y scale for each dimension
+  //set the color for the line
+  const color = d3.scaleOrdinal()
+    .domain(column_from_csv.map(d => d.make))
+    .range(d3.quantize(t => d3.hsl(
+      t * 360,
+      0.55,
+      0.5 + t * 0.25
+    ).formatHex(), column_from_csv.length));
+
+  // Create Y scale
   const y = {};
-  dimensions.forEach(dim =>
+  columns.forEach(dim =>
   {
     if (["year", "odometer", "price"].includes(dim))
     {
+      // If they're numbers, use linear scale
       y[dim] = d3.scaleLinear()
-        .domain(d3.extent(column_from_csv, d => +d[dim])) // 确保是数值类型
+        .domain(d3.extent(column_from_csv, d => +d[dim])) // Make sure to convert the string to number
         .range([size.height, 0]);
-    } else
+    }
+    else
     {
+      // If they're not numbers, use point scale
       y[dim] = d3.scalePoint()
-        .domain([...new Set(column_from_csv.map(d => d[dim]))]) // 去重后的分类数据
+        .domain([...new Set(column_from_csv.map(d => d[dim]))]) // Remove duplicates
         .range([size.height, 0]);
     }
   });
 
-  // Remove duplicates from "year", "make", and "model"
-  column_from_csv = column_from_csv.filter((value, index, self) =>
-    index === self.findIndex((t) => (
-      t.year === value.year && t.make === value.make && t.model === value.model
-    ))
-  );
-  console.log("finished y dimension");
-
-  // 为x轴创建一个比例尺
+  // Create X scale.
   const x = d3.scalePoint()
-    .domain(dimensions)
+    .domain(columns)
     .range([0, size.width])
     .padding(0.1);
-  console.log("finished x dimension");
-  // 添加坐标轴
+
+  // Draw the vertical lines for each dimension (i.e. the vertical lines for "year", "make", "model", "body", "odometer", "price")
   const axis = chartContainer.selectAll(".axis")
-    .data(dimensions)
+    .data(columns)
     .enter().append("g")
     .attr("class", "axis")
     .attr("transform", d => `translate(${ x(d) },0)`)
     .each(function (d) { d3.select(this).call(d3.axisLeft(y[d])); });
-  console.log(" Add the axis");
-  // 添加坐标轴标题
+
+  // Add the label for each vertical line (The "year", "make", "model", "body", "odometer", "price" labels)
   axis.append("text")
     .style("text-anchor", "middle")
     .attr("y", -9)
     .text(d => d)
     .style("fill", "black");
-  console.log("Add the axis title");
-  // 定义路径生成器
+
+  // Draw the lines connecting the each dimension based on the value
   const line = d3.line()
     .defined(d => !isNaN(d[1]))
-    .x((d, i) => x(dimensions[i]))
-    .y(d => y[d[0]](d[1])); // 根据维度映射到y轴比例尺
-  console.log("Defined the line");
-  // 添加平行坐标线
+    .x((d, i) => x(columns[i]))
+    .y(d => y[d[0]](d[1])); // d[0] is the dimension, d[1] is the value
+
+  // Append the line into the graph
   chartContainer.selectAll(".line")
     .data(column_from_csv)
     .enter().append("path")
     .attr("class", "line")
-    .attr("d", d => line(dimensions.map(dim => [dim, d[dim]]))) // 生成路径
-    .style("fill", "none")
-    .style("stroke", "steelblue")
+    .attr("d", d => line(columns.map(dim => [dim, d[dim]]))) // d[dim] is the value
+    .attr("stroke", d => color(d.make))
     .style("opacity", 0.5);
 
   console.log("Printed the line");

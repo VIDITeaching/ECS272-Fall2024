@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { isEmpty, debounce } from 'lodash';
 
-let size = { width: 0, height: 0 };
+let size = { width: 800, height: 400 };
 const onResize = (targets) =>
 {
   targets.forEach(target =>
@@ -11,7 +11,7 @@ const onResize = (targets) =>
     size = { width: target.contentRect.width, height: target.contentRect.height };
     if (!isEmpty(size))
     {
-      if (targetId === 'bar-container-graph1' && !isEmpty(graph_1_value))
+      if (targetId === 'bar-container-graph1' && !isEmpty(column_from_csv))
       {
         d3.select('#Graph1').selectAll('*').remove();
         Graph1_Overall();
@@ -49,43 +49,6 @@ export const Graph3_DetailView = (
     </div>`
 );
 
-
-export const Graph1_Detail = (`
-  <div>
-    <div class="detail-container">
-      <div class="left-side"> ${ Graph1_OverallView } </div>
-        <div class="right-side">
-          <p> Here we place the explanation of the chart </p>
-        </div>
-    </div>
-  </div>
-  <br>
-`);
-
-export const Graph2_Detail_explaination = (`
-  <div>
-    <div class="detail-container">
-        <div class="left-side">
-          <p> Here we place the explanation of the chart </p>
-        </div>
-        <div class="right-side"> ${ Graph2_DetailView } </div>
-    </div>
-  </div>
-  <br>
-`);
-
-export const Graph3_Detail_explaionation = (`
-  <div>
-    <div class="detail-container">
-      <div class="left-side"> ${ Graph3_DetailView } </div>
-        <div class="right-side">
-          <p> Here we place the explanation of the chart </p>
-        </div>
-    </div>
-  </div>
-  <br>
-`);
-
 export const VisualizeLayout_grid = (`
   <br>
   <div>
@@ -98,8 +61,10 @@ export const VisualizeLayout_grid = (`
   <br>
 `);
 
+
 const chartObserver = new ResizeObserver(debounce(onResize, 100));
-let graph_1_value = await d3.csv('../data/car_prices.csv', (d) =>
+console.log("Start data import");
+let column_from_csv = await d3.csv('../data/car_prices.csv', (d) =>
 {
   return {
     year: +d.year,
@@ -110,36 +75,26 @@ let graph_1_value = await d3.csv('../data/car_prices.csv', (d) =>
     price: +d.sellingprice
   };
 });
-
-let graph_2_value = await d3.csv('../data/car_prices.csv', (d) =>
-{
-  return {
-    make: d.make
-  };
-});
-
-let graph_3_value = await d3.csv('../data/car_prices.csv', (d) =>
-{
-  return {
-    year: +d.year
-  };
-});
 // Sort the data by year
-graph_1_value.sort((a, b) => a.year - b.year);
+column_from_csv.sort((a, b) => a.year - b.year);
+console.log("data import finished, we have " + column_from_csv.length + " rows");
 export function mountChart1()
 { // registering this element to watch its size change
+  console.log("Start mountChart1");
   let Graph1Container = document.querySelector('#bar-container-graph1');
   chartObserver.observe(Graph1Container);
 }
 
 export function mountChart2()
 { // registering this element to watch its size change
+  console.log("Start mountChart2");
   let Graph2Container = document.querySelector('#bar-container-graph2');
   chartObserver.observe(Graph2Container);
 }
 
 export function mountChart3()
 { // registering this element to watch its size change
+  console.log("Start mountChart3");
   let Graph3Container = document.querySelector('#bar-container-graph3');
   chartObserver.observe(Graph3Container);
 }
@@ -148,68 +103,81 @@ export function mountChart3()
 function Graph1_Overall()
 {
   // set the dimensions and margins of the graph
-  const margin = { top: 30, right: 10, bottom: 10, left: 0 };
-  const width = 960 - margin.left - margin.right;
-  const height = 500 - margin.top - margin.bottom;
-
-  // create svg element
-  const svg = d3.select("#Graph1");
-
-  const data = graph_1_value;
-
+  console.log("Start Graph1_Overall");
+  let chartContainer = d3.select("#Graph1")
+    .attr("viewBox", `0 0 ${ size.width } ${ size.height }`)
+    .attr("preserveAspectRatio", "xMidYMid meet"); // This will scale the SVG to always fit the parent element
   const dimensions = ["year", "make", "model", "body", "odometer", "price"];
 
-  // 为每个维度创建一个y比例尺
+  // Create Y scale for each dimension
   const y = {};
   dimensions.forEach(dim =>
   {
-    y[dim] = d3.scaleLinear()
-      .domain(d3.extent(data, d => d[dim]))
-      .range([height, 0]);
+    if (["year", "odometer", "price"].includes(dim))
+    {
+      y[dim] = d3.scaleLinear()
+        .domain(d3.extent(column_from_csv, d => +d[dim])) // 确保是数值类型
+        .range([size.height, 0]);
+    } else
+    {
+      y[dim] = d3.scalePoint()
+        .domain([...new Set(column_from_csv.map(d => d[dim]))]) // 去重后的分类数据
+        .range([size.height, 0]);
+    }
   });
+
+  // Remove duplicates from "year", "make", and "model"
+  column_from_csv = column_from_csv.filter((value, index, self) =>
+    index === self.findIndex((t) => (
+      t.year === value.year && t.make === value.make && t.model === value.model
+    ))
+  );
+  console.log("finished y dimension");
 
   // 为x轴创建一个比例尺
   const x = d3.scalePoint()
-    .range([0, width])
-    .padding(1)
-    .domain(dimensions);
-
+    .domain(dimensions)
+    .range([0, size.width])
+    .padding(0.1);
+  console.log("finished x dimension");
   // 添加坐标轴
-  const axis = svg.selectAll(".axis")
+  const axis = chartContainer.selectAll(".axis")
     .data(dimensions)
     .enter().append("g")
     .attr("class", "axis")
     .attr("transform", d => `translate(${ x(d) },0)`)
     .each(function (d) { d3.select(this).call(d3.axisLeft(y[d])); });
-
+  console.log(" Add the axis");
   // 添加坐标轴标题
   axis.append("text")
     .style("text-anchor", "middle")
     .attr("y", -9)
     .text(d => d)
     .style("fill", "black");
-
-  // 添加平行坐标线
+  console.log("Add the axis title");
+  // 定义路径生成器
   const line = d3.line()
     .defined(d => !isNaN(d[1]))
-    .x((_, i) => x(dimensions[i]))
-    .y(d => d[1]);
-
-  svg.selectAll(".line")
-    .data(data)
+    .x((d, i) => x(dimensions[i]))
+    .y(d => y[d[0]](d[1])); // 根据维度映射到y轴比例尺
+  console.log("Defined the line");
+  // 添加平行坐标线
+  chartContainer.selectAll(".line")
+    .data(column_from_csv)
     .enter().append("path")
     .attr("class", "line")
-    .attr("d", d => line(dimensions.map(p => [p, y[p](d[p])])))
+    .attr("d", d => line(dimensions.map(dim => [dim, d[dim]]))) // 生成路径
     .style("fill", "none")
     .style("stroke", "steelblue")
     .style("opacity", 0.5);
-  console.log("Graph1_Overall");
+
+  console.log("Printed the line");
 }
 
 function Graph2_Detail()
 {
   // select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.
-  let chartContainer = d3.select('#Graph2');
+  // let chartContainer = d3.select('#Graph2');
   // We need a way to map our data to where it should be rendered within the svg (in screen pixels), based on the data
   // value, so the extents and the unique values above help us define the limits.
   // Scales are just like mapping functions y = f(x), where x refers to domain, y refers to range.
@@ -256,7 +224,7 @@ function Graph2_Detail()
   // // We iterate through each <CategoricalBar> element in the array, create a rectangle for each and indicate the coordinates, the rectangle, and the color.
   // const barEles = chartContainer.append('g')
   //   .selectAll('rect')
-  //   .data(graph_2_value) // TypeScript expression. This always expects an array of objects.
+  //   .data(column_from_csv) // TypeScript expression. This always expects an array of objects.
   //   .join('rect')
   //   // specify the left-top coordinate of the rectangle
   //   .attr('x', (d) => xScale(d.category))
@@ -280,7 +248,7 @@ function Graph2_Detail()
 function Graph3_Detail()
 {
   // select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.
-  let chartContainer = d3.select('#Graph3');
+  // let chartContainer = d3.select('#Graph3');
   // let data = dataFromCSV;
   // console.log(data);
   // // We need a way to map our data to where it should be rendered within the svg (in screen pixels), based on the data
@@ -329,7 +297,7 @@ function Graph3_Detail()
   // // We iterate through each <CategoricalBar> element in the array, create a rectangle for each and indicate the coordinates, the rectangle, and the color.
   // const barEles = chartContainer.append('g')
   //   .selectAll('rect')
-  //   .data(graph_3_value) // TypeScript expression. This always expects an array of objects.
+  //   .data(column_from_csv) // TypeScript expression. This always expects an array of objects.
   //   .join('rect')
   //   // specify the left-top coordinate of the rectangle
   //   .attr('x', (d) => xScale(d.category))

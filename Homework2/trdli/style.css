@@ -10,8 +10,6 @@
 }
 
 .MainBody {
-  height: 100vh;
-  width: 100vw;
   display: flex;
   flex-direction: column;
 }
@@ -66,22 +64,15 @@
   flex-direction: column;
 }
 
-.footer {
-  padding: 1rem;
-}
-
-#parallel-coordinates-container-graph1, #pie-container-graph2, #bar-container-graph3 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-}
-
 #parallel-coordinates-container-graph1 {
+  display: flex;
+  width: 100%;
   height: 60vh;
 }
 
 #pie-container-graph2, #bar-container-graph3 {
+  display: flex;
+  width: 100%;
   height: 35vh;
 }
 

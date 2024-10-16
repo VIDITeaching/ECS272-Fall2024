@@ -2,8 +2,8 @@ import * as d3 from 'd3';
 import { isEmpty, debounce } from 'lodash';
 
 // Define the global margin and the size of the graph
-const margin = { top: 20, right: 20, bottom: 20, left: 20 };
-let size = { width: 500, height: 500 };
+const margin = { top: 10, right: 15, bottom: 10, left: 15 };
+let size = { width: 100, height: 100 };
 
 /**
  * @brief Handles the resizing of graph containers and redraws the graphs accordingly.
@@ -168,14 +168,30 @@ function graph1_data_cleaning()
     return steps[steps.length - 1] + 5000;  // Handle values greater than the last step
   };
 
-  return column_from_csv.map(d => ({
-    year: d.year,
-    make: d.make,
-    model: d.model,
-    body: d.body,
-    odometer: ranges(d.odometer || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000]),  // Use numeric ranges
-    price: ranges(d.price || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000])  // Use numeric ranges
-  }));
+  // Use a Set to track unique combinations of year, make, model, and body
+  const uniqueEntries = new Set();
+
+  return column_from_csv.map(d =>
+  {
+    const year = d.year;
+    const make = d.make.toLowerCase();
+    const model = d.model.toLowerCase();
+    const body = d.body.toLowerCase();
+    const uniqueKey = `${ year }-${ make }-${ model }-${ body }`;
+    if (!uniqueEntries.has(uniqueKey))
+    {
+      uniqueEntries.add(uniqueKey);
+      return {
+        year: year,
+        make: make,
+        model: model,
+        body: body,
+        odometer: ranges(d.odometer || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000]),  // Use numeric ranges
+        price: ranges(d.price || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000])  // Use numeric ranges
+      };
+    }
+    return null;
+  }).filter(d => d !== null);  // Filter out null entries
 }
 
 
@@ -193,8 +209,8 @@ function Graph1_Overall()
   const chartContainer_graph1 = d3.select("#Graph1")
     .attr("width", "100%")
     .attr("height", "100%")
-    .attr("preserveAspectRatio", "xMidYMid meet")
     .append("g")
+    .attr("preserveAspectRatio", "xMidYMid meet")
     .attr("transform", `translate(${ margin.left },${ margin.top })`);
   // Defined the categories for the parallel coordinates
   const dimensions = ['year', 'make', 'model', 'body', 'odometer', 'price'];

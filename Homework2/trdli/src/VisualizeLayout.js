@@ -353,6 +353,11 @@ function Graph2_Detail()
     .text(d => d.data.make);
 }
 
+
+
+/** For the third chart, we would like to see the distribution of buyer's choice based on years.
+ * To be more specific, we would like to see how many cars were sold in each year. We will use a bar
+ * chart to demostrate this */
 export function mountChart3()
 { // registering this element to watch its size change
   console.log("Start mountChart3");
@@ -362,73 +367,74 @@ export function mountChart3()
 
 function Graph3_Detail()
 {
-  // select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.
-  // let chartContainer = d3.select('#Graph3');
-  // let data = dataFromCSV;
-  // console.log(data);
-  // // We need a way to map our data to where it should be rendered within the svg (in screen pixels), based on the data
-  // // value, so the extents and the unique values above help us define the limits.
-  // // Scales are just like mapping functions y = f(x), where x refers to domain, y refers to range.
-  // //      In our case, x should be the data, y should be the screen pixels.
-  // // We have the margin here just to leave some space
-  // // In viewport (our screen), the leftmost side always refer to 0 in the horizontal coordinates in pixels (x).
-  // let xScale = d3.scaleBand()
-  //   .rangeRound([margin.left, size.width - margin.right])
-  //   .domain(xCategories)
-  //   .padding(0.1); // spacing between the categories
+  let chartContainer_graph3 = d3.select('#Graph3');
+  // Group data by year and count the number of cars for each year
+  const carYearCount = d3.rollup(column_from_csv, v => v.length, d => d.year);
 
-  // // In viewport (our screen), the topmost side always refer to 0 in the vertical coordinates in pixels (y).
-  // let yScale = d3.scaleLinear()
-  //   .range([size.height - margin.bottom, margin.top]) //bottom side to the top side on the screen
-  //   .domain([0, yCategories[1]]); // This is based on your data, but if there is a natural value range for your data attribute, you should follow
-  // // e.g., it is natural to define [0, 100] for the exame score, or [0, <maxVal>] for counts.
+  // Convert the Map to an array for bar chart
+  const data = Array.from(carYearCount, ([year, count]) => ({ year, count }));
 
-  // // There are other scales such as scaleOrdinal,
-  // // whichever is appropriate depends on the data types and the kind of visualizations you're creating.
+  // Set up SVG dimensions
+  const margin = { top: 10, right: 10, bottom: 30, left: 40 };
+  const width = size.width - margin.left - margin.right;
+  const height = size.height - margin.top - margin.bottom;
 
-  // // This following part visualizes the axes along with axis labels.
-  // // Check out https://observablehq.com/@d3/margin-convention?collection=@d3/d3-axis for more details
-  // const xAxis = chartContainer.append('g')
-  //   .attr('transform', `translate(0, ${ size.height - margin.bottom })`)
-  //   .call(d3.axisBottom(xScale));
+  // Create the SVG element
+  const svg = chartContainer_graph3
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .append("g")
+    .attr("transform", `translate(${ margin.left }, ${ margin.top })`);
 
-  // const yAxis = chartContainer.append('g')
-  //   .attr('transform', `translate(${ margin.left }, 0)`)
-  //   .call(d3.axisLeft(yScale));
+  // Create the X scale
+  const xScale = d3.scaleBand()
+    .domain(data.map(d => d.year))
+    .range([0, width])
+    .padding(0.1);
 
-  // const yLabel = chartContainer.append('g')
-  //   .attr('transform', `translate(${ 10 }, ${ size.height / 2 }) rotate(-90)`)
-  //   .append('text')
-  //   .text('Value')
-  //   .style('font-size', '.8rem');
+  // Create the Y scale
+  const yScale = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.count)])
+    .nice()
+    .range([height, 0]);
 
-  // const xLabel = chartContainer.append('g')
-  //   .attr('transform', `translate(${ size.width / 2 - margin.left }, ${ size.height - margin.top - 5 })`)
-  //   .append('text')
-  //   .text('Categories')
-  //   .style('font-size', '.8rem');
+  // Create the X axis
+  svg.append("g")
+    .attr("transform", `translate(0, ${ height })`)
+    .call(d3.axisBottom(xScale));
 
-  // // "g" is grouping element that does nothing but helps avoid DOM looking like a mess
-  // // We iterate through each <CategoricalBar> element in the array, create a rectangle for each and indicate the coordinates, the rectangle, and the color.
-  // const barEles = chartContainer.append('g')
-  //   .selectAll('rect')
-  //   .data(column_from_csv) // TypeScript expression. This always expects an array of objects.
-  //   .join('rect')
-  //   // specify the left-top coordinate of the rectangle
-  //   .attr('x', (d) => xScale(d.category))
-  //   .attr('y', (d) => yScale(d.value))
-  //   // specify the size of the rectangle
-  //   .attr('width', xScale.bandwidth())
-  //   .attr('height', (d) => Math.abs(yScale(0) - yScale(d.value))) // this substraction is reversed so the result is non-negative
-  //   .attr('fill', 'teal');
+  // Create the Y axis
+  svg.append("g")
+    .call(d3.axisLeft(yScale));
 
-  // // For transform, check out https://www.tutorialspoint.com/d3js/d3js_svg_transformation.htm, but essentially we are adjusting the positions of the selected elements.
-  // const title = chartContainer.append('g')
-  //   .append('text') // adding the text
-  //   .attr('transform', `translate(${ size.width / 2 }, ${ size.height - margin.top + 5 })`)
-  //   .attr('dy', '0.5rem') // relative distance from the indicated coordinates.
-  //   .style('text-anchor', 'middle')
-  //   .style('font-weight', 'bold')
-  //   .text('Distribution of Demo Data'); // text content
+  // Create the bars
+  svg.selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", d => xScale(d.year))
+    .attr("y", d => yScale(d.count))
+    .attr("width", xScale.bandwidth())
+    .attr("height", d => height - yScale(d.count));
+
+  // Add labels
+  svg.selectAll("text")
+    .data(data)
+    .enter()
+    .append("text")
+    .attr("x", d => xScale(d.year) + xScale.bandwidth() / 2);
+
+  // Add number of cars labels on top of the bars
+  svg.selectAll("text")
+    .data(data)
+    .enter()
+    .append("text")
+    .attr("x", d => xScale(d.year) + xScale.bandwidth() / 2)
+    .attr("y", d => yScale(d.count) - 5) // Position the label above the bar
+    .attr("text-anchor", "middle") // Center the text
+    .text(d => d.count) // Display the count
+    .attr("font-size", "12px") // Set font size
+    .attr("fill", "black"); // Set text color
 
 }

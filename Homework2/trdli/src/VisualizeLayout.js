@@ -48,18 +48,24 @@ const chartObserver = new ResizeObserver(debounce(onResize, 100));
 let column_from_csv = await d3.csv('../data/car_prices.csv', (d) =>
 {
   return {
-    year: +d.year || null, // Ensure year is a valid number or null
-    make: d.make || null,
-    model: d.model || null,
-    body: d.body || null,
-    odometer: +d.odometer || null, // Ensure odometer is a valid number or null
-    price: +d.sellingprice || null // Ensure price is a valid number or null
+    year: isNaN(+d.year) ? null : +d.year,
+    make: d.make || "Unspecified",
+    model: d.model || "Unspecified",
+    body: d.body || "Unspecified",
+    odometer: isNaN(+d.odometer) ? null : +d.odometer,
+    price: isNaN(+d.sellingprice) ? null : +d.sellingprice
   };
 }).then(data =>
 {
-  // Filter out any rows with missing critical values
-  return data.filter(d => d.year && d.make && d.model && d.body && d.odometer && d.price);
+  // Filter out rows where any critical values are missing or invalid (null)
+  return data.filter(d =>
+  {
+    return d.year !== null && d.make !== "Unspecified" && d.model !== "Unspecified" &&
+      d.body !== "Unspecified" && d.odometer !== null && d.price !== null;
+  });
 });
+
+
 // Sort the data by year
 column_from_csv.sort((a, b) => a.year - b.year);
 export function mountChart1()
@@ -69,117 +75,143 @@ export function mountChart1()
   chartObserver.observe(Graph1Container);
 }
 
+/* For graph 1, we would like to draw a parallel coordinates chart. The vertical lines would be the year,
+model, make, body, odometer, and price of the cars. By connecting those lines, we can see the relationship
+between the car attributes and the price. Keep in mind here, the prince and odometer are binned into ranges
+for better performance. To do that, we need to cleanup our data first.*/
+
+
+/**
+ * @brief Cleans and processes data for graph1 visualization.
+ *
+ * This function processes a CSV column data and maps it to a new format
+ * with cleaned and categorized values for odometer and price.
+ *
+ * @returns {Array<Object>} An array of objects with cleaned data.
+ * Each object contains the following properties:
+ * - year: {number} The year of the vehicle.
+ * - make: {string} The make of the vehicle.
+ * - model: {string} The model of the vehicle.
+ * - body: {string} The body type of the vehicle.
+ * - odometer: {number} The categorized odometer reading.
+ * - price: {number} The categorized price.
+ */
+function graph1_data_cleaning()
+{
+  const ranges = (value, steps) =>
+  {
+    for (let i = 0; i < steps.length; i++)
+    {
+      if (value < steps[i]) return (i === 0 ? 0 : (steps[i - 1] + steps[i]) / 2);  // Use midpoint of the range
+    }
+    return steps[steps.length - 1] + 5000;  // Handle values greater than the last step
+  };
+
+  return column_from_csv.map(d => ({
+    year: d.year,
+    make: d.make,
+    model: d.model,
+    body: d.body,
+    odometer: ranges(d.odometer || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000]),  // Use numeric ranges
+    price: ranges(d.price || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000])  // Use numeric ranges
+  }));
+}
+
+
+let afterCleanData_Graph1 = graph1_data_cleaning();
 function Graph1_Overall()
 {
-  console.log("Start Graph1_Overall");
-  let chartContainer = d3.select("#Graph1").attr("viewBox", [0, 0, size.width, size.height])
-    .attr("preserveAspectRatio", "xMidYMid meet");
-  const columns = ["year", "make", "model", "body", "odometer", "price"];
+  const margin = { top: 30, right: 10, bottom: 10, left: 0 };
+  const width = size.width - margin.left - margin.right;
+  const height = size.height - margin.top - margin.bottom;
+  // Select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.
+  const chartContainer_graph1 = d3.select("#Graph1").append("svg")
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .attr("width", size.width)
+    .attr("height", size.height)
+    .append("g")
+    .attr("transform", `translate(${ margin.left },${ margin.top })`);
+  // Defined the categories for the parallel coordinates
+  const dimensions = ['year', 'make', 'model', 'body', 'odometer', 'price'];
 
+  // Defined the color that the line will be colored based on the make
   const color = d3.scaleOrdinal()
-    .domain(column_from_csv.map(d => d.make))
-    .range(d3.quantize(t => d3.hsl(
-      t * 360,
-      0.55,
-      0.5 + t * 0.25
-    ).formatHex(), column_from_csv.length));
+    .domain(afterCleanData_Graph1.map(d => d.make))
+    .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), afterCleanData_Graph1.length).reverse());
 
-  // Function to create range bins
-  const createRanges = (data, field, binCount) =>
+  const yScales = {};
+  // Now we need to define the scales for each dimension. Linear scale for numeric data like 'year', 'odometer', 'price'
+  ['year', 'odometer', 'price'].forEach(dim =>
   {
-    const validData = data.filter(d => !isNaN(+d[field]));
-    const extent = d3.extent(validData, d => +d[field]);
-    const step = (extent[1] - extent[0]) / binCount;
-    return d3.range(binCount).map(i =>
-    {
-      const min = extent[0] + i * step;
-      const max = min + step;
-      return `${ Math.round(min / 1000) }k-${ Math.round(max / 1000) }k`;
-    });
-  };
-
-  // Create Y scale
-  const y = {};
-  columns.forEach(dim =>
+    const extent = d3.extent(afterCleanData_Graph1, d => d[dim]);
+    yScales[dim] = d3.scaleLinear()
+      .domain(extent)  // Ensure the domain is based on valid data
+      .range([size.height, 0]);
+  });
+  // 'make', 'model', 'body' are categorical, so we use ordinal scales
+  ['make', 'model', 'body'].forEach(dim =>
   {
-    if (dim === "odometer" || dim === "price")
-    {
-      const ranges = createRanges(column_from_csv, dim, 10);
-      y[dim] = d3.scalePoint()
-        .domain(ranges)
-        .range([size.height, 0]);
-    } else if (dim === "year")
-    {
-      const validYears = column_from_csv.map(d => +d[dim]).filter(year => !isNaN(year));
-      y[dim] = d3.scaleLinear()
-        .domain(d3.extent(validYears))
-        .range([size.height, 0]);
-    } else
-    {
-      y[dim] = d3.scalePoint()
-        .domain([...new Set(column_from_csv.map(d => d[dim]).filter(Boolean))])
-        .range([size.height, 0]);
-    }
+    yScales[dim] = d3.scalePoint()
+      .domain(afterCleanData_Graph1.map(d => d[dim]).filter(Boolean))  // Filter out any invalid or empty strings
+      .range([size.height, 0])
+      .padding(1);
   });
 
-  // Create X scale
-  const x = d3.scalePoint()
-    .domain(columns)
+
+  // Create the X axis, that's the distance between the vertical lines, the data will connect between the lines
+  const xScale = d3.scalePoint()
     .range([0, size.width])
-    .padding(1);
+    .domain(dimensions);
 
-  // Draw the vertical lines for each dimension
-  const axis = chartContainer.selectAll(".axis")
-    .data(columns)
-    .enter().append("g")
-    .attr("class", "axis")
-    .attr("transform", d => `translate(${ x(d) },0)`)
-    .each(function (d) { d3.select(this).call(d3.axisLeft(y[d])); });
+  // Draw the lines for that vetical axis (Parallel Lines, each dimensions a line)
+  chartContainer_graph1.selectAll("allAxies")
+    .data(dimensions).enter()
+    .append("g")
+    .attr("transform", d => `translate(${ xScale(d) },0)`)
+    .each(function (d)
+    {
+      d3.select(this).call(d3.axisLeft().scale(yScales[d]));
+    });
 
-  // Add the label for each vertical line
-  axis.append("text")
-    .style("text-anchor", "middle")
-    .attr("y", -9)
-    .text(d => d)
-    .style("fill", "black");
-
-  // Function to get the appropriate y value (exact or range)
-  const getYValue = (dim, value) =>
+  // Connect the vertical lines with the data. (i.e. connect from year, to make, to model, to body, to
+  // odometer, to price)
+  function path(d)
   {
-    if (isNaN(value) || value === null) return null; // Check for invalid or null values
-    if (dim === "odometer" || dim === "price")
+    // Check if any dimension returns NaN for this data point
+    const valid = dimensions.every(p =>
     {
-      const ranges = y[dim].domain();
-      const range = ranges.find(range =>
+      const scaledValue = yScales[p](d[p]);
+      if (isNaN(scaledValue))
       {
-        const [min, max] = range.split('-').map(v => parseFloat(v) * 1000);
-        return value >= min && value < max;
-      });
-      return range ? y[dim](range) : null; // Ensure `range` is valid
-    }
-    return y[dim](value);
-  };
+        console.error(`Invalid value for ${ p }:`, d[p]);
+      }
+      return !isNaN(scaledValue);
+    });
 
-  // Draw the lines connecting each dimension based on the value
-  const line = d3.line()
-    .defined(d => d[1] !== null)
-    .x((d, i) => x(columns[i]))
-    .y(d => d[1]);
+    // Only return path if all dimensions are valid
+    return valid ? d3.line()(dimensions.map(p => [xScale(p), yScales[p](d[p])])) : null;
+  }
 
-  // Append the line into the graph
-  chartContainer.selectAll(".line")
-    .data(column_from_csv)
+
+  // Show the lines.
+  chartContainer_graph1.selectAll("path_connect_lines")
+    .data(afterCleanData_Graph1)
     .enter().append("path")
-    .attr("class", "line")
-    .attr("d", d =>
-    {
-      const points = columns.map(dim => [dim, getYValue(dim, d[dim])]);
-      return line(points);
-    })
-    .attr("stroke", d => color(d.make))
+    .attr("d", path)
+    .style("fill", "none")
+    .style("stroke", d => color(d.make))
     .style("opacity", 0.5);
 
-  console.log("Printed the line");
+  // Make lables for each vertical line
+  chartContainer_graph1.selectAll("dimension_labels")
+    .data(dimensions).enter()
+    .append("text")
+    .text(d => d)
+    .attr("text-anchor", "middle")
+    .attr("x", d => xScale(d))
+    .attr("y", size.height + 15);
+
+
 }
 
 

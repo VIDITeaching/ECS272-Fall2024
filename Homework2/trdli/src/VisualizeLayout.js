@@ -196,6 +196,7 @@ function graph1_data_cleaning()
 
 
 let afterCleanData_Graph1 = graph1_data_cleaning();
+console.log("We have ", afterCleanData_Graph1.length, " rows of data after cleaning.");
 console.log("Data cleaned and loaded for Graph 1, start drawing the chart.");
 
 /**

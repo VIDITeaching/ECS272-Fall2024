@@ -379,6 +379,25 @@ function Graph3_Detail()
   const width = size.width - margin.left - margin.right;
   const height = size.height - margin.top - margin.bottom;
 
+  // Define color for the bars
+  function getColor(index)
+  {
+    if (index < 10000)
+    {
+      return '#ff0000'; // red for 10000
+    } else if (index < 50000)
+    {
+      return '#ffb700'; // orange for 50000
+    }
+    else if (index < 100000)
+    {
+      return '#d0ff00'; // Yellow for 100000
+    }
+    else
+    {
+      return '#0fd971'; // Green for 100000 and above
+    }
+  }
   // Create the SVG element
   const svg = chartContainer_graph3
     .attr("width", "100%")
@@ -416,14 +435,8 @@ function Graph3_Detail()
     .attr("x", d => xScale(d.year))
     .attr("y", d => yScale(d.count))
     .attr("width", xScale.bandwidth())
-    .attr("height", d => height - yScale(d.count));
-
-  // Add labels
-  svg.selectAll("text")
-    .data(data)
-    .enter()
-    .append("text")
-    .attr("x", d => xScale(d.year) + xScale.bandwidth() / 2);
+    .attr("height", d => height - yScale(d.count))
+    .attr("fill", d => getColor(d.count));
 
   // Add number of cars labels on top of the bars
   svg.selectAll("text")
@@ -432,9 +445,9 @@ function Graph3_Detail()
     .append("text")
     .attr("x", d => xScale(d.year) + xScale.bandwidth() / 2)
     .attr("y", d => yScale(d.count) - 5) // Position the label above the bar
-    .attr("text-anchor", "middle") // Center the text
-    .text(d => d.count) // Display the count
-    .attr("font-size", "12px") // Set font size
-    .attr("fill", "black"); // Set text color
+    .attr("text-anchor", "middle")
+    .attr("font-size", "12px")
+    .attr("fill", "black")
+    .text(d => d.count);
 
 }

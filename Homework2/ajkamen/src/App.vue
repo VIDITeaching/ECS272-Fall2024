@@ -1,91 +1,63 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <div id="app">
+    <h1>CSV Visualizations</h1>
+    <!-- Only render visualizations if csvData is not null -->
+    <div v-if="csvData">
+      <Visualization1 :data="csvData" />
+      <Visualization2 :data="csvData" />
+      <Visualization3 :data="csvData" />
     </div>
-  </header>
-
-  <RouterView />
+    <div v-else>
+      Loading data...
+    </div>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<script>
+import Visualization1 from './components/Visualization1.vue';
+import Visualization2 from './components/Visualization2.vue';
+import Visualization3 from './components/Visualization3.vue';
+import { parseCSV } from './utils/csvParser';
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+export default {
+  components: {
+    Visualization1,
+    Visualization2,
+    Visualization3,
+  },
+  data() {
+    return {
+      csvData: null,
+    };
+  },
+  mounted() {
+    this.loadCSV();
+  },
+  methods: {
+    loadCSV() {
+      console.log("Fetching CSV data...");
+      fetch('/data/financial_risk_assessment.csv')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.text();
+        })
+        .then(csv => {
+          console.log("CSV data fetched, parsing...");
+          this.csvData = parseCSV(csv);
+          console.log("CSV parsed:", this.csvData);
+        })
+        .catch(err => console.error('Error loading CSV:', err));
+    },
+  },
+};
+</script>
 
-nav {
-  width: 100%;
-  font-size: 12px;
+<style>
+#app {
+  font-family: Arial, sans-serif;
   text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
 }
 </style>
+

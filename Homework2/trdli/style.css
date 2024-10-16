@@ -23,8 +23,8 @@ body, html {
 }
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;  /* First column for Graph1, second column for Graph2 and Graph3 */
-  grid-template-rows: 1fr 1fr;  /* First row for Graph1, second row for Graph2 and Graph3 */
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   grid-gap: 10px;
   background-color: #4a6572;
   padding: 20px;
@@ -33,40 +33,27 @@ body, html {
   height: 100vh; /* Ensure the container takes up full screen height */
 }
 
-.left-side {
-  grid-column: 1 / 2;
-  grid-row: 1 / 3;  /* Span two rows to occupy the full left side */
-  background-color: #718792;
+.left-side, .right-top, .right-bottom {
+  background-color: #718792; /* You can move this to the grid container instead */
   border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;  /* Ensure the SVG uses full width/height */
+}
+
+.left-side {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;  /* Span two rows to occupy the full left side */
 }
 
 .right-top {
   grid-column: 2 / 3;
   grid-row: 1 / 2;
-  background-color: #718792;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
 }
 
 .right-bottom {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
-  background-color: #718792;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
 }
 
 .Greeting_div {
@@ -77,7 +64,7 @@ body, html {
   align-items: center;
   background-color: #1c2938;
   flex-direction: column;
-  height: 300px;
+  height: auto;
 }
 
 .footer {
@@ -92,4 +79,9 @@ body, html {
 
 .text-muted {
   color: #6c757d;
+}
+
+.svg-graph1, .svg-graph2 {
+  width: 100%;
+  height: 100%;
 }

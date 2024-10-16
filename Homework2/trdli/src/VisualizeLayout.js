@@ -1,7 +1,8 @@
 import * as d3 from 'd3';
 import { isEmpty, debounce } from 'lodash';
 
-let size = { width: '100%', height: '100%' };
+const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+let size = {width: 2800, height: 2800};
 const onResize = (targets) =>
 {
   targets.forEach(target =>
@@ -30,12 +31,12 @@ const onResize = (targets) =>
 
 export const Graph1_OverallView = () => (
   `<div class='chart-container d-flex' id='bar-container-graph1'>
-        <svg id='Graph1'></svg>
+        <svg class='svg-graph1' id='Graph1'></svg>
     </div>`
 );
 export const Graph2_DetailView = () => (
   `<div class='chart-container d-flex' id='bar-container-graph2'>
-        <svg id='Graph2'></svg>
+        <svg class='svg-graph1' id='Graph2'></svg>
     </div>`
 );
 export const Graph3_DetailView = () => (
@@ -119,9 +120,9 @@ function graph1_data_cleaning()
 
 
 let afterCleanData_Graph1 = graph1_data_cleaning();
+console.log("Data cleaned and loaded for Graph 1, start drawing the chart.");
 function Graph1_Overall()
 {
-  const margin = { top: 20, right: 20, bottom: 20, left: 20 };
   // Select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.
   const chartContainer_graph1 = d3.select("#Graph1").append("svg")
     .attr("width", "100%")
@@ -222,6 +223,7 @@ export function mountChart2()
 
 function Graph2_Detail()
 {
+
   const chartContainer_graph2 = d3.select("#Graph2")
     .append("svg")
     .attr("width", "100%")

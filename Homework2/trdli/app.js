@@ -10,22 +10,20 @@ document.querySelector('#app').innerHTML = `
         <h1>Car Price Visualization</h1>
         <i> The ultimate guide to buy a car </i>
     </div>
-    <br>
-      <div class="grid-container">
-        <div class="left-side">${ Graph1_OverallView() }</div>
-        <div class="right-top">${ Graph2_DetailView() }</div>
-        <div class="right-bottom">${ Graph3_DetailView() }</div>
-      </div>
-    <br>
+    <div class="grid-container">
+      <div class="left-side">${ Graph1_OverallView() }</div>
+      <div class="right-top">${ Graph2_DetailView() }</div>
+      <div class="right-bottom">${ Graph3_DetailView() }</div>
+    </div>
     <div class='mt-auto'>
-  <footer class="footer">
-    <span class="text-muted"> &copy 2024 Hengyi Li. All rights reserved</span>
-    <span class="text-muted"> | </span>
-    <span class="text-muted"> <a href="https://github.com/TheRealMilesLee" target="_blank">GitHub</a> </span>
-    <span class="text-muted"> | </span>
-    <span class="text-muted"> <a href="https://www.linkedin.com/in/hengyi-li-968744191/?locale=en_US" target="_blank">LinkedIn</a> </span>
-  </footer>
-</div>
+      <footer class="footer">
+        <span class="text-muted"> &copy 2024 Hengyi Li. All rights reserved </span>
+        <span class="text-muted"> | </span>
+        <span class="text-muted"> <a href="https://github.com/TheRealMilesLee" target="_blank"> GitHub </a> </span>
+        <span class="text-muted"> | </span>
+        <span class="text-muted"> <a href="https://www.linkedin.com/in/hengyi-li-968744191/?locale=en_US" target="_blank"> LinkedIn </a> </span>
+      </footer>
+    </div>
   </div>
 `;
 

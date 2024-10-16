@@ -1,22 +1,47 @@
 import * as d3 from 'd3';
 import { isEmpty, debounce } from 'lodash';
 
+// Define the global margin and the size of the graph
 const margin = { top: 20, right: 20, bottom: 20, left: 20 };
-let size = {width: 2800, height: 2800};
+let size = { width: 500, height: 500 };
+
+/**
+ * @brief Handles the resizing of graph containers and redraws the graphs accordingly.
+ *
+ * @function onResize
+ * @param {Array} targets - An array of ResizeObserverEntry objects representing the elements being resized.
+ *
+ * This function iterates over the provided targets and checks if the target is one of the graph containers.
+ * If the target is a graph container, it updates the size and redraws the corresponding graph.
+ *
+ * The function specifically handles three graph containers with IDs:
+ * - 'parallel-coordinates-container-graph1'
+ * - 'pie-container-graph2'
+ * - 'bar-container-graph3'
+ *
+ * For each of these containers, it removes the existing graph elements and calls the appropriate function to redraw the graph:
+ * - Graph1_Overall() for 'parallel-coordinates-container-graph1'
+ * - Graph2_Detail() for 'pie-container-graph2'
+ * - Graph3_Detail() for 'bar-container-graph3'
+ *
+ * The function also logs a message to the console indicating which graph has been redrawn.
+ */
 const onResize = (targets) =>
 {
   targets.forEach(target =>
   {
+    // Check if the target is the graph container
     const targetId = target.target.getAttribute('id');
-    if (targetId !== 'bar-container-graph1' && targetId !== 'bar-container-graph2' && targetId !== 'bar-container-graph3') return;
+    if (targetId !== 'parallel-coordinates-container-graph1' && targetId !== 'pie-container-graph2' && targetId !== 'bar-container-graph3') return;
     size = { width: target.contentRect.width, height: target.contentRect.height };
     if (!isEmpty(size) && !isEmpty(column_from_csv))
     {
-      if (targetId === 'bar-container-graph1')
+      // Remove the existing graph and redraw it
+      if (targetId === 'parallel-coordinates-container-graph1')
       {
         d3.select('#Graph1').selectAll('*').remove();
         Graph1_Overall();
-      } else if (targetId === 'bar-container-graph2')
+      } else if (targetId === 'pie-container-graph2')
       {
         d3.select('#Graph2').selectAll('*').remove();
         Graph2_Detail();
@@ -29,22 +54,40 @@ const onResize = (targets) =>
   });
 };
 
+/**
+ * @description Generates the overall view for Graph1.
+ * @name Graph1_OverallView
+ * @returns {string} HTML string containing a div with an SVG element for Graph1.
+ */
 export const Graph1_OverallView = () => (
-  `<div class='chart-container d-flex' id='bar-container-graph1'>
-        <svg class='svg-graph1' id='Graph1'></svg>
+  `<div id='parallel-coordinates-container-graph1'>
+        <svg id='Graph1'></svg>
     </div>`
 );
+
+/**
+ * @description Generates the HTML structure for the detailed view of Graph2.
+ * @name Graph2_DetailView
+ * @returns {string} The HTML string for the detailed view of Graph2.
+ */
 export const Graph2_DetailView = () => (
-  `<div class='chart-container d-flex' id='bar-container-graph2'>
-        <svg class='svg-graph1' id='Graph2'></svg>
+  `<div id='pie-container-graph2'>
+        <svg id='Graph2'></svg>
     </div>`
 );
+
+/**
+ * @description Generates the HTML structure for the detailed view of Graph 3.
+ * @name Graph3_DetailView
+ * @returns {string} The HTML string containing a div with an SVG element.
+ */
 export const Graph3_DetailView = () => (
-  `<div class='chart-container d-flex' id='bar-container-graph3'>
+  `<div id='bar-container-graph3'>
         <svg id='Graph3'></svg>
     </div>`
 );
 
+// Load the data from the CSV file
 const chartObserver = new ResizeObserver(debounce(onResize, 100));
 let column_from_csv = await d3.csv('../data/car_prices.csv', (d) =>
 {
@@ -65,22 +108,27 @@ let column_from_csv = await d3.csv('../data/car_prices.csv', (d) =>
       d.body !== "Unspecified" && d.odometer !== null && d.price !== null;
   });
 });
-
-
+console.log("Data loaded from CSV file");
 // Sort the data by year
 column_from_csv.sort((a, b) => a.year - b.year);
-export function mountChart1()
-{ // registering this element to watch its size change
-  console.log("Start mountChart1");
-  let Graph1Container = document.querySelector('#bar-container-graph1');
-  chartObserver.observe(Graph1Container);
-}
+console.log("Data sorted by year");
 
 /* For graph 1, we would like to draw a parallel coordinates chart. The vertical lines would be the year,
 model, make, body, odometer, and price of the cars. By connecting those lines, we can see the relationship
 between the car attributes and the price. Keep in mind here, the prince and odometer are binned into ranges
 for better performance. To do that, we need to cleanup our data first.*/
 
+/**
+ * @brief Mounts the chart for Graph1.
+ * @function mountChart1
+ * @returns {void}
+ */
+export function mountChart1()
+{ // registering this element to watch its size change
+  console.log("Start mountChart1");
+  let Graph1Container = document.querySelector('#parallel-coordinates-container-graph1');
+  chartObserver.observe(Graph1Container);
+}
 
 /**
  * @brief Cleans and processes data for graph1 visualization.
@@ -101,9 +149,21 @@ function graph1_data_cleaning()
 {
   const ranges = (value, steps) =>
   {
-    for (let i = 0; i < steps.length; i++)
+    for (let currentStepIndex = 0; currentStepIndex < steps.length; currentStepIndex++)
     {
-      if (value < steps[i]) return (i === 0 ? 0 : (steps[i - 1] + steps[i]) / 2);  // Use midpoint of the range
+      if (value < steps[currentStepIndex])
+      {
+        if (currentStepIndex === 0)
+        {
+          return 0;
+        }
+        else
+        {
+          const previousStep = steps[currentStepIndex - 1];
+          const currentStep = steps[currentStepIndex];
+          return (previousStep + currentStep) / 2;  // Use midpoint of the range
+        }
+      }
     }
     return steps[steps.length - 1] + 5000;  // Handle values greater than the last step
   };
@@ -121,10 +181,16 @@ function graph1_data_cleaning()
 
 let afterCleanData_Graph1 = graph1_data_cleaning();
 console.log("Data cleaned and loaded for Graph 1, start drawing the chart.");
+
+/**
+ * @brief Draws the overall view for Graph1 (Parallel Coordinates Chart).
+ * @function Graph1_Overall
+ * @returns {void}
+ */
 function Graph1_Overall()
 {
   // Select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.
-  const chartContainer_graph1 = d3.select("#Graph1").append("svg")
+  const chartContainer_graph1 = d3.select("#Graph1")
     .attr("width", "100%")
     .attr("height", "100%")
     .attr("preserveAspectRatio", "xMidYMid meet")
@@ -135,8 +201,8 @@ function Graph1_Overall()
 
   // Defined the color that the line will be colored based on the make
   const color = d3.scaleOrdinal()
-    .domain(afterCleanData_Graph1.map(d => d.make))
-    .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), afterCleanData_Graph1.length).reverse());
+    .domain(dimensions)
+    .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), dimensions.length).reverse());
 
   const yScales = {};
   // Now we need to define the scales for each dimension. Linear scale for numeric data like 'year', 'odometer', 'price'
@@ -153,14 +219,15 @@ function Graph1_Overall()
     yScales[dim] = d3.scalePoint()
       .domain(afterCleanData_Graph1.map(d => d[dim]).filter(Boolean))  // Filter out any invalid or empty strings
       .range([size.height, 0])
-      .padding(1);
+      .padding(0.1);
   });
-
+  console.log("Y Scales defined for graph 1");
 
   // Create the X axis, that's the distance between the vertical lines, the data will connect between the lines
   const xScale = d3.scalePoint()
     .range([0, size.width])
     .domain(dimensions);
+  console.log("X Scale defined for graph 1");
 
   // Draw the lines for that vetical axis (Parallel Lines, each dimensions a line)
   chartContainer_graph1.selectAll("allAxies")
@@ -171,7 +238,7 @@ function Graph1_Overall()
     {
       d3.select(this).call(d3.axisLeft().scale(yScales[d]));
     });
-
+  console.log("Vertical lines drawn for graph 1");
   // Connect the vertical lines with the data. (i.e. connect from year, to make, to model, to body, to
   // odometer, to price)
   function path(d)
@@ -190,7 +257,7 @@ function Graph1_Overall()
     // Only return path if all dimensions are valid
     return valid ? d3.line()(dimensions.map(p => [xScale(p), yScales[p](d[p])])) : null;
   }
-
+  console.log("Path defined for graph 1");
 
   // Show the lines.
   chartContainer_graph1.selectAll("path_connect_lines")
@@ -200,6 +267,7 @@ function Graph1_Overall()
     .style("fill", "none")
     .style("stroke", d => color(d.make))
     .style("opacity", 0.5);
+  console.log("Lines drawn for graph 1");
 
   // Make lables for each vertical line
   chartContainer_graph1.selectAll("dimension_labels")
@@ -209,15 +277,14 @@ function Graph1_Overall()
     .attr("text-anchor", "middle")
     .attr("x", d => xScale(d))
     .attr("y", size.height + 15);
-
-
+  console.log("Labels drawn for graph 1");
 }
 
 
 export function mountChart2()
 { // registering this element to watch its size change
   console.log("Start mountChart2");
-  let Graph2Container = document.querySelector('#bar-container-graph2');
+  let Graph2Container = document.querySelector('#pie-container-graph2');
   chartObserver.observe(Graph2Container);
 }
 
@@ -225,7 +292,6 @@ function Graph2_Detail()
 {
 
   const chartContainer_graph2 = d3.select("#Graph2")
-    .append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
     .attr("preserveAspectRatio", "xMidYMid meet")

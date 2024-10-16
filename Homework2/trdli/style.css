@@ -9,78 +9,82 @@
   background-color: #2c3e50;
 }
 
-body, html {
-  margin: 0;
-  padding: 0;
-}
-
-#app {
-  height: 800vh;
-  width: 800vw;
+.MainBody {
+  height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
 }
+
 .grid-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  grid-gap: 10px;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
   background-color: #4a6572;
   padding: 20px;
   border-radius: 20px;
   margin: 20px;
-  height: 100vh; /* Ensure the container takes up full screen height */
+  height: 100vh;
 }
 
-.left-side, .right-top, .right-bottom {
-  background-color: #718792; /* You can move this to the grid container instead */
+.grid-container > div {
+  background-color: #718792;
   border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.left-side {
-  grid-column: 1 / 2;
-  grid-row: 1 / 3;  /* Span two rows to occupy the full left side */
-}
-
-.right-top {
-  grid-column: 2 / 3;
+.row1 {
+  grid-column: 1 / 3;
   grid-row: 1 / 2;
 }
 
-.right-bottom {
+.row2-left {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
+.row2-right {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
 }
 
-.Greeting_div {
-  color: #a7c0cd;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #1c2938;
-  flex-direction: column;
-  height: auto;
-}
-
-.footer {
+.Greeting_div, .footer {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #1c2938;
   color: #718792;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  border-radius: 20px;
   padding: 1rem;
+}
+
+.Greeting_div {
+  flex-direction: column;
+}
+
+.footer {
+  padding: 1rem;
+}
+
+#parallel-coordinates-container-graph1, #pie-container-graph2, #bar-container-graph3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+#parallel-coordinates-container-graph1 {
+  height: 60vh;
+}
+
+#pie-container-graph2, #bar-container-graph3 {
+  height: 35vh;
 }
 
 .text-muted {
   color: #6c757d;
-}
-
-.svg-graph1, .svg-graph2 {
-  width: 100%;
-  height: 100%;
 }

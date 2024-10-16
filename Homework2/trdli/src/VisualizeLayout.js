@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { isEmpty, debounce } from 'lodash';
 
-let size = { width: 600, height: 600 };
+let size = { width: '100%', height: '100%' };
 const onResize = (targets) =>
 {
   targets.forEach(target =>
@@ -121,14 +121,12 @@ function graph1_data_cleaning()
 let afterCleanData_Graph1 = graph1_data_cleaning();
 function Graph1_Overall()
 {
-  const margin = { top: 30, right: 10, bottom: 10, left: 0 };
-  const width = size.width - margin.left - margin.right;
-  const height = size.height - margin.top - margin.bottom;
+  const margin = { top: 20, right: 20, bottom: 20, left: 20 };
   // Select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.
   const chartContainer_graph1 = d3.select("#Graph1").append("svg")
+    .attr("width", "100%")
+    .attr("height", "100%")
     .attr("preserveAspectRatio", "xMidYMid meet")
-    .attr("width", size.width)
-    .attr("height", size.height)
     .append("g")
     .attr("transform", `translate(${ margin.left },${ margin.top })`);
   // Defined the categories for the parallel coordinates
@@ -226,8 +224,8 @@ function Graph2_Detail()
 {
   const chartContainer_graph2 = d3.select("#Graph2")
     .append("svg")
-    .attr("width", size.width)
-    .attr("height", size.height)
+    .attr("width", "100%")
+    .attr("height", "100%")
     .attr("preserveAspectRatio", "xMidYMid meet")
     .append("g")
     .attr("transform", `translate(${ size.width / 2 }, ${ size.height / 2 })`);

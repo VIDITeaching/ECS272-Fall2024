@@ -194,6 +194,8 @@ function graph1_data_cleaning()
   }).filter(d => d !== null);  // Filter out null entries
 }
 
+// Consider getting rid of the model, and using the averge 
+
 
 let afterCleanData_Graph1 = graph1_data_cleaning();
 console.log("We have ", afterCleanData_Graph1.length, " rows of data after cleaning.");

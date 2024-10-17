@@ -203,7 +203,8 @@ function graph1_data_cleaning()
     const make = d.make.toLowerCase();
     const body = categorizeBody(d.body);
     const uniqueKey = `${ year }-${ make }-${ body }`;
-    if (!uniqueEntries.has(uniqueKey))
+    const luxuryBrands = ['ferrari', 'rolls-royce', 'fisker', 'tesla', 'lamborghini', 'bentley', 'porsche', 'bmw', 'mercedes-benz', 'jaguar', 'land rover', 'maserati', 'alfa romeo', 'fiat', 'smart', 'hummer', 'lotus', 'aston martin'];
+    if (!uniqueEntries.has(uniqueKey) && !luxuryBrands.includes(make))
     {
       uniqueEntries.add(uniqueKey);
       const odometer = ranges(d.odometer || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000]);

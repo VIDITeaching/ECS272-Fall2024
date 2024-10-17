@@ -1,10 +1,7 @@
 import * as d3 from 'd3';
 import { isEmpty, debounce } from 'lodash';
 
-// Define the global margin and the size of the graph
-const margin = { top: 10, right: 15, bottom: 10, left: 15 };
-let size = { width: 100, height: 100 };
-
+let size = { width: 0, height: 0 };
 /**
  * @brief Handles the resizing of graph containers and redraws the graphs accordingly.
  *
@@ -94,24 +91,20 @@ let column_from_csv = await d3.csv('../data/car_prices.csv', (d) =>
   return {
     year: isNaN(+d.year) ? null : +d.year,
     make: d.make || "Unspecified",
-    model: d.model || "Unspecified",
     body: d.body || "Unspecified",
     odometer: isNaN(+d.odometer) ? null : +d.odometer,
     price: isNaN(+d.sellingprice) ? null : +d.sellingprice
   };
 }).then(data =>
 {
-  // Filter out rows where any critical values are missing or invalid (null)
+  // Filter out rows where any critical values are missing or invalid (null) or price is 0
   return data.filter(d =>
   {
-    return d.year !== null && d.make !== "Unspecified" && d.model !== "Unspecified" &&
-      d.body !== "Unspecified" && d.odometer !== null && d.price !== null;
+    return d.year !== null && d.make !== "Unspecified" && d.body !== "Unspecified" && d.odometer !== null && d.price !== null && d.price !== 0;
   });
 });
-console.log("Data loaded from CSV file");
 // Sort the data by year
 column_from_csv.sort((a, b) => a.year - b.year);
-console.log("Data sorted by year");
 
 /* For graph 1, we would like to draw a parallel coordinates chart. The vertical lines would be the year,
 model, make, body, odometer, and price of the cars. By connecting those lines, we can see the relationship
@@ -168,37 +161,59 @@ function graph1_data_cleaning()
     return steps[steps.length - 1] + 5000;  // Handle values greater than the last step
   };
 
+  const yearRanges = [
+    { start: 1980, end: 1985, label: '1980-1985' },
+    { start: 1986, end: 1990, label: '1986-1990' },
+    { start: 1991, end: 1995, label: '1991-1995' },
+    { start: 1996, end: 2000, label: '1996-2000' },
+    { start: 2001, end: 2005, label: '2001-2005' },
+    { start: 2006, end: 2010, label: '2006-2010' },
+    { start: 2011, end: 2015, label: '2011-2015' }
+  ];
+
+  const categorizeYear = (year) =>
+  {
+    for (const range of yearRanges)
+    {
+      if (year >= range.start && year <= range.end)
+      {
+        return range.label;
+      }
+    }
+    return 'Unknown';
+  };
+
   // Use a Set to track unique combinations of year, make, model, and body
   const uniqueEntries = new Set();
 
   return column_from_csv.map(d =>
   {
-    const year = d.year;
+    const year = categorizeYear(d.year);
     const make = d.make.toLowerCase();
-    const model = d.model.toLowerCase();
     const body = d.body.toLowerCase();
-    const uniqueKey = `${ year }-${ make }-${ model }-${ body }`;
+    const uniqueKey = `${ year }-${ make }-${ body }`;
     if (!uniqueEntries.has(uniqueKey))
     {
       uniqueEntries.add(uniqueKey);
+      const odometer = ranges(d.odometer || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000]);
+      const price = ranges(d.price || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000]);
+      if (price === 0) return null;  // Filter out entries with price 0
       return {
         year: year,
         make: make,
-        model: model,
         body: body,
-        odometer: ranges(d.odometer || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000]),  // Use numeric ranges
-        price: ranges(d.price || 0, [5000, 10000, 15000, 20000, 25000, 30000, 35000])  // Use numeric ranges
+        odometer: odometer,  // Use numeric ranges
+        price: price  // Use numeric ranges
       };
     }
     return null;
   }).filter(d => d !== null);  // Filter out null entries
 }
 
-// Consider getting rid of the model, and using the averge 
+// Consider getting rid of the model, and using the averge
 
 
 let afterCleanData_Graph1 = graph1_data_cleaning();
-console.log("We have ", afterCleanData_Graph1.length, " rows of data after cleaning.");
 console.log("Data cleaned and loaded for Graph 1, start drawing the chart.");
 
 /**
@@ -208,47 +223,69 @@ console.log("Data cleaned and loaded for Graph 1, start drawing the chart.");
  */
 function Graph1_Overall()
 {
+  // Set up the margins for the chart
+  const margin = { top: 25, right: 5, bottom: 40, left: 5 };
+  const width = size.width - margin.left - margin.right;
+  const height = size.height - margin.top - margin.bottom;
+
   // Select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.
   const chartContainer_graph1 = d3.select("#Graph1")
     .attr("width", "100%")
     .attr("height", "100%")
+    .attr("transform", `translate(${ margin.left },${ margin.top })`)
     .append("g")
-    .attr("preserveAspectRatio", "xMidYMid meet")
-    .attr("transform", `translate(${ margin.left },${ margin.top })`);
+    .attr("preserveAspectRatio", "xMidYMid meet");
+
   // Defined the categories for the parallel coordinates
-  const dimensions = ['year', 'make', 'model', 'body', 'odometer', 'price'];
+  const dimensions = ['year', 'make', 'body', 'odometer', 'price'];
 
   // Defined the color that the line will be colored based on the make
-  const color = d3.scaleOrdinal()
-    .domain(dimensions)
-    .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), dimensions.length).reverse());
-
+  function getColor(year) {
+    if (year === '1980-1985') {
+      return '#ff0000'; // vivid red for 1980-1985
+    } else if (year === '1986-1990') {
+      return '#ff8c00'; // vivid orange for 1986-1990
+    } else if (year === '1991-1995') {
+      return '#ffd700'; // vivid yellow for 1991-1995
+    } else if (year === '1996-2000') {
+      return '#32cd32'; // vivid green for 1996-2000
+    } else if (year === '2001-2005') {
+      return '#00008b'; // dark blue for 2001-2005
+    } else if (year === '2006-2010') {
+      return '#8a2be2'; // vivid purple for 2006-2010
+    } else if (year === '2011-2015') {
+      return '#ff1493'; // vivid pink for 2011-2015
+    } else {
+      return '#000000'; // black for unknown or other years
+    }
+  }
   const yScales = {};
-  // Now we need to define the scales for each dimension. Linear scale for numeric data like 'year', 'odometer', 'price'
-  ['year', 'odometer', 'price'].forEach(dim =>
+  // Now we need to define the scales for each dimension. Linear scale for numeric data like 'odometer', 'price'
+  ['odometer', 'price'].forEach(dimensions =>
   {
-    const extent = d3.extent(afterCleanData_Graph1, d => d[dim]);
-    yScales[dim] = d3.scaleLinear()
-      .domain(extent)  // Ensure the domain is based on valid data
-      .range([size.height, 0]);
+    const numeric_value = d3.extent(afterCleanData_Graph1, d => d[dimensions]);
+    yScales[dimensions] = d3.scaleLinear()
+      .domain(numeric_value)  // Ensure the domain is based on valid data
+      .range([height - margin.bottom, margin.top]);
   });
-  // 'make', 'model', 'body' are categorical, so we use ordinal scales
-  ['make', 'model', 'body'].forEach(dim =>
+  // 'make', 'body' are categorical, so we use ordinal scales
+  ['year', 'make', 'body'].forEach(dimensions =>
   {
-    yScales[dim] = d3.scalePoint()
-      .domain(afterCleanData_Graph1.map(d => d[dim]).filter(Boolean))  // Filter out any invalid or empty strings
-      .range([size.height, 0])
+    yScales[dimensions] = d3.scalePoint()
+      .domain(afterCleanData_Graph1.map(d => d[dimensions]).filter(Boolean))  // Filter out any invalid or empty strings
+      .range([height - margin.bottom, margin.top])
       .padding(0.1);
   });
   console.log("Y Scales defined for graph 1");
 
   // Create the X axis, that's the distance between the vertical lines, the data will connect between the lines
   const xScale = d3.scalePoint()
-    .range([0, size.width])
-    .domain(dimensions);
+    .range([margin.left, width - margin.right])
+    .domain(dimensions)
+    .padding(0.2);
   console.log("X Scale defined for graph 1");
 
-  // Draw the lines for that vetical axis (Parallel Lines, each dimensions a line)
+  // Draw the lines for that vertical axis (Parallel Lines, each dimension a line)
   chartContainer_graph1.selectAll("allAxies")
     .data(dimensions).enter()
     .append("g")
@@ -257,7 +294,7 @@ function Graph1_Overall()
     {
       d3.select(this).call(d3.axisLeft().scale(yScales[d]));
     });
-  console.log("Vertical lines drawn for graph 1");
+
   // Connect the vertical lines with the data. (i.e. connect from year, to make, to model, to body, to
   // odometer, to price)
   function path(d)
@@ -272,11 +309,9 @@ function Graph1_Overall()
       }
       return !isNaN(scaledValue);
     });
-
     // Only return path if all dimensions are valid
     return valid ? d3.line()(dimensions.map(p => [xScale(p), yScales[p](d[p])])) : null;
   }
-  console.log("Path defined for graph 1");
 
   // Show the lines.
   chartContainer_graph1.selectAll("path_connect_lines")
@@ -284,19 +319,21 @@ function Graph1_Overall()
     .enter().append("path")
     .attr("d", path)
     .style("fill", "none")
-    .style("stroke", d => color(d.make))
+    .style("stroke", d => getColor(d.year))
     .style("opacity", 0.5);
-  console.log("Lines drawn for graph 1");
 
-  // Make lables for each vertical line
+  // Make lables for each vertical line (i.e. year, make, model, body, odometer, price)
   chartContainer_graph1.selectAll("dimension_labels")
     .data(dimensions).enter()
     .append("text")
     .text(d => d)
     .attr("text-anchor", "middle")
     .attr("x", d => xScale(d))
-    .attr("y", size.height + 15);
-  console.log("Labels drawn for graph 1");
+    .attr("y", height + 30)
+    .style("fill", "black")
+    .style("font-size", 14)
+    .style("text-decoration", "underline")
+    .style("font-weight", "bold");
 }
 
 
@@ -309,13 +346,18 @@ export function mountChart2()
 
 function Graph2_Detail()
 {
+  // Set up the margin for the chart
+  const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+  const width = size.width - margin.left - margin.right;
+  const height = size.height - margin.top - margin.bottom;
 
+  // Set up the SVG container
   const chartContainer_graph2 = d3.select("#Graph2")
     .attr("width", "100%")
     .attr("height", "100%")
     .attr("preserveAspectRatio", "xMidYMid meet")
     .append("g")
-    .attr("transform", `translate(${ size.width / 2 }, ${ size.height / 2 })`);
+    .attr("transform", `translate(${ width / 2 }, ${ height / 2 })`);
 
   // Group data by car maker and count the number of cars for each maker
   const carMakerCount = d3.rollup(column_from_csv, v => v.length, d => d.make);
@@ -324,8 +366,11 @@ function Graph2_Detail()
   const data = Array.from(carMakerCount, ([make, count]) => ({ make, count }));
 
   // Set up SVG dimensions
-  const radius = Math.min(size.width, size.height) / 2;
-  const color = d3.scaleOrdinal(d3.schemeCategory10);
+  const radius = Math.min(width, height) / 2;
+  const color = d3.scaleOrdinal()
+    .domain(data.map(d => d.make))
+    .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), data.length).reverse());
+
   // Create the pie layout
   const pie = d3.pie()
     .value(d => d.count)
@@ -347,12 +392,14 @@ function Graph2_Detail()
     .attr("d", arc)
     .attr("fill", d => color(d.data.make));
 
-  // Add labels
+
+  // Add inside legend to show the number of cars sold for each car maker
   arcs.append("text")
     .attr("transform", d => `translate(${ arc.centroid(d) })`)
-    .attr("text-anchor", "middle")
-    .attr("font-size", "12px")
-    .text(d => d.data.make);
+    .attr("dy", "0.35em")
+    .text(d => d.data.count)
+    .style("text-anchor", "middle");
+
 }
 
 
@@ -377,7 +424,7 @@ function Graph3_Detail()
   const data = Array.from(carYearCount, ([year, count]) => ({ year, count }));
 
   // Set up SVG dimensions
-  const margin = { top: 10, right: 10, bottom: 30, left: 40 };
+  const margin = { top: 10, right: 10, bottom: 30, left: 60 };
   const width = size.width - margin.left - margin.right;
   const height = size.height - margin.top - margin.bottom;
 

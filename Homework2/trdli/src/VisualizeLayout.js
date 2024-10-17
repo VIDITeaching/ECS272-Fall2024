@@ -23,8 +23,10 @@ let size = { width: 0, height: 0 };
  *
  * The function also logs a message to the console indicating which graph has been redrawn.
  */
-const onResize = (targets) => {
-  targets.forEach(target => {
+const onResize = (targets) =>
+{
+  targets.forEach(target =>
+  {
     const targetId = target.target.getAttribute('id');
     if (!['parallel-coordinates-container-graph1', 'pie-container-graph2', 'bar-container-graph3'].includes(targetId)) return;
 
@@ -176,7 +178,19 @@ function graph1_data_cleaning()
   const categorizeBody = (body) =>
   {
     const bodyLower = body.toLowerCase();
-    const categories = ['coupe', 'koup', 'sedan', 'suv', 'minivan', 'truck', 'van', 'wagon', 'hatchback', 'convertible', 'roadster', 'cab'];
+    const categories = ['coupe', 'sedan', 'suv', 'minivan', 'truck', 'van', 'wagon', 'hatchback', 'convertible', 'roadster', 'cab'];
+    if (bodyLower.includes('koup'))
+    {
+      return 'coupe';
+    }
+    if (bodyLower.includes('navitgation'))
+    {
+      return 'suv'; // Exclude entries with 'navigation'
+    }
+    if (bodyLower.includes('supercrew'))
+    {
+      return 'truck';
+    }
     return categories.find(category => bodyLower.includes(category)) || bodyLower;
   };
 
@@ -221,7 +235,7 @@ console.log("Data cleaned and loaded for Graph 1, start drawing the chart.");
 function Graph1_Overall()
 {
   // Set up the margins for the chart
-  const margin = { top: 25, right: 5, bottom: 40, left: 5 };
+  const margin = { top: 20, right: 5, bottom: 35, left: 5 };
   const width = size.width - margin.left - margin.right;
   const height = size.height - margin.top - margin.bottom;
 
@@ -232,7 +246,6 @@ function Graph1_Overall()
     .attr("transform", `translate(${ margin.left },${ margin.top })`)
     .append("g")
     .attr("preserveAspectRatio", "xMidYMid meet");
-
   // Defined the categories for the parallel coordinates
   const dimensions = ['year', 'make', 'body', 'odometer', 'price'];
 
@@ -241,7 +254,8 @@ function Graph1_Overall()
     .domain(['1980-1985', '1986-1990', '1991-1995', '1996-2000', '2001-2005', '2006-2010', '2011-2015'])
     .range(['#ff0000', '#ff8c00', '#ffd700', '#32cd32', '#00008b', '#8a2be2', '#ffb700']);
 
-  function getColor(year) {
+  function getColor(year)
+  {
     return colorScale(year) || '#000000'; // default to black for unknown or other years
   }
   const yScales = {};
@@ -251,7 +265,7 @@ function Graph1_Overall()
     const numeric_value = d3.extent(afterCleanData_Graph1, d => d[dimensions]);
     yScales[dimensions] = d3.scaleLinear()
       .domain(numeric_value)  // Ensure the domain is based on valid data
-      .range([height - margin.bottom, margin.top]);
+      .range([height - margin.bottom , margin.top]);
   });
   // 'make', 'body' are categorical, so we use ordinal scales
   ['year', 'make', 'body'].forEach(dimensions =>
@@ -259,29 +273,17 @@ function Graph1_Overall()
     yScales[dimensions] = d3.scalePoint()
       .domain(afterCleanData_Graph1.map(d => d[dimensions]).filter(Boolean))  // Filter out any invalid or empty strings
       .range([height - margin.bottom, margin.top])
-      .padding(0.1);
+      .padding(0.01);
   });
 
   // Create the X axis, that's the distance between the vertical lines, the data will connect between the lines
   const xScale = d3.scalePoint()
-    .range([margin.left, width - margin.right])
+    .range([margin.left, width- margin.right])
     .domain(dimensions)
     .padding(0.2);
   console.log("X Scale defined for graph 1");
 
-  // Draw the lines for that vertical axis (Parallel Lines, each dimension a line)
-  chartContainer_graph1.selectAll("allAxies")
-    .data(dimensions).enter()
-    .append("g")
-    .attr("transform", d => `translate(${ xScale(d) },0)`)
-    .each(function (d)
-    {
-      d3.select(this).call(d3.axisLeft().scale(yScales[d]));
-    })
-
-
-  // Connect the vertical lines with the data. (i.e. connect from year, to make, to model, to body, to
-  // odometer, to price)
+  // Connect the vertical lines with the data. (i.e. connect from year, to make, to model, to body, to odometer, to price)
   function path(d)
   {
     // Check if any dimension returns NaN for this data point
@@ -307,7 +309,18 @@ function Graph1_Overall()
     .style("stroke", d => getColor(d.year))
     .style("opacity", 0.5)
     .style("stroke-width", 1.5);
-
+    // Draw the lines for that vertical axis (Parallel Lines, each dimension a line)
+    chartContainer_graph1.selectAll("allAxies")
+      .data(dimensions).enter()
+      .append("g")
+      .attr("transform", d => `translate(${ xScale(d) },0)`)
+      .each(function (d)
+      {
+        d3.select(this).call(d3.axisLeft().scale(yScales[d]));
+      })
+      .attr("padding", 0.5)
+      .style("font-size", 12)
+      .style("font-weight", "bold");
 
   // Make lables for each vertical line (i.e. year, make, model, body, odometer, price)
   chartContainer_graph1.selectAll("dimension_labels")
@@ -316,7 +329,7 @@ function Graph1_Overall()
     .text(d => d)
     .attr("text-anchor", "middle")
     .attr("x", d => xScale(d))
-    .attr("y", height + 30)
+    .attr("y", height)
     .style("fill", "black")
     .style("font-size", 14)
     .style("text-decoration", "underline")
@@ -420,7 +433,8 @@ function Graph3_Detail()
     .domain([10000, 50000, 100000])
     .range(['#ff0000', '#ffb700', '#d0ff00', '#0fd971']);
 
-  function getColor(index) {
+  function getColor(index)
+  {
     return colorScale(index);
   }
   // Create the SVG element

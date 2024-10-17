@@ -358,6 +358,9 @@ function Graph1_Overall()
 }
 
 
+/** For this graph, we would like to see which car brands sells the most and the distribution
+ * of the majority people choose for the brand. We will use a line-area chart to demostrate
+ * this.*/
 export function mountChart2()
 { // registering this element to watch its size change
   console.log("Start mountChart2");
@@ -378,50 +381,102 @@ function Graph2_Detail()
     .attr("height", "100%")
     .attr("preserveAspectRatio", "xMidYMid meet")
     .append("g")
-    .attr("transform", `translate(${ width / 2 }, ${ height / 2 })`);
+    .attr("transform", `translate(${ margin.left }, ${ margin.top })`);
 
   // Group data by car maker and count the number of cars for each maker
   const carMakerCount = d3.rollup(column_from_csv, v => v.length, d => d.make);
 
-  // Convert the Map to an array for pie chart
+  // Convert the Map to an array for line-area chart
   const data = Array.from(carMakerCount, ([make, count]) => ({ make, count }));
 
-  // Set up SVG dimensions
-  const radius = Math.min(width, height) / 2;
+  // Set up our X-axis scale for the brand of the car makers
+  const x = d3.scaleBand()
+    .domain(data.map(d => d.make))
+    .range([0, width])
+    .padding(0.1);
+
+  // Set up our Y-axis scale for the count of car that those maker sells, setting the upper bound to the biggest count
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.count)])
+    .nice()
+    .range([height, 0]);
+
+  // Set up the color that will be using. We trying to avoid too bright color to increase readability.
   const color = d3.scaleOrdinal()
     .domain(data.map(d => d.make))
-    .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1),
-      data.length).reverse());
+    .range(d3.quantize(t => d3.hsl(
+      t * 360,
+      0.55,
+      0.5 + t * 0.25
+    ).formatHex(), data.length));
 
-  // Create the pie layout
-  const pie = d3.pie()
-    .value(d => d.count)
-    .sort(null);
+  // Draw the line-area chart, X axis is the brand of the car maker, Y axis is the count of the car that the maker sells
+  chartContainer_graph2.append("path")
+    .datum(data)
+    .attr("fill", "none")
+    .attr("stroke", "steelblue")
+    .attr("stroke-width", 1.5)
+    .attr("d", d3.line()
+      .x(d => x(d.make) + x.bandwidth() / 2)
+      .y(d => y(d.count))
+    );
 
-  // Create the arc generator
-  const arc = d3.arc()
-    .innerRadius(0)
-    .outerRadius(radius);
+  chartContainer_graph2.append("path")
+    .datum(data)
+    .attr("fill", "steelblue")
+    .attr("fill-opacity", 0.3)
+    .attr("stroke", "none")
+    .attr("d", d3.area()
+      .x(d => x(d.make) + x.bandwidth() / 2)
+      .y0(y(0))
+      .y1(d => y(d.count))
+    );
 
-  // Bind data and create pie chart slices
-  const arcs = chartContainer_graph2.selectAll(".arc")
-    .data(pie(data))
+  // Labeling
+  const xAxis = g => g.attr("transform", `translate(0,${ height })`)
+    .call(d3.axisBottom(x));
+
+  // initialize the location of the Y-axis
+  const yAxis = g => g.call(d3.axisLeft(y));
+
+  //Add a label for each line
+  chartContainer_graph2.selectAll(".label")
+    .data(data)
     .enter()
-    .append("g")
-    .attr("class", "arc");
+    .append("text")
+    .attr("class", "label")
+    .attr("x", d => x(d.make) + x.bandwidth() / 2)
+    .attr("y", d => y(d.count) - 5)
+    .attr("text-anchor", "middle")
+    .text(d => d.make)
+    .attr("fill", d => color(d.make))
+    .attr("font-size", "13px");
 
-  arcs.append("path")
-    .attr("d", arc)
-    .attr("fill", d => color(d.data.make));
+  // append each to the svg so they will be rendered
+  chartContainer_graph2.append("g")
+    .call(xAxis)
+    // x-axis label
+    .call(g =>
+      g.select(".tick:last-of-type text").clone()
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", margin.bottom - 10)
+        .attr("font-weight", "bold")
+        .text("Brand")
+    );
 
-
-  // Add inside legend to show the number of cars sold for each car maker
-  arcs.append("text")
-    .attr("transform", d => `translate(${ arc.centroid(d) })`)
-    .attr("dy", "0.35em")
-    .text(d => d.data.count)
-    .style("text-anchor", "middle");
-
+  chartContainer_graph2.append("g")
+    .call(yAxis)
+    // y-axis label
+    .call(g =>
+      g.select(".tick:last-of-type text").clone()
+        .attr("transform", `rotate(-90)`)
+        .attr("text-anchor", "middle")
+        .attr("x", -height / 2)
+        .attr("y", -margin.left + 20)
+        .attr("font-weight", "bold")
+        .text("Number of Cars Sold")
+    );
 }
 
 

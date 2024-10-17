@@ -23,31 +23,22 @@ let size = { width: 0, height: 0 };
  *
  * The function also logs a message to the console indicating which graph has been redrawn.
  */
-const onResize = (targets) =>
-{
-  targets.forEach(target =>
-  {
-    // Check if the target is the graph container
+const onResize = (targets) => {
+  targets.forEach(target => {
     const targetId = target.target.getAttribute('id');
-    if (targetId !== 'parallel-coordinates-container-graph1' && targetId !== 'pie-container-graph2' && targetId !== 'bar-container-graph3') return;
+    if (!['parallel-coordinates-container-graph1', 'pie-container-graph2', 'bar-container-graph3'].includes(targetId)) return;
+
     size = { width: target.contentRect.width, height: target.contentRect.height };
-    if (!isEmpty(size) && !isEmpty(column_from_csv))
-    {
-      // Remove the existing graph and redraw it
-      if (targetId === 'parallel-coordinates-container-graph1')
-      {
-        d3.select('#Graph1').selectAll('*').remove();
-        Graph1_Overall();
-      } else if (targetId === 'pie-container-graph2')
-      {
-        d3.select('#Graph2').selectAll('*').remove();
-        Graph2_Detail();
-      } else if (targetId === 'bar-container-graph3')
-      {
-        d3.select('#Graph3').selectAll('*').remove();
-        Graph3_Detail();
-      }
-    }
+    if (isEmpty(size) || isEmpty(column_from_csv)) return;
+
+    const graphMap = {
+      'parallel-coordinates-container-graph1': { selector: '#Graph1', redraw: Graph1_Overall },
+      'pie-container-graph2': { selector: '#Graph2', redraw: Graph2_Detail },
+      'bar-container-graph3': { selector: '#Graph3', redraw: Graph3_Detail }
+    };
+
+    d3.select(graphMap[targetId].selector).selectAll('*').remove();
+    graphMap[targetId].redraw();
   });
 };
 
@@ -160,7 +151,6 @@ function graph1_data_cleaning()
     }
     return steps[steps.length - 1] + 5000;  // Handle values greater than the last step
   };
-
   const yearRanges = [
     { start: 1980, end: 1985, label: '1980-1985' },
     { start: 1986, end: 1990, label: '1986-1990' },
@@ -183,6 +173,13 @@ function graph1_data_cleaning()
     return 'Unknown';
   };
 
+  const categorizeBody = (body) =>
+  {
+    const bodyLower = body.toLowerCase();
+    const categories = ['coupe', 'koup', 'sedan', 'suv', 'minivan', 'truck', 'van', 'wagon', 'hatchback', 'convertible', 'roadster', 'cab'];
+    return categories.find(category => bodyLower.includes(category)) || bodyLower;
+  };
+
   // Use a Set to track unique combinations of year, make, model, and body
   const uniqueEntries = new Set();
 
@@ -190,7 +187,7 @@ function graph1_data_cleaning()
   {
     const year = categorizeYear(d.year);
     const make = d.make.toLowerCase();
-    const body = d.body.toLowerCase();
+    const body = categorizeBody(d.body);
     const uniqueKey = `${ year }-${ make }-${ body }`;
     if (!uniqueEntries.has(uniqueKey))
     {
@@ -240,24 +237,12 @@ function Graph1_Overall()
   const dimensions = ['year', 'make', 'body', 'odometer', 'price'];
 
   // Defined the color that the line will be colored based on the make
+  const colorScale = d3.scaleOrdinal()
+    .domain(['1980-1985', '1986-1990', '1991-1995', '1996-2000', '2001-2005', '2006-2010', '2011-2015'])
+    .range(['#ff0000', '#ff8c00', '#ffd700', '#32cd32', '#00008b', '#8a2be2', '#ffb700']);
+
   function getColor(year) {
-    if (year === '1980-1985') {
-      return '#ff0000'; // vivid red for 1980-1985
-    } else if (year === '1986-1990') {
-      return '#ff8c00'; // vivid orange for 1986-1990
-    } else if (year === '1991-1995') {
-      return '#ffd700'; // vivid yellow for 1991-1995
-    } else if (year === '1996-2000') {
-      return '#32cd32'; // vivid green for 1996-2000
-    } else if (year === '2001-2005') {
-      return '#00008b'; // dark blue for 2001-2005
-    } else if (year === '2006-2010') {
-      return '#8a2be2'; // vivid purple for 2006-2010
-    } else if (year === '2011-2015') {
-      return '#ff1493'; // vivid pink for 2011-2015
-    } else {
-      return '#000000'; // black for unknown or other years
-    }
+    return colorScale(year) || '#000000'; // default to black for unknown or other years
   }
   const yScales = {};
   // Now we need to define the scales for each dimension. Linear scale for numeric data like 'odometer', 'price'
@@ -276,7 +261,6 @@ function Graph1_Overall()
       .range([height - margin.bottom, margin.top])
       .padding(0.1);
   });
-  console.log("Y Scales defined for graph 1");
 
   // Create the X axis, that's the distance between the vertical lines, the data will connect between the lines
   const xScale = d3.scalePoint()
@@ -293,7 +277,8 @@ function Graph1_Overall()
     .each(function (d)
     {
       d3.select(this).call(d3.axisLeft().scale(yScales[d]));
-    });
+    })
+
 
   // Connect the vertical lines with the data. (i.e. connect from year, to make, to model, to body, to
   // odometer, to price)
@@ -320,7 +305,9 @@ function Graph1_Overall()
     .attr("d", path)
     .style("fill", "none")
     .style("stroke", d => getColor(d.year))
-    .style("opacity", 0.5);
+    .style("opacity", 0.5)
+    .style("stroke-width", 1.5);
+
 
   // Make lables for each vertical line (i.e. year, make, model, body, odometer, price)
   chartContainer_graph1.selectAll("dimension_labels")
@@ -429,23 +416,12 @@ function Graph3_Detail()
   const height = size.height - margin.top - margin.bottom;
 
   // Define color for the bars
-  function getColor(index)
-  {
-    if (index < 10000)
-    {
-      return '#ff0000'; // red for 10000
-    } else if (index < 50000)
-    {
-      return '#ffb700'; // orange for 50000
-    }
-    else if (index < 100000)
-    {
-      return '#d0ff00'; // Yellow for 100000
-    }
-    else
-    {
-      return '#0fd971'; // Green for 100000 and above
-    }
+  const colorScale = d3.scaleThreshold()
+    .domain([10000, 50000, 100000])
+    .range(['#ff0000', '#ffb700', '#d0ff00', '#0fd971']);
+
+  function getColor(index) {
+    return colorScale(index);
   }
   // Create the SVG element
   const svg = chartContainer_graph3

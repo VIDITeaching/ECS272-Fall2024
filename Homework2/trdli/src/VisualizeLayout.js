@@ -445,11 +445,6 @@ function Graph2_Detail()
   {
     return colorScale(make) || '#000000'; // default to black for unknown or other years
   }
-    .range(d3.quantize(t => d3.hsl(
-    t * 360,
-    0.55,
-    0.5 + t * 0.25
-  ).formatHex(), data.length));
 
   // Create the pie layout
   const pie = d3.pie()

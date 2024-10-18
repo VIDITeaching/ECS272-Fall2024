@@ -358,15 +358,32 @@ function Graph1_Overall()
 }
 
 
-/** For this graph, we would like to see which car brands sells the most and the distribution
- * of the majority people choose for the brand. We will use a line-area chart to demostrate
- * this.*/
 export function mountChart2()
 { // registering this element to watch its size change
   console.log("Start mountChart2");
   let Graph2Container = document.querySelector('#pie-container-graph2');
   chartObserver.observe(Graph2Container);
 }
+
+function Graph2_data_cleaning()
+{
+  return column_from_csv.map(d =>
+  {
+    const make = d.make.toLowerCase();
+    const luxuryBrands = ['ferrari', 'rolls-royce', 'fisker', 'tesla', 'lamborghini',
+      'bentley', 'porsche', 'bmw', 'mercedes-benz', 'jaguar', 'land rover', 'maserati',
+      'alfa romeo', 'fiat', 'smart', 'hummer', 'lotus', 'aston martin'];
+    if (!luxuryBrands.includes(make))
+    {
+      return {
+        make: make,
+      };
+    }
+    return null;
+  }).filter(d => d !== null);  // Filter out null entries
+}
+
+
 
 /**
  * For this chart, we would like to see the distribution of car makers based on the number
@@ -385,14 +402,22 @@ function Graph2_Detail()
     .attr("height", "100%")
     .attr("preserveAspectRatio", "xMidYMid meet")
     .append("g")
-    .attr("transform", `translate(${ margin.left }, ${ margin.top })`);
+    .attr("transform", `translate(${ width / 2 }, ${ height / 2 })`);
 
-  // Group data by car maker and count the number of cars for each maker
-  const carMakerCount = d3.rollup(column_from_csv, v => v.length, d => d.make);
-
-  // Convert the Map to an array for line-area chart
+  const carMakerCount_preprocess = Graph2_data_cleaning();
+  const carMakerCount = d3.rollup(carMakerCount_preprocess, v => v.length, d => d.make);
+  // Convert the Map to an array for pie chart
   const data = Array.from(carMakerCount, ([make, count]) => ({ make, count }));
+  // Calculate the total count and filter out small slices
+  const total = d3.sum(data, d => d.count);
+  const filteredData = data.filter(d => (d.count / total) * 100 >= 1.5);
+  const otherCount = total - d3.sum(filteredData, d => d.count);
 
+  // Set up SVG dimensions
+  const radius = Math.min(width, height) / 3;
+
+  // Set up the color for each car maker
+  const colorScale = d3.scaleOrdinal();
   // Set up our X-axis scale for the brand of the car makers
   const x = d3.scaleBand()
     .domain(data.map(d => d.make))
@@ -408,79 +433,114 @@ function Graph2_Detail()
   // Set up the color that will be using. We trying to avoid too bright color to increase readability.
   const color = d3.scaleOrdinal()
     .domain(data.map(d => d.make))
+    .range([
+      '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0',
+      '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8',
+      '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff',
+      '#000000', '#ffe4e1', '#d2691e', '#6495ed', '#ff1493', '#daa520', '#adff2f',
+      '#ff6347', '#40e0d0', '#ee82ee', '#ffdead'
+    ]);
+
+  function getColor(make)
+  {
+    return colorScale(make) || '#000000'; // default to black for unknown or other years
+  }
     .range(d3.quantize(t => d3.hsl(
-      t * 360,
-      0.55,
-      0.5 + t * 0.25
-    ).formatHex(), data.length));
+    t * 360,
+    0.55,
+    0.5 + t * 0.25
+  ).formatHex(), data.length));
 
-  // Draw the line-area chart, X axis is the brand of the car maker, Y axis is the count of the car that the maker sells
-  chartContainer_graph2.append("path")
-    .datum(data)
-    .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-width", 1.5)
-    .attr("d", d3.line()
-      .x(d => x(d.make) + x.bandwidth() / 2)
-      .y(d => y(d.count))
-    );
+  // Create the pie layout
+  const pie = d3.pie()
+    .value(d => d.count);
 
-  chartContainer_graph2.append("path")
-    .datum(data)
-    .attr("fill", "steelblue")
-    .attr("fill-opacity", 0.3)
-    .attr("stroke", "none")
-    .attr("d", d3.area()
-      .x(d => x(d.make) + x.bandwidth() / 2)
-      .y0(y(0))
-      .y1(d => y(d.count))
-    );
+  // Create the arc generator
+  const arc = d3.arc()
+    .innerRadius(0)
+    .outerRadius(radius);
 
-  // Labeling
-  const xAxis = g => g.attr("transform", `translate(0,${ height })`)
-    .call(d3.axisBottom(x));
+  // Bind data and create pie chart slices
+  const arcs = chartContainer_graph2.selectAll(".arc")
+    .data(pie(filteredData))
+    .enter()
+    .append("g")
+    .attr("class", "arc");
 
-  // initialize the location of the Y-axis
-  const yAxis = g => g.call(d3.axisLeft(y));
+  arcs.append("path")
+    .attr("d", arc)
+    .attr("fill", d => getColor(d.data.make));
+  // Create the arc for the labels
+  // Define a minimum percentage to display the label, otherwise it will be ignored
+  const minPercentageToShow = 2.5; // You can adjust this value
 
-  //Add a label for each line
-  chartContainer_graph2.selectAll(".label")
-    .data(data)
+  // Create the arc for the labels
+  const outerArc = d3.arc()
+    .outerRadius(radius * 1.2)
+    .innerRadius(radius * 1.2);
+
+  if (otherCount > 0)
+  {
+    filteredData.push({ make: 'Other', count: otherCount });
+  }
+
+  // Create text labels outside the pie
+  chartContainer_graph2.selectAll("text")
+    .data(pie(filteredData))
     .enter()
     .append("text")
-    .attr("class", "label")
-    .attr("x", d => x(d.make) + x.bandwidth() / 2)
-    .attr("y", d => y(d.count) - 5)
-    .attr("text-anchor", "middle")
-    .text(d => d.make)
-    .attr("fill", d => color(d.make))
-    .attr("font-size", "13px");
+    .attr("transform", function (d)
+    {
+      const percentage = (d.data.count / total * 100).toFixed(2);
+      if (percentage < minPercentageToShow) return null; // Skip small slices
 
-  // append each to the svg so they will be rendered
-  chartContainer_graph2.append("g")
-    .call(xAxis)
-    // x-axis label
-    .call(g =>
-      g.select(".tick:last-of-type text").clone()
-        .attr("text-anchor", "middle")
-        .attr("x", width / 2)
-        .attr("y", margin.bottom - 10)
-        .attr("font-weight", "bold")
-        .text("Brand")
-    );
+      const pos = outerArc.centroid(d);
+      const mid = midAngle(d);
+      pos[0] = radius * (mid < Math.PI ? 1.3 : -1.3); // Adjust for left/right
+      return `translate(${ pos })`;
+    })
+    .attr("text-anchor", function (d)
+    {
+      const percentage = (d.data.count / total * 100).toFixed(2);
+      return percentage < minPercentageToShow ? null : (midAngle(d) < Math.PI ? "start" : "end");
+    })
+    .text(d =>
+    {
+      const percentage = (d.data.count / total * 100).toFixed(2);
+      return percentage >= minPercentageToShow ? `${ d.data.make }: (${ percentage }%)` : ''; // Hide small labels
+    });
 
-  chartContainer_graph2.append("g")
-    .call(yAxis)
-    // y-axis label
-    .call(g =>
-      g.select(".tick:last-of-type text").clone()
-        .attr("transform", `rotate(-90)`)
-        .attr("text-anchor", "middle")
-        .attr("x", -height / 2)
-        .attr("y", -margin.left + 20)
-        .attr("font-weight", "bold")
-        .text("Number of Cars Sold")
-    );
+  // Create the lines connecting slices to labels
+  chartContainer_graph2.selectAll("polyline")
+    .data(pie(filteredData))
+    .enter()
+    .append("polyline")
+    .attr("points", function (d)
+    {
+      const percentage = (d.data.count / total * 100).toFixed(2);
+      if (percentage < minPercentageToShow) return null; // Skip small slices
+
+      const pos = outerArc.centroid(d);
+      const mid = midAngle(d);
+      const outerPos = pos.slice();
+      outerPos[0] = radius * (mid < Math.PI ? 1.3 : -1.3); // Position of label
+
+      // Create smooth lines with 3 points
+      return [arc.centroid(d), outerArc.centroid(d), outerPos];
+    })
+    .style("fill", "none")
+    .style("stroke", function (d)
+    {
+      const percentage = (d.data.count / total * 100).toFixed(2);
+      return percentage >= minPercentageToShow ? "black" : "none"; // Hide lines for small slices
+    });
+
+  // MidAngle function for determining side of the pie
+  function midAngle(d)
+  {
+    return d.startAngle + (d.endAngle - d.startAngle) / 2;
+  }
+
 }
 
 

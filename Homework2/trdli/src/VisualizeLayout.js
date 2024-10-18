@@ -71,7 +71,7 @@ export const Graph1_OverallView = () => (
  */
 export const Graph2_DetailView = () => (
   `<div id='pie-container-graph2'>
-        <svg id='Graph2'></svg>
+        <svg id='Graph2'>Graph 2 - Percentage of each car brand sell situation</svg>
     </div>
     `
 );
@@ -517,6 +517,7 @@ function Graph2_Detail()
   {
     return d.startAngle + (d.endAngle - d.startAngle) / 2;
   }
+
 }
 
 
@@ -605,5 +606,28 @@ function Graph3_Detail()
     .attr("font-size", "12px")
     .attr("fill", "black")
     .text(d => d.count);
+
+
+  // Add the X axis label
+  svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", height + margin.top + 20)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "12px")
+    .attr("fill", "black")
+    .text("Year")
+    .style("font-weight", "bold");
+
+  // Add the Y axis label
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -height / 2)
+    .attr("y", -margin.left)
+    .attr("dy", "1em")
+    .text("Number of car sold")
+    .attr("text-anchor", "middle")
+    .attr("font-size", "12px")
+    .attr("fill", "black")
+    .style("font-weight", "bold");
 
 }

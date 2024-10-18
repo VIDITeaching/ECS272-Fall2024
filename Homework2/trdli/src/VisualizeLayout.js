@@ -415,9 +415,6 @@ function Graph2_Detail()
 
   // Set up SVG dimensions
   const radius = Math.min(width, height) / 3;
-
-  // Set up the color for each car maker
-  const colorScale = d3.scaleOrdinal();
   // Set up our X-axis scale for the brand of the car makers
   const x = d3.scaleBand()
     .domain(data.map(d => d.make))
@@ -443,7 +440,7 @@ function Graph2_Detail()
 
   function getColor(make)
   {
-    return colorScale(make) || '#000000'; // default to black for unknown or other years
+    return color(make) || '#000000'; // default to black for unknown or other years
   }
 
   // Create the pie layout

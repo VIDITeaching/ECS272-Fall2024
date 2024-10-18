@@ -404,44 +404,36 @@ function Graph2_Detail()
     .append("g")
     .attr("transform", `translate(${ width / 2 }, ${ height / 2 })`);
 
-  const carMakerCount_preprocess = Graph2_data_cleaning();
-  const carMakerCount = d3.rollup(carMakerCount_preprocess, v => v.length, d => d.make);
+  // Data preprocessing, group the data by car maker and count the number of cars sold
+  const carMakerCount = d3.rollup(Graph2_data_cleaning(), v => v.length, d => d.make);
   // Convert the Map to an array for pie chart
   const data = Array.from(carMakerCount, ([make, count]) => ({ make, count }));
-  // Calculate the total count and filter out small slices
-  const total = d3.sum(data, d => d.count);
-  const filteredData = data.filter(d => (d.count / total) * 100 >= 1.5);
-  const otherCount = total - d3.sum(filteredData, d => d.count);
+
+  // Merge the low percentage makers (percentage < 3) into 'Other'
+  let total = d3.sum(data, d => d.count);
+  let otherCount = 0;
+  const filteredData = data.filter(d =>
+  {
+    if (d.count / total * 100 < 2.5)
+    {
+      otherCount += d.count;
+      return false;
+    }
+    return true;
+  });
+
+  if (otherCount > 0)
+  {
+    filteredData.push({ make: 'Other', count: otherCount });
+  }
 
   // Set up SVG dimensions
   const radius = Math.min(width, height) / 3;
-  // Set up our X-axis scale for the brand of the car makers
-  const x = d3.scaleBand()
-    .domain(data.map(d => d.make))
-    .range([0, width])
-    .padding(0.1);
 
-  // Set up our Y-axis scale for the count of car that those maker sells, setting the upper bound to the biggest count
-  const y = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.count)])
-    .nice()
-    .range([height, 0]);
-
-  // Set up the color that will be using. We trying to avoid too bright color to increase readability.
+  // Set up the color scale
   const color = d3.scaleOrdinal()
-    .domain(data.map(d => d.make))
-    .range([
-      '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0',
-      '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8',
-      '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff',
-      '#000000', '#ffe4e1', '#d2691e', '#6495ed', '#ff1493', '#daa520', '#adff2f',
-      '#ff6347', '#40e0d0', '#ee82ee', '#ffdead'
-    ]);
-
-  function getColor(make)
-  {
-    return color(make) || '#000000'; // default to black for unknown or other years
-  }
+    .domain(filteredData.map(d => d.make))
+    .range(d3.schemeCategory10);
 
   // Create the pie layout
   const pie = d3.pie()
@@ -461,20 +453,12 @@ function Graph2_Detail()
 
   arcs.append("path")
     .attr("d", arc)
-    .attr("fill", d => getColor(d.data.make));
-  // Create the arc for the labels
-  // Define a minimum percentage to display the label, otherwise it will be ignored
-  const minPercentageToShow = 2.5; // You can adjust this value
+    .attr("fill", d => color(d.data.make));
 
   // Create the arc for the labels
   const outerArc = d3.arc()
     .outerRadius(radius * 1.2)
     .innerRadius(radius * 1.2);
-
-  if (otherCount > 0)
-  {
-    filteredData.push({ make: 'Other', count: otherCount });
-  }
 
   // Create text labels outside the pie
   chartContainer_graph2.selectAll("text")
@@ -483,24 +467,28 @@ function Graph2_Detail()
     .append("text")
     .attr("transform", function (d)
     {
-      const percentage = (d.data.count / total * 100).toFixed(2);
-      if (percentage < minPercentageToShow) return null; // Skip small slices
-
       const pos = outerArc.centroid(d);
       const mid = midAngle(d);
       pos[0] = radius * (mid < Math.PI ? 1.3 : -1.3); // Adjust for left/right
+
+      // Adjust 'volkswagen' label manually
+      if (d.data.make === "volkswagen")
+      {
+        pos[1] -= 10;  // Move up by 10 units
+      }
+
       return `translate(${ pos })`;
     })
     .attr("text-anchor", function (d)
     {
-      const percentage = (d.data.count / total * 100).toFixed(2);
-      return percentage < minPercentageToShow ? null : (midAngle(d) < Math.PI ? "start" : "end");
+      return (midAngle(d) < Math.PI ? "start" : "end");
     })
     .text(d =>
     {
-      const percentage = (d.data.count / total * 100).toFixed(2);
-      return percentage >= minPercentageToShow ? `${ d.data.make }: (${ percentage }%)` : ''; // Hide small labels
+      const percentage = ((d.data.count / total) * 100).toFixed(2);
+      return `${ d.data.make } (${ percentage }%)`;
     });
+
 
   // Create the lines connecting slices to labels
   chartContainer_graph2.selectAll("polyline")
@@ -509,23 +497,21 @@ function Graph2_Detail()
     .append("polyline")
     .attr("points", function (d)
     {
-      const percentage = (d.data.count / total * 100).toFixed(2);
-      if (percentage < minPercentageToShow) return null; // Skip small slices
-
       const pos = outerArc.centroid(d);
       const mid = midAngle(d);
       const outerPos = pos.slice();
       outerPos[0] = radius * (mid < Math.PI ? 1.3 : -1.3); // Position of label
 
-      // Create smooth lines with 3 points
+      // Adjust 'volkswagen' polyline position manually
+      if (d.data.make === "volkswagen")
+      {
+        outerPos[1] -= 10;  // Move line connection up by 10 units
+      }
+
       return [arc.centroid(d), outerArc.centroid(d), outerPos];
     })
     .style("fill", "none")
-    .style("stroke", function (d)
-    {
-      const percentage = (d.data.count / total * 100).toFixed(2);
-      return percentage >= minPercentageToShow ? "black" : "none"; // Hide lines for small slices
-    });
+    .style("stroke", "black");
 
   // MidAngle function for determining side of the pie
   function midAngle(d)

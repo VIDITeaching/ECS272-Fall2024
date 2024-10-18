@@ -3,30 +3,14 @@ import { isEmpty, debounce } from 'lodash';
 
 let size = { width: 0, height: 0 };
 /**
- * @brief Handles the resizing of graph containers and redraws the graphs accordingly.
+ * Handles the resize event for specified target elements and redraws the corresponding graphs.
  *
- * @function onResize
- * @param {Array} targets - An array of ResizeObserverEntry objects representing the
- * elements being resized.
+ * @param {Array} targets - An array of ResizeObserverEntry objects representing the elements being resized.
+ * @param {ResizeObserverEntry} targets[].target - The target element being resized.
+ * @param {DOMRectReadOnly} targets[].contentRect - The new size of the target element.
  *
- * This function iterates over the provided targets and checks if the target is one of the
- * graph containers.
- * If the target is a graph container, it updates the size and redraws the corresponding
- * graph.
- *
- * The function specifically handles three graph containers with IDs:
- * - 'parallel-coordinates-container-graph1'
- * - 'pie-container-graph2'
- * - 'bar-container-graph3'
- *
- * For each of these containers, it removes the existing graph elements and calls the
- * appropriate function to redraw the graph:
- * - Graph1_Overall() for 'parallel-coordinates-container-graph1'
- * - Graph2_Detail() for 'pie-container-graph2'
- * - Graph3_Detail() for 'bar-container-graph3'
- *
- * The function also logs a message to the console indicating which graph has been
- * redrawn.
+ * The function checks if the resized element's ID matches one of the predefined graph container IDs.
+ * If it matches, it updates the size and redraws the corresponding graph using D3.js.
  */
 const onResize = (targets) =>
 {
@@ -122,26 +106,24 @@ need to cleanup our data first.*/
  * @returns {void}
  */
 export function mountChart1()
-{ // registering this element to watch its size change
-  console.log("Start mountChart1");
+{
   let Graph1Container = document.querySelector('#parallel-coordinates-container-graph1');
   chartObserver.observe(Graph1Container);
 }
 
 /**
- * @brief Cleans and processes data for graph1 visualization.
+ * @brief Cleans and categorizes data for graph1 visualization.
  *
- * This function processes a CSV column data and maps it to a new format
- * with cleaned and categorized values for odometer and price.
+ * This function processes the input data by categorizing years, makes, and body types,
+ * and filtering out luxury brands and entries with a price of 0. It also converts
+ * odometer and price values into specified numeric ranges.
  *
- * @returns {Array<Object>} An array of objects with cleaned data.
- * Each object contains the following properties:
- * - year: {number} The year of the vehicle.
- * - make: {string} The make of the vehicle.
- * - model: {string} The model of the vehicle.
- * - body: {string} The body type of the vehicle.
- * - odometer: {number} The categorized odometer reading.
- * - price: {number} The categorized price.
+ * @function graph1_data_cleaning
+ * @returns {Array<Object>} An array of cleaned and categorized data objects.
+ *
+ * @example
+ * const cleanedData = graph1_data_cleaning();
+ * console.log(cleanedData);
  */
 function graph1_data_cleaning()
 {
@@ -238,12 +220,7 @@ function graph1_data_cleaning()
   }).filter(d => d !== null);  // Filter out null entries
 }
 
-// Consider getting rid of the model, and using the averge
-
-
-let afterCleanData_Graph1 = graph1_data_cleaning();
-console.log("Data cleaned and loaded for Graph 1, start drawing the chart.");
-
+const afterCleanData_Graph1 = graph1_data_cleaning();
 /**
  * @brief Draws the overall view for Graph1 (Parallel Coordinates Chart).
  * @function Graph1_Overall
@@ -279,7 +256,6 @@ function Graph1_Overall()
   }
   const yScales = {};
   // Now we need to define the scales for each dimension. Linear scale for numeric data
-  // like 'odometer', 'price'
   ['odometer', 'price'].forEach(dimensions =>
   {
     const numeric_value = d3.extent(afterCleanData_Graph1, d => d[dimensions]);
@@ -302,20 +278,24 @@ function Graph1_Overall()
     .range([margin.left, width - margin.right])
     .domain(dimensions)
     .padding(0.2);
-  console.log("X Scale defined for graph 1");
 
-  // Connect the vertical lines with the data. (i.e. connect from year, to make, to model,
-  // to body, to odometer, to price)
+
+  /**
+   * @brief The function `path` checks if all dimensions of a data point are valid and returns
+   * the path if they are.
+   * @param d - The `d` parameter in the `path` function represents a data point that contains
+   * values for different dimensions. The function checks if the data point is valid for all
+   * dimensions before returning a path based on the data values.
+   * @returns The function `path(d)` will return a path if all dimensions are valid, otherwise
+   * it will return `null`. The path is generated using D3's line generator and is based on
+   * the data point `d` provided as input.
+   */
   function path(d)
   {
     // Check if any dimension returns NaN for this data point
     const valid = dimensions.every(p =>
     {
       const scaledValue = yScales[p](d[p]);
-      if (isNaN(scaledValue))
-      {
-        console.error(`Invalid value for ${ p }:`, d[p]);
-      }
       return !isNaN(scaledValue);
     });
     // Only return path if all dimensions are valid
@@ -358,14 +338,24 @@ function Graph1_Overall()
     .style("font-weight", "bold");
 }
 
-
+/** For this chart, we want to see how many cars were being sold for each car makers, we
+ * especially care for the non-luxury brands and more consider for the family use. So it has
+ * to be a selection for the majority. We will use a pie chart to demonstrate this by
+ * showing the percentage of each car brand sell situation.*/
 export function mountChart2()
-{ // registering this element to watch its size change
-  console.log("Start mountChart2");
+{
   let Graph2Container = document.querySelector('#pie-container-graph2');
   chartObserver.observe(Graph2Container);
 }
 
+/**
+ * @brief The function `Graph2_data_cleaning` filters out non-luxury car brands from a
+ * dataset based on a predefined list of luxury brands.
+ * @returns The function `Graph2_data_cleaning()` is returning an array of objects where
+ * each object contains the `make` property from the `column_from_csv` array after
+ * converting it to lowercase. The function filters out any entries that do not belong to
+ * the luxury car brands listed in the `luxuryBrands` array.
+ */
 function Graph2_data_cleaning()
 {
   return column_from_csv.map(d =>
@@ -384,11 +374,11 @@ function Graph2_data_cleaning()
   }).filter(d => d !== null);  // Filter out null entries
 }
 
-
-
 /**
- * For this chart, we would like to see the distribution of car makers based on the number
- * of cars sold. We will use a pie chart to demonstrate this.
+ * @brief The function `Graph2_Detail` creates a pie chart based on car maker data, grouping
+ * low percentage makers into 'Other' and displaying labels and lines connecting slices.
+ * @returns The `Graph2_Detail` function is setting up a pie chart visualization based on
+ * car maker data.
  */
 function Graph2_Detail()
 {
@@ -428,7 +418,7 @@ function Graph2_Detail()
     filteredData.push({ make: 'Other', count: otherCount });
   }
 
-  // Set up SVG dimensions
+  // Config the size of the pie
   const radius = Math.min(width, height) / 3;
 
   // Set up the color scale
@@ -475,7 +465,7 @@ function Graph2_Detail()
       // Adjust 'volkswagen' label manually
       if (d.data.make === "volkswagen")
       {
-        pos[1] -= 10;  // Move up by 10 units
+        pos[1] -= 20;  // Move up by 20 units
       }
 
       return `translate(${ pos })`;
@@ -489,7 +479,6 @@ function Graph2_Detail()
       const percentage = ((d.data.count / total) * 100).toFixed(2);
       return `${ d.data.make } (${ percentage }%)`;
     });
-
 
   // Create the lines connecting slices to labels
   chartContainer_graph2.selectAll("polyline")
@@ -505,7 +494,7 @@ function Graph2_Detail()
       // Adjust 'volkswagen' polyline position manually other wise it would collide
       if (d.data.make === "volkswagen")
       {
-        outerPos[1] -= 10;  // Move line connection up by 10 units
+        outerPos[1] -= 20;  // Move line connection up by 20 units
       }
       return [arc.centroid(d), outerArc.centroid(d), outerPos];
     })
@@ -526,26 +515,32 @@ function Graph2_Detail()
  * years. To be more specific, we would like to see how many cars were sold in each year.
  * We will use a bar chart to demostrate this */
 export function mountChart3()
-{ // registering this element to watch its size change
-  console.log("Start mountChart3");
+{
   let Graph3Container = document.querySelector('#bar-container-graph3');
   chartObserver.observe(Graph3Container);
 }
 
+/**
+ * @brief The function `Graph3_Detail` creates a bar chart using D3.js to visualize the
+ * number of cars sold per year.
+ */
 function Graph3_Detail()
 {
-  let chartContainer_graph3 = d3.select('#Graph3');
-  // Group data by year and count the number of cars for each year
-  const carYearCount = d3.rollup(column_from_csv, v => v.length, d => d.year);
-
-  // Convert the Map to an array for bar chart
-  const data = Array.from(carYearCount, ([year, count]) => ({ year, count }));
-
   // Set up SVG dimensions
   const margin = { top: 10, right: 10, bottom: 30, left: 60 };
   const width = size.width - margin.left - margin.right;
   const height = size.height - margin.top - margin.bottom;
 
+  let chartContainer_graph3 = d3.select('#Graph3')
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .append("g")
+    .attr("transform", `translate(${ margin.left }, ${ margin.top })`);
+  // Group data by year and count the number of cars for each year
+  const carYearCount = d3.rollup(column_from_csv, v => v.length, d => d.year);
+  // Convert the Map to an array for bar chart
+  const data = Array.from(carYearCount, ([year, count]) => ({ year, count }));
   // Define color for the bars
   const colorScale = d3.scaleThreshold()
     .domain([10000, 50000, 100000])
@@ -555,14 +550,6 @@ function Graph3_Detail()
   {
     return colorScale(index);
   }
-  // Create the SVG element
-  const svg = chartContainer_graph3
-    .attr("width", "100%")
-    .attr("height", "100%")
-    .attr("preserveAspectRatio", "xMidYMid meet")
-    .append("g")
-    .attr("transform", `translate(${ margin.left }, ${ margin.top })`);
-
   // Create the X scale
   const xScale = d3.scaleBand()
     .domain(data.map(d => d.year))
@@ -576,16 +563,16 @@ function Graph3_Detail()
     .range([height, 0]);
 
   // Create the X axis
-  svg.append("g")
+  chartContainer_graph3.append("g")
     .attr("transform", `translate(0, ${ height })`)
     .call(d3.axisBottom(xScale));
 
   // Create the Y axis
-  svg.append("g")
+  chartContainer_graph3.append("g")
     .call(d3.axisLeft(yScale));
 
   // Create the bars
-  svg.selectAll("rect")
+  chartContainer_graph3.selectAll("rect")
     .data(data)
     .enter()
     .append("rect")
@@ -595,21 +582,8 @@ function Graph3_Detail()
     .attr("height", d => height - yScale(d.count))
     .attr("fill", d => getColor(d.count));
 
-  // Add number of cars labels on top of the bars
-  svg.selectAll("text")
-    .data(data)
-    .enter()
-    .append("text")
-    .attr("x", d => xScale(d.year) + xScale.bandwidth() / 2)
-    .attr("y", d => yScale(d.count) - 5) // Position the label above the bar
-    .attr("text-anchor", "middle")
-    .attr("font-size", "12px")
-    .attr("fill", "black")
-    .text(d => d.count);
-
-
   // Add the X axis label
-  svg.append("text")
+  chartContainer_graph3.append("text")
     .attr("x", width / 2)
     .attr("y", height + margin.top + 20)
     .attr("text-anchor", "middle")
@@ -619,7 +593,7 @@ function Graph3_Detail()
     .style("font-weight", "bold");
 
   // Add the Y axis label
-  svg.append("text")
+  chartContainer_graph3.append("text")
     .attr("transform", "rotate(-90)")
     .attr("x", -height / 2)
     .attr("y", -margin.left)

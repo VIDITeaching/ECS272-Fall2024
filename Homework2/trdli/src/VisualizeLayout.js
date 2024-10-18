@@ -72,7 +72,8 @@ export const Graph1_OverallView = () => (
 export const Graph2_DetailView = () => (
   `<div id='pie-container-graph2'>
         <svg id='Graph2'></svg>
-    </div>`
+    </div>
+    `
 );
 
 /**
@@ -501,13 +502,11 @@ function Graph2_Detail()
       const mid = midAngle(d);
       const outerPos = pos.slice();
       outerPos[0] = radius * (mid < Math.PI ? 1.3 : -1.3); // Position of label
-
-      // Adjust 'volkswagen' polyline position manually
+      // Adjust 'volkswagen' polyline position manually other wise it would collide
       if (d.data.make === "volkswagen")
       {
         outerPos[1] -= 10;  // Move line connection up by 10 units
       }
-
       return [arc.centroid(d), outerArc.centroid(d), outerPos];
     })
     .style("fill", "none")
@@ -518,7 +517,6 @@ function Graph2_Detail()
   {
     return d.startAngle + (d.endAngle - d.startAngle) / 2;
   }
-
 }
 
 

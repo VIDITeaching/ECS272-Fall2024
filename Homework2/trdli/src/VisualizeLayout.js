@@ -368,6 +368,10 @@ export function mountChart2()
   chartObserver.observe(Graph2Container);
 }
 
+/**
+ * For this chart, we would like to see the distribution of car makers based on the number
+ * of cars sold. We will use a pie chart to demonstrate this.
+ */
 function Graph2_Detail()
 {
   // Set up the margin for the chart

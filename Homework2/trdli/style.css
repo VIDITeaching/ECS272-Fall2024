@@ -1,23 +1,40 @@
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  background-color: #2c3e50;
+  background-image: url("./data/pic/Stairwell.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
-.Greeting_div, .footer {
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.Greeting_div, .grid-container > div, .footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #1c2938;
-  color: #718792;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  border-radius: 20px;
+  font-family: inherit;
+  background: rgba(255, 255, 255, .5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 20px 15px 15px #201e29;
+  border-radius: 15px;
+}
+
+.Greeting_div {
+  flex-direction: column;
   padding: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1e1e1e;
+  text-shadow: #201e29;
 }
 
 .MainBody {
@@ -30,19 +47,18 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
   gap: 10px;
-  background-color: #4a6572;
   padding: 20px;
   border-radius: 20px;
   height: 100%;
+  background-image: url("./data/pic/Stairwell.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .grid-container > div {
-  background-color: #718792;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-size: 1rem;
+  border-radius: 25px;
 }
 
 .row1 {
@@ -60,18 +76,7 @@
   grid-row: 2 / 3;
 }
 
-
-.Greeting_div {
-  flex-direction: column;
-}
-
-#parallel-coordinates-container-graph1 {
-  display: flex;
-  width: 100%;
-  height: 60vh;
-}
-
-#pie-container-graph2, #bar-container-graph3 {
+#parallel-coordinates-container-graph1, #pie-container-graph2, #bar-container-graph3 {
   display: flex;
   width: 100%;
   height: 60vh;
@@ -79,4 +84,29 @@
 
 .text-muted {
   color: #6c757d;
+}
+
+.footer {
+  font-size: 1rem;
+  border-radius: 10px;
+}
+
+li {
+  font-weight: bold;
+  color: #1e1e1e;
+}
+
+a:link, a:visited, a:hover, a:active {
+  text-decoration: none;
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 2s ease-in;
+  animation-fill-mode: forwards;
 }

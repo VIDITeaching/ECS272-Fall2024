@@ -1,5 +1,7 @@
+import React from 'react';
 import MentalHealthChart from './components/MentalHealthChart';
 import ScatterPlot from './components/ScatterPlot';
+import SankeyDiagram from './components/SankeyDiagram';
 
 const App: React.FC = () => {
   return (
@@ -32,6 +34,18 @@ const App: React.FC = () => {
           </p>
           <p>
             Hover over the points to see detailed information about each student.
+          </p>
+        </section>
+        <section className="chart-section">
+          <h2>Course to Year of Study to Mental Health Condition Flow</h2>
+          <SankeyDiagram />
+          <p>
+            This Sankey diagram visualizes the flow of students from their course to year of study
+            to their mental health condition (specifically, whether they have depression or not).
+            The width of each flow represents the number of students in that path.
+          </p>
+          <p>
+            Hover over the nodes and links to see more detailed information.
           </p>
         </section>
       </main>

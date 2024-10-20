@@ -41,3 +41,9 @@ svg {
   margin: 0 auto;
 }
 
+.chart-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  overflow-x: auto;
+}

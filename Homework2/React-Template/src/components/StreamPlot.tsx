@@ -14,11 +14,12 @@ interface StreamPlotProps {
 const StreamPlot: React.FC<StreamPlotProps> = ({ data }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [hoveredMake, setHoveredMake] = useState<string | null>(null);
+  const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
-    const margin = { top: 50, right: 30, bottom: 150, left: 100 };
+    const margin = { top: 50, right: 30, bottom: 50, left: 100 };
     const width = 900 - margin.left - margin.right;
-    const height = 500 - margin.top - margin.bottom;
+    const height = 800 - margin.top - margin.bottom;
 
     // Clear previous SVG content
     d3.select(svgRef.current).selectAll('*').remove();
@@ -30,10 +31,10 @@ const StreamPlot: React.FC<StreamPlotProps> = ({ data }) => {
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Filter data to remove negative prices
+    // Filter data to remove negative prices and clamp selling prices to 0
     const filteredData = data.map(d => ({
       ...d,
-      sellingprice: Math.max(0, d.sellingprice), // Ensure no negative selling prices
+      sellingprice: Math.max(0, d.sellingprice),
     }));
 
     // Prepare the data: group by year and make, summing the selling prices
@@ -51,14 +52,21 @@ const StreamPlot: React.FC<StreamPlotProps> = ({ data }) => {
     const stackedData = years.map(year => {
       const row: Record<string, number> = { year: +year };  // Convert year to number
       makes.forEach(make => {
-        row[make] = dataByMakeYear.get(year)?.get(make) || 0;
+        if (make != '') 
+          row[make] = dataByMakeYear.get(year)?.get(make) || 0;
       });
       return row;
     });
 
-    // X Scale (year) - start from min year, not 0
+    // Find the first year where there is some selling price > 0
+    const minYearWithPrice = d3.min(
+      stackedData.filter(d => d3.sum(makes, make => d[make]) > 0),
+      d => d.year
+    );
+
+    // X Scale (year) - start from the first year that has a selling price > 0
     const xScale = d3.scaleLinear()
-      .domain(d3.extent(filteredData, d => d.year) as [number, number]) // Domain is [min year, max year]
+      .domain([minYearWithPrice || 0, d3.max(filteredData, d => d.year) as number])  // Adjusted to start with year with prices > 0
       .range([0, width]);
 
     // Y Scale (stacked price) - ensure non-negative values using stackOffsetNone
@@ -96,10 +104,16 @@ const StreamPlot: React.FC<StreamPlotProps> = ({ data }) => {
       .attr('stroke', 'none')
       .on('mouseover', function (event, d) {
         setHoveredMake(d.key);  // Set hovered make name on mouseover
+        setHoverPosition({ x: event.pageX, y: event.pageY });  // Set hover position
         d3.select(this).attr('opacity', 0.8);  // Highlight the hovered stream
+      })
+      .on('mousemove', function (event) {
+        // Update position of hover box on mouse move
+        setHoverPosition({ x: event.pageX, y: event.pageY });
       })
       .on('mouseout', function () {
         setHoveredMake(null);  // Clear the hovered make name on mouseout
+        setHoverPosition(null);  // Clear hover position
         d3.select(this).attr('opacity', 1);  // Reset opacity
       });
 
@@ -139,8 +153,18 @@ const StreamPlot: React.FC<StreamPlotProps> = ({ data }) => {
 
   return (
     <div>
-      {hoveredMake && (
-        <div style={{ position: 'absolute', top: 20, left: 20, fontWeight: 'bold', fontSize: '16px' }}>
+      {hoveredMake && hoverPosition && (
+        <div style={{
+          position: 'absolute',
+          top: hoverPosition.y + 10,
+          left: hoverPosition.x + 10,
+          fontWeight: 'bold',
+          fontSize: '14px',
+          backgroundColor: 'white',
+          padding: '5px',
+          border: '1px solid black',
+          pointerEvents: 'none',
+        }}>
           {hoveredMake}
         </div>
       )}

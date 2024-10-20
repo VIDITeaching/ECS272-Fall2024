@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
-import { isEmpty } from 'lodash';
+import { isEmpty, round } from 'lodash';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 
 // Define the interface for your data
@@ -28,7 +28,7 @@ export default function BarChart() {
   const barRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
   const margin: Margin = { top: 60, right: 40, bottom: 60, left: 100 };
-  const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200);
+  const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 400);
 
   useResizeObserver({ ref: barRef, onResize });
 
@@ -142,7 +142,7 @@ export default function BarChart() {
       .attr('text-anchor', 'middle')
       .style('font-size', '12px')
       .style('font-family', 'monospace')  // Font size for bar value labels
-      .text(d => d.amount.toFixed(2));
+      .text(d => round(d.amount));
   
     // Add title
     chartContainer.append('text')
@@ -201,7 +201,7 @@ export default function BarChart() {
   return (
     <>
       <div ref={barRef} className='chart-container'>
-        <svg id='bar-svg' width='100%' height='100%'></svg>
+        <svg id='bar-svg' width='100%' height='100%' style={{minHeight: '400px'}}></svg>
       </div>
     </>
   );

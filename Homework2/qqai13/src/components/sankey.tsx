@@ -2,189 +2,167 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { sankey as d3Sankey, sankeyLinkHorizontal } from 'd3-sankey';
 
-interface MySankeyNode {
-  name: string;
-}
+const SankeyDiagram = () => {
+  const svgRef = useRef();
+  const [data, setData] = useState(null);
 
-interface MySankeyLink {
-  source: number;
-  target: number;
-  value: number;
-}
-
-interface MySankeyData {
-  nodes: MySankeyNode[];
-  links: MySankeyLink[];
-}
-
-const SankeyDiagram: React.FC = () => {
-  const svgRef = useRef<SVGSVGElement | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [data, setData] = useState<MySankeyData | null>(null);
-  const [size, setSize] = useState({ width: 900, height: 500 }); // Default size
-
-  // Function to handle resizing
-  const updateSize = () => {
-    if (containerRef.current) {
-      const { clientWidth, clientHeight } = containerRef.current;
-      setSize({ width: clientWidth, height: clientHeight });
-    }
-  };
-
-  // Listen for window resizing and adjust the size of the diagram
   useEffect(() => {
-    updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => {
-      window.removeEventListener('resize', updateSize);
+    // Load CSV data
+    const loadData = async () => {
+      try {
+        const csvData = await d3.csv('/data/financial_risk_assessment.csv');
+        setData(csvData);
+      } catch (error) {
+        console.error('Error loading CSV data:', error);
+      }
     };
+    loadData();
   }, []);
 
-    // Inside your component
-    useEffect(() => {
-      // Load data from CSV and preprocess it
-      const loadData = async () => {
-        const csvData = await loadFinancialData('../../data/financial_risk_assessment.csv');
-
-        // Generate nodes and links from the CSV data
-        const sankeyData = processDataForSankey(csvData);
-        setData(sankeyData);
-      };
-
-      loadData();
-    }, []);
-
   useEffect(() => {
-    if (!data || size.width === 0 || size.height === 0) return;
+    if (!data) return;
 
+    const sankeyData = processDataForSankey(data);
+
+    // Get container dimensions
+    const container = svgRef.current.parentElement;
+    const width = container.clientWidth;
+    const height = container.clientHeight || 600; // Default height if not set
+
+    // Create SVG canvas
     const svg = d3.select(svgRef.current)
-      .attr('width', size.width)
-      .attr('height', size.height);
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet');
 
-    const sankeyGenerator = d3Sankey<MySankeyNode, MySankeyLink>()
-      .nodeWidth(15)
-      .nodePadding(10)
-      .extent([[1, 1], [size.width - 1, size.height - 1]]);
-
-    const { nodes, links } = sankeyGenerator({
-      nodes: data.nodes.map(d => Object.assign({}, d)),
-      links: data.links.map(d => Object.assign({}, d)),
-    });
-
-    // Clear previous content
+    // Clear any existing content
     svg.selectAll('*').remove();
 
+    // Add Title
+    svg.append('text')
+      .attr('x', width / 2)
+      .attr('y', 30)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '24px')
+      .style('font-family', 'monospace')
+      .style('font-weight', 'bold')
+      .text('Sankey Diagram: Gender to Risk Rating');
+
+    // Create Sankey generator
+    const sankeyGenerator = d3Sankey()
+      .nodeId(d => d.id)
+      .nodeWidth(15)
+      .nodePadding(10)
+      .extent([[1, 50], [width - 1, height - 6]]); // Adjusted to account for title height
+
+    // Generate Sankey data
+    const { nodes, links } = sankeyGenerator({
+      nodes: sankeyData.nodes.map(d => Object.assign({}, d)),
+      links: sankeyData.links.map(d => Object.assign({}, d)),
+    });
+
+    // Define color scale
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     // Add links
     svg.append('g')
+      .attr('transform', 'translate(0,20)') // Adjust if needed
       .selectAll('path')
       .data(links)
       .join('path')
       .attr('d', sankeyLinkHorizontal())
       .attr('fill', 'none')
-      .attr('stroke', (d) => color((d.source as MySankeyNode).name))
+      .attr('stroke', d => color(d.source.id))
       .attr('stroke-width', d => Math.max(1, d.width))
       .attr('stroke-opacity', 0.5);
 
     // Add nodes
-    const node = svg.append('g')
+    svg.append('g')
+      .attr('transform', 'translate(0,20)') // Adjust if needed
       .selectAll('rect')
       .data(nodes)
       .join('rect')
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
-      .attr('width', d => d.x1 - d.x0)
       .attr('height', d => d.y1 - d.y0)
-      .attr('fill', d => color(d.name))
+      .attr('width', d => d.x1 - d.x0)
+      .attr('fill', d => color(d.id))
       .attr('stroke', '#000')
-      .attr('stroke-width', 1);
+      .append('title')
+      .text(d => `${d.id}\n${d.value}`)
+      .style('font-family', 'monospace');
 
-    node.append('title')
-      .text(d => `${d.name}\n${d.value}`);
-
-    // Add labels
+    // Add node labels
     svg.append('g')
+      .attr('transform', 'translate(0,20)') // Adjust if needed
       .selectAll('text')
       .data(nodes)
       .join('text')
-      .attr('x', d => d.x0 < size.width / 2 ? d.x1 + 6 : d.x0 - 6)
+      .attr('x', d => d.x0 - 6)
       .attr('y', d => (d.y1 + d.y0) / 2)
       .attr('dy', '0.35em')
-      .attr('text-anchor', d => d.x0 < size.width / 2 ? 'start' : 'end')
-      .text(d => d.name);
+      .attr('text-anchor', 'end')
+      .text(d => d.id)
+      .style('font-family', 'monospace')
+      .filter(d => d.x0 < width / 2)
+      .attr('x', d => d.x1 + 6)
+      .attr('text-anchor', 'start');
 
-    // Add layer labels (Gender, Education, Employment, Risk)
-    const nodeGroups = ['Gender', 'Education Level', 'Employment', 'Risk Rating'];
-    const layerPositions = [size.width * 0.05, size.width * 0.30, size.width * 0.55, size.width * 0.80];
+  }, [data]);
 
-    nodeGroups.forEach((group, i) => {
-      svg.append('text')
-        .attr('x', layerPositions[i])
-        .attr('y', 20) // Adjust this value for vertical placement
-        .attr('dy', '0.35em')
-        .attr('text-anchor', 'middle')
-        .style('font-size', '14px')
-        .style('font-weight', 'bold')
-        .text(group);
+  // Data processing function remains the same, but with normalization
+  const processDataForSankey = (csvData) => {
+    const nodesSet = new Set();
+    const linksMap = new Map();
+
+    csvData.forEach((row) => {
+      // Extract and normalize the relevant fields
+      const gender = row['Gender']?.trim().toLowerCase();
+      const education = row['Education Level']?.trim().toLowerCase();
+      const employment = row['Employment Status']?.trim().toLowerCase();
+      const risk = row['Risk Rating']?.trim().toLowerCase();
+
+      // Ensure all fields are present
+      if (gender && education && employment && risk) {
+        // Add nodes to the set
+        nodesSet.add(gender);
+        nodesSet.add(education);
+        nodesSet.add(employment);
+        nodesSet.add(risk);
+
+        // Define link pairs
+        const linkPairs = [
+          [gender, education],
+          [education, employment],
+          [employment, risk],
+        ];
+
+        // Aggregate link values
+        linkPairs.forEach(([source, target]) => {
+          const key = `${source}->${target}`;
+          if (linksMap.has(key)) {
+            linksMap.get(key).value += 1;
+          } else {
+            linksMap.set(key, { source, target, value: 1 });
+          }
+        });
+      }
     });
 
-  }, [data, size]);
+    // Convert nodes set to array of objects
+    const nodes = Array.from(nodesSet).map((id) => ({ id }));
+    // Convert links map to array
+    const links = Array.from(linksMap.values());
+
+    console.log('Links:', links); // For debugging
+
+    return { nodes, links };
+  };
 
   return (
-    <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
-      <svg ref={svgRef}></svg>
+    <div style={{ width: '100%', height: '600px', marginBottom: '60px' }}> {/* Set a default height */}
+      <svg ref={svgRef} style={{ width: '100%', height: '100%'  }}></svg>
     </div>
   );
 };
-
-// Function to process CSV data into Sankey nodes and links
-function processDataForSankey(csvData: any[]): MySankeyData {
-  const nodes: MySankeyNode[] = [];
-  const links: MySankeyLink[] = [];
-
-  const genderNodes = new Map();
-  const educationNodes = new Map();
-  const employmentNodes = new Map();
-  const riskNodes = new Map();
-
-  // Create unique nodes and assign indices
-  csvData.forEach((row) => {
-    // Gender nodes
-    if (!genderNodes.has(row.gender)) {
-      genderNodes.set(row.gender, nodes.length);
-      nodes.push({ name: row.gender });
-    }
-    const genderIdx = genderNodes.get(row.gender);
-
-    // Education nodes
-    if (!educationNodes.has(row.education)) {
-      educationNodes.set(row.education, nodes.length);
-      nodes.push({ name: row.education });
-    }
-    const eduIdx = educationNodes.get(row.education);
-
-    // Employment nodes
-    if (!employmentNodes.has(row.employment)) {
-      employmentNodes.set(row.employment, nodes.length);
-      nodes.push({ name: row.employment });
-    }
-    const empIdx = employmentNodes.get(row.employment);
-
-    // Risk nodes
-    if (!riskNodes.has(row.risk)) {
-      riskNodes.set(row.risk, nodes.length);
-      nodes.push({ name: row.risk });
-    }
-    const riskIdx = riskNodes.get(row.risk);
-
-    // Create links: Gender -> Education, Education -> Employment, Employment -> Risk
-    links.push({ source: genderIdx, target: eduIdx, value: 1 });
-    links.push({ source: eduIdx, target: empIdx, value: 1 });
-    links.push({ source: empIdx, target: riskIdx, value: 1 });
-  });
-
-  return { nodes, links };
-}
 
 export default SankeyDiagram;

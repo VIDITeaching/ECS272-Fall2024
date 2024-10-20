@@ -6,7 +6,6 @@ import DonutChart from './components/donut';
 import BarChart from './components/bar';
 import SunburstContainer from './components/sunburstcontainer';
 import SankeyDiagram from './components/sankey';
-// import SankeyDiagram from './components/sankey';
 
 // Adjust the color theme for Material UI
 const theme = createTheme({

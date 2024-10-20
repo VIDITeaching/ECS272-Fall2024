@@ -31,8 +31,8 @@ const SunburstDiagram: React.FC<SunburstDiagramProps> = ({ data, width, height }
       Female: '#ff6f61',        // Coral for Female
       'Non-binary': '#E7EB90',  // Purple for Non-binary
       Personal: '#FADF63',      // Grass green for Personal
-      Business: '#E6AF2E',      // Orange for Business
-      Auto: '#705D56',          // Yellow for Auto
+      Business: '#9DD9D2',      // Orange for Business
+      Auto: '#E88873',          // Yellow for Auto
       Home: '#E799A3',          // Dark purple for Home
     };
 
@@ -81,14 +81,14 @@ const SunburstDiagram: React.FC<SunburstDiagramProps> = ({ data, width, height }
       })
       .attr('text-anchor', 'middle')  // Center the text horizontally
       .attr('dy', '0.35em')
-      .style('font-size', d => d.depth === 1 ? '14px' : '14px')
+      .style('font-size', d => d.depth === 1 ? '16px' : '14px')
       .style('font-family', 'monospace')  // Larger text for gender labels
       .text(d => d.data.name === 'Non-binary' ? 'Non-Binary' : d.data.name);
 
   }, [data, width, height]);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '100%', paddingTop: '120px' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '100%', paddingTop: '80px' }}>
       <svg ref={ref} width={width} height={height}></svg>
     </div>
   );

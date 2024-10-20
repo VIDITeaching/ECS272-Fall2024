@@ -13,7 +13,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: inherit;
 }
 
 .Greeting_div, .grid-container > div, .footer {
@@ -50,10 +50,6 @@ body {
   padding: 20px;
   border-radius: 20px;
   height: 100%;
-  background-image: url("./data/pic/Stairwell.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
 }
 
 .grid-container > div {
@@ -100,13 +96,12 @@ a:link, a:visited, a:hover, a:active {
   text-decoration: none;
 }
 
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
 .fade-in {
-  animation: fadeIn 2s ease-in;
+  animation: fadeIn 1s ease-in-out;
   animation-fill-mode: forwards;
 }

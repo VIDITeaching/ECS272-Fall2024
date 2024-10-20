@@ -268,8 +268,8 @@ function Graph1_Overall()
   const colorScale = d3.scaleOrdinal()
     .domain(['1980-1985', '1986-1990', '1991-1995', '1996-2000', '2001-2005',
       '2006-2010', '2011-2015'])
-    .range(['#ff0000', '#ff8c00', '#ffd700', '#32cd32', '#00008b', '#8a2be2',
-      '#ffb700']);
+    .range(['#FF3366', '#4834E0', '#00A676 ', '#F7B500', '#8B1E3F',
+      '#3B1EC0', '#E45826']);
 
   function getColor(year)
   {
@@ -301,8 +301,6 @@ function Graph1_Overall()
     .range([margin.left, width - margin.right])
     .domain(dimensions)
     .padding(0.2);
-
-
   /**
    * @brief The function `path` checks if all dimensions of a data point are
    * valid and returns the path if they are.
@@ -348,7 +346,14 @@ function Graph1_Overall()
     })
     .attr("padding", 0.5)
     .style("font-size", 12)
-    .style("font-weight", "bold");
+    .style("font-weight", "bold")
+    .call(g => g.selectAll("text")
+      .clone(true).lower()
+      .attr("fill", "none")
+      .attr("stroke-width", 3)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke", "#e6ecf5")  // Changed to white for brighter appearance
+      .attr("stroke-opacity", 0.5));
 
   // Make lables for each vertical line (i.e. year, make, model, body,
   // odometer, price)

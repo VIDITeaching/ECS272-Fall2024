@@ -18,16 +18,75 @@ const theme = createTheme({
 })
 
 // For how Grid works, refer to https://mui.com/material-ui/react-grid/
+// import React, { useState, useEffect } from 'react';
+// import StreamPlot from './components/StreamPlot'; // Adjust path if needed
+// import ScatterPlot from './components/ScatterPlot'; // Adjust path if needed
+// import * as d3 from 'd3';
+
+// interface VehicleData {
+//   year: number;
+//   make: string;
+//   sellingprice: number;
+//   mmr: number; // Include this field as it's required for ScatterPlot
+// }
+
+// const App: React.FC = () => {
+//   const [data, setData] = useState<VehicleData[]>([]);
+//   const [view, setView] = useState<'scatter' | 'stream'>('scatter'); // Toggle between views
+
+//   useEffect(() => {
+//     d3.csv('/path/to/car_prices.csv', (d: any) => ({
+//       year: +d.year,
+//       make: d.make,
+//       sellingprice: +d.sellingprice,
+//       mmr: +d.mmr, // Ensure MMR data is loaded
+//     })).then((loadedData: VehicleData[]) => {
+//       setData(loadedData);
+//     });
+//   }, []);
+
+//   return (
+//     <div>
+//       <h1>Vehicle Price Analysis</h1>
+//       {/* Toggle Buttons */}
+//       <div>
+//         <button onClick={() => setView('scatter')}>Show Scatter Plot</button>
+//         <button onClick={() => setView('stream')}>Show Stream Plot</button>
+//       </div>
+      
+//       {/* Conditionally Render the Views */}
+//       {data.length > 0 ? (
+//         <>
+//           {view === 'scatter' && (
+//             <>
+//               <h2>Scatter Plot: Profit (Selling Price - MMR) Over Year</h2>
+//               <ScatterPlot data={data} />
+//             </>
+//           )}
+//           {view === 'stream' && (
+//             <>
+//               <h2>Stream Plot: Price of Makes Over Year</h2>
+//               <StreamPlot data={data} />
+//             </>
+//           )}
+//         </>
+//       ) : (
+//         <p>Loading data...</p>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default App;
 
 import React, { useState, useEffect } from 'react';
-import LineChart from './components/ScatterPlot'; // Adjust this path according to your project structure
+import StreamPlot from './components/StreamPlot'; // Adjust this path according to your project structure
 import * as d3 from 'd3';
-import ScatterPlot from './components/ScatterPlot';
 
 interface VehicleData {
   year: number;
+  make: string;
   sellingprice: number;
-  mmr: number;
 }
 
 const App: React.FC = () => {
@@ -36,8 +95,8 @@ const App: React.FC = () => {
   useEffect(() => {
     d3.csv('/data/car_prices.csv', (d: any) => ({
       year: +d.year,
+      make: d.make,
       sellingprice: +d.sellingprice,
-      mmr: +d.mmr,
     })).then((loadedData: VehicleData[]) => {
       setData(loadedData);
     });
@@ -45,8 +104,8 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <h1>Vehicle Profit Line Chart</h1>
-      {data.length > 0 ? <ScatterPlot data={data} /> : <p>Loading data...</p>}
+      <h1>Stream Plot of Vehicle Prices by Make Over Year</h1>
+      {data.length > 0 ? <StreamPlot data={data} /> : <p>Loading data...</p>}
     </div>
   );
 };

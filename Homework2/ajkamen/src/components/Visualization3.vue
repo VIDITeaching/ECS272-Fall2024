@@ -182,6 +182,7 @@ export default {
 .chart-box {
   background-color: white;
   padding: 20px;
+  width: 900px;
   border: 1px solid black; /* Black border around the chart */
   position: relative;
   margin-top: 10px; /* Adds some spacing below the title */
@@ -196,7 +197,6 @@ export default {
 .legend-box {
   background-color: white;
   padding: 10px;
-  width: 900px;
   border: 1px solid black; /* Box around the legend */
   position: absolute;
   top: 10px;  /* Place it inside the chart-box */

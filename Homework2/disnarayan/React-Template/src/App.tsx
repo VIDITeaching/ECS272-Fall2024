@@ -2,6 +2,7 @@ import React from 'react';
 import MentalHealthChart from './components/MentalHealthChart';
 import ScatterPlot from './components/ScatterPlot';
 import SankeyDiagram from './components/SankeyDiagram';
+import ChordDiagram from './components/ChordDiagram';
 
 const App: React.FC = () => {
   return (
@@ -46,6 +47,20 @@ const App: React.FC = () => {
           </p>
           <p>
             Hover over the nodes and links to see more detailed information.
+          </p>
+        </section>
+        <section className="chart-section">
+          <h2>Age Groups and Mental Health Conditions Chord Diagram</h2>
+          <ChordDiagram />
+          <p>
+            This chord diagram illustrates the relationships between age groups and mental health conditions.
+            It shows how different age categories (Under 20, 20-25, 25-30, 30+) are associated with 
+            mental health conditions like depression, anxiety, and panic attacks.
+          </p>
+          <p>
+            The thickness of the chords represents the number of students in each age group 
+            experiencing a particular mental health condition. Hover over the chords and arcs 
+            for more detailed information.
           </p>
         </section>
       </main>

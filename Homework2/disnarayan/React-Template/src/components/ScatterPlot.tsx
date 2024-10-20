@@ -7,7 +7,6 @@ interface DataPoint {
   cgpa: number;
   gender: string;
   depression: boolean;
-  course: string;
 }
 
 const ScatterPlot: React.FC = () => {
@@ -20,8 +19,7 @@ const ScatterPlot: React.FC = () => {
         age: +row['Age'],
         cgpa: parseCGPA(row['What is your CGPA?']),
         gender: row['Choose your gender'],
-        depression: row['Do you have Depression?'] === 'Yes',
-        course: row['What is your course?']
+        depression: row['Do you have Depression?'] === 'Yes'
       }));
       setData(scatterData);
     });
@@ -35,8 +33,8 @@ const ScatterPlot: React.FC = () => {
   useEffect(() => {
     if (data.length === 0 || !svgRef.current) return;
 
-    const margin = { top: 50, right: 200, bottom: 60, left: 80 };
-    const width = 900 - margin.left - margin.right;
+    const margin = { top: 50, right: 120, bottom: 60, left: 80 };
+    const width = 800 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
     d3.select(svgRef.current).selectAll("*").remove();
@@ -55,17 +53,12 @@ const ScatterPlot: React.FC = () => {
       .domain([d3.min(data, d => d.cgpa) || 0, d3.max(data, d => d.cgpa) || 0])
       .range([height, 0]);
 
-    const courses = Array.from(new Set(data.map(d => d.course)));
     const color = d3.scaleOrdinal<string>()
-      .domain(courses)
-      .range(d3.schemeCategory10);
+      .domain(['true', 'false'])
+      .range(['#e15759', '#4e79a7']);
 
     const getSymbol = (gender: string): d3.SymbolType => {
       return gender === 'Male' ? d3.symbolSquare : d3.symbolCircle;
-    };
-
-    const getOpacity = (depression: boolean): number => {
-      return depression ? 1 : 0.5;
     };
 
     svg.append('g')
@@ -82,12 +75,11 @@ const ScatterPlot: React.FC = () => {
       .attr('class', 'point')
       .attr('d', d => d3.symbol().type(getSymbol(d.gender)).size(100)() || '')
       .attr('transform', d => `translate(${x(d.age)},${y(d.cgpa)})`)
-      .style('fill', d => color(d.course))
-      .style('opacity', d => getOpacity(d.depression))
+      .style('fill', d => color(d.depression.toString()))
       .on('mouseover', (event, d) => {
         const tooltip = d3.select('#tooltip');
         tooltip.transition().duration(200).style('opacity', 0.9);
-        tooltip.html(`Age: ${d.age}<br/>CGPA: ${d.cgpa.toFixed(2)}<br/>Gender: ${d.gender}<br/>Course: ${d.course}<br/>Depression: ${d.depression ? 'Yes' : 'No'}`)
+        tooltip.html(`Age: ${d.age}<br/>CGPA: ${d.cgpa.toFixed(2)}<br/>Gender: ${d.gender}<br/>Depression: ${d.depression ? 'Yes' : 'No'}`)
           .style('left', `${event.pageX}px`)
           .style('top', `${event.pageY - 28}px`);
       })
@@ -118,48 +110,36 @@ const ScatterPlot: React.FC = () => {
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('text-decoration', 'underline')
-      .text('Age vs CGPA Scatter Plot (Grouped by Course)');
+      .text('Age vs CGPA Scatter Plot');
 
     // Legend
     const legend = svg.append('g')
       .attr('font-family', 'sans-serif')
       .attr('font-size', 10)
-      .attr('text-anchor', 'start')
+      .attr('text-anchor', 'end')
       .selectAll('g')
-      .data([...courses, 'Male', 'Female', 'Depression', 'No Depression'])
+      .data(['Depression', 'No Depression', 'Male', 'Female'])
       .join('g')
-      .attr('transform', (d, i) => `translate(${width + 20},${i * 20})`);
+      .attr('transform', (d, i) => `translate(${width + 60},${i * 20})`);
 
-    legend.append('rect')
-      .attr('x', 0)
-      .attr('width', 19)
-      .attr('height', 19)
-      .attr('fill', d => {
-        if (courses.includes(d)) return color(d);
-        return 'white';
+    legend.append('path')
+      .attr('d', d => {
+        if (d === 'Male' || d === 'Female') {
+          return d3.symbol().type(getSymbol(d)).size(100)() || '';
+        }
+        return d3.symbol().type(d3.symbolCircle).size(100)() || '';
       })
-      .attr('stroke', 'black');
+      .attr('fill', d => {
+        if (d === 'Depression') return color('true');
+        if (d === 'No Depression') return color('false');
+        return 'black';
+      });
 
     legend.append('text')
-      .attr('x', 24)
-      .attr('y', 9.5)
+      .attr('x', -10)
+      .attr('y', 5)
       .attr('dy', '0.32em')
       .text(d => d);
-
-    // Add symbols for gender and depression
-    legend.filter(d => d === 'Male' || d === 'Female')
-      .append('path')
-      .attr('d', d => d3.symbol().type(getSymbol(d)).size(100)() || '')
-      .attr('transform', 'translate(9.5, 9.5)')
-      .style('fill', 'black');
-
-    legend.filter(d => d === 'Depression' || d === 'No Depression')
-      .append('circle')
-      .attr('cx', 9.5)
-      .attr('cy', 9.5)
-      .attr('r', 6)
-      .style('fill', 'black')
-      .style('opacity', d => d === 'Depression' ? 1 : 0.5);
 
   }, [data]);
 

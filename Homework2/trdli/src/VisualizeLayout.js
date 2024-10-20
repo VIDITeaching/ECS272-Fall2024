@@ -52,6 +52,9 @@ const onResize = (targets) =>
 export const Graph1_OverallView = () => (
   `<div id='parallel-coordinates-container-graph1'>
         <svg id='Graph1'></svg>
+        <p>
+          <b> Graph 1. </b> Overview of car sales trends from 1986 to 2015.
+        </p>
     </div>`
 );
 
@@ -62,9 +65,10 @@ export const Graph1_OverallView = () => (
  */
 export const Graph2_DetailView = () => (
   `<div id='pie-container-graph2'>
-      <svg id='Graph2'>
-        Graph 2 - Percentage of each car brand sell situation
-      </svg>
+      <svg id='Graph2'></svg>
+      <p>
+        <b> Graph 2. </b> The distribution of people's brand preferences by percentage.
+      </p>
     </div>
     `
 );
@@ -78,10 +82,12 @@ export const Graph2_DetailView = () => (
 export const Graph3_DetailView = () => (
   `<div id='bar-container-graph3'>
         <svg id='Graph3'></svg>
+        <p>
+          <b> Graph 3. </b> The number of cars sold each year.
+        </p>
     </div>`
 );
 
-// Load the data from the CSV file
 const chartObserver = new ResizeObserver(debounce(onResize, 100));
 let column_from_csv = await d3.csv('../data/car_prices.csv', (d) =>
 {
@@ -251,7 +257,7 @@ function Graph1_Overall()
   // Set up the margins for the chart
   const margin = { top: 20, right: 5, bottom: 35, left: 5 };
   const width = size.width - margin.left - margin.right;
-  const height = size.height - margin.top - margin.bottom;
+  const height = size.height - margin.top - margin.bottom - 15;
 
   // Select the svg tag so that we can insert(render) elements, i.e., draw
   // the chart within it.
@@ -292,7 +298,7 @@ function Graph1_Overall()
     yScales[dimensions] = d3.scalePoint()
       .domain(afterCleanData_Graph1.map(d => d[dimensions]).filter(Boolean))
       .range([height - margin.bottom, margin.top])
-      .padding(0.01);
+      .padding(0.1);
   });
 
   // Create the X axis, that's the distance between the vertical lines, the
@@ -344,7 +350,7 @@ function Graph1_Overall()
     {
       d3.select(this).call(d3.axisLeft().scale(yScales[d]));
     })
-    .attr("padding", 0.5)
+    .attr("padding", 1)
     .style("font-size", 12)
     .style("font-weight", "bold")
     .call(g => g.selectAll("text")
@@ -420,7 +426,7 @@ function Graph2_Detail()
   // Set up the margin for the chart
   const margin = { top: 10, right: 10, bottom: 10, left: 10 };
   const width = size.width - margin.left - margin.right;
-  const height = size.height - margin.top - margin.bottom;
+  const height = size.height - margin.top - margin.bottom - 10;
 
   // Set up the SVG container
   const chartContainer_graph2 = d3.select("#Graph2")
@@ -570,7 +576,7 @@ function Graph3_Detail()
   // Set up SVG dimensions
   const margin = { top: 10, right: 10, bottom: 30, left: 60 };
   const width = size.width - margin.left - margin.right;
-  const height = size.height - margin.top - margin.bottom;
+  const height = size.height - margin.top - margin.bottom - 60;
 
   let chartContainer_graph3 = d3.select('#Graph3')
     .attr("width", "100%")
@@ -629,7 +635,7 @@ function Graph3_Detail()
   // Add the X axis label
   chartContainer_graph3.append("text")
     .attr("x", width / 2)
-    .attr("y", height + margin.top + 20)
+    .attr("y", height + 30)
     .attr("text-anchor", "middle")
     .attr("font-size", "12px")
     .attr("fill", "black")

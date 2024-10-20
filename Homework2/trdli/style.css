@@ -30,7 +30,7 @@ body {
 
 .Greeting_div {
   flex-direction: column;
-  padding: 1rem;
+  padding: 2rem;
   font-size: 2rem;
   font-weight: bold;
   color: #1e1e1e;
@@ -74,6 +74,8 @@ body {
 
 #parallel-coordinates-container-graph1, #pie-container-graph2, #bar-container-graph3 {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 60vh;
 }

@@ -8,15 +8,17 @@ document.querySelector('#header').innerHTML = `
   </header>
 `;
 
-
 document.querySelector('#MainBody').innerHTML = `
   <div class="grid-container">
-    <div class="row1 fade-in">${ Graph1_OverallView() }</div>
-    <br>
-    <div class="row2-left fade-in">${ Graph2_DetailView() }</div>
-    <br>
-    <div class="row2-right fade-in">${ Graph3_DetailView() }</div>
-    <br>
+    <div class="row1 fade-in">
+      ${ Graph1_OverallView() }
+    </div>
+    <div class="row2-left fade-in">
+      ${ Graph2_DetailView() }
+    </div>
+    <div class="row2-right fade-in">
+      ${ Graph3_DetailView() }
+    </div>
   </div>
 `;
 

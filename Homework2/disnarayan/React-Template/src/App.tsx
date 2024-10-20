@@ -1,37 +1,34 @@
-import Example from './components/Example'; // Your bar chart component
-import Heatmap from './components/Heatmap';  // Heatmap component
-import Grid from '@mui/material/Grid';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { grey } from '@mui/material/colors';
+import React from 'react';
+import MentalHealthChart from './components/MentalHealthChart';
 
-const theme = createTheme({
-  palette: {
-    primary: { main: grey[700] },
-    secondary: { main: grey[700] },
-  },
-});
-
-function Layout() {
+const App: React.FC = () => {
   return (
-    <Grid container spacing={1} direction="column" id="main-container">
-      <Grid container item xs={12} sm={12} md={12} lg={12}>
-        <Grid item xs={6} sm={6} md={6} lg={6}>
-          <Example /> {/* Bar Chart Component */}
-        </Grid>
-        <Grid item xs={6} sm={6} md={6} lg={6}>
-          <Heatmap /> {/* Heatmap Component */}
-        </Grid>
-      </Grid>
-    </Grid>
+    <div className="App">
+      <header className="App-header">
+        <h1>Bar Chart - Student Mental Health Analysis</h1>
+      </header>
+      <main>
+        <section className="chart-section">
+          <MentalHealthChart />
+        </section>
+        <section className="description-section">
+          <h2>About This Visualization</h2>
+          <p>
+            This chart displays the prevalence of mental health conditions among students,
+            including depression, anxiety, and panic attacks. The data is based on a survey
+            of student responses, showing the number of students who reported experiencing
+            each condition (True) versus those who did not (False).
+          </p>
+          <p>
+            Hover over the bars to see detailed information about each category.
+          </p>
+        </section>
+      </main>
+      <footer className="App-footer">
+        <p>Data source: Student Mental Health Survey</p>
+      </footer>
+    </div>
   );
-}
-
-function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <Layout />
-    </ThemeProvider>
-  );
-}
+};
 
 export default App;

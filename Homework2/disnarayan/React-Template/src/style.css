@@ -1,6 +1,7 @@
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 1rem;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,18 +19,25 @@ body {
 }
 
 .chart-container {
-  height: 400px;
-  width: 100%;
+  height: 100%;
 }
-.tooltip {
-  position: absolute;
+.App {
+  font-family: Arial, sans-serif;
   text-align: center;
-  width: auto;
-  height: auto;
-  padding: 8px;
-  font: 0.8rem sans-serif;
-  background: lightgrey;
-  border: 1px solid #d3d3d3;
-  pointer-events: none;
-  border-radius: 4px;
+  margin: 20px;
 }
+
+svg {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+}
+
+.bar {
+  transition: fill 0.2s;
+}
+.chart-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+

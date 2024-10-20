@@ -1,109 +1,148 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { isEmpty } from 'lodash';
-import { ComponentSize, Margin } from '../types';
 
 // FinancialData interface with gender and education
 interface FinancialData {
   gender: string;
   education: string;
+  loan: string;
 }
 
 // Aggregated data to show proportions
 interface GenderData {
   gender: string;
   count: number;
+  proportion: number;
 }
 
 interface EducationData {
   education: string;
   count: number;
+  proportion: number;
+}
+
+interface LoanData {
+  loan: string;
+  count: number;
+  proportion: number;
 }
 
 export default function DonutChart() {
   const [data, setData] = useState<FinancialData[]>([]);
   const [genderData, setGenderData] = useState<GenderData[]>([]);
   const [eduData, setEduData] = useState<EducationData[]>([]);
+  const [loanData, setLoanData] = useState<LoanData[]>([]);
   const chartRef = useRef<HTMLDivElement>(null);
-  
-  // Set a static size for the chart
-  const size: ComponentSize = { width: 500, height: 500 };
-  const margin: Margin = { top: 40, right: 20, bottom: 80, left: 60 };
 
-  // Load and process the data
+  // Set dynamic size for the chart
+  const margin = { top: 100, right: 100, bottom: 100, left: 100 };
+
+  // Resize chart based on the parent container's width
+  const [size, setSize] = useState({ width: 600, height: 600 });
+
+  // Function to update chart size dynamically
+  const updateSize = () => {
+    if (chartRef.current) {
+      const width = chartRef.current.offsetWidth;
+      const height = width; // You can adjust this ratio if you want a different aspect ratio
+      setSize({ width, height });
+    }
+  };
+
   useEffect(() => {
-    // For reading csv file
-    const dataFromCSV = async () => {
-      try {
-        const csvData = await d3.csv('../../data/financial_risk_assessment.csv', d => {
-          // This callback allows you to rename the keys, format values, and drop columns you don't need
-          return {gender: d.Gender, education: d['Education Level']};
-        });
-        setData(csvData);
-      } catch (error) {
-        console.error('Error loading CSV:', error);
-      }
-    } 
-    dataFromCSV();
+    // Call this function on initial render
+    updateSize();
+    // Update size whenever the window resizes
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  // Aggregate data by gender and education
   useEffect(() => {
-    if (isEmpty(data)) return;
+    const fetchData = async () => {
+      try {
+        const csvData = await d3.csv('../../data/financial_risk_assessment.csv', d => ({
+          gender: d.Gender,
+          education: d['Education Level'],
+          loan: d['Loan Purpose'],
+        }));
 
-    // Group by gender and count occurrences
-    const genderCount = d3.rollups(
-      data,
-      v => v.length,
-      d => d.gender
-    ).map(([gender, count]) => ({ gender, count }));
+        setData(csvData as FinancialData[]);
 
-    setGenderData(genderCount);
+        const totalCount = csvData.length;
 
-    // Group by education and count occurrences
-    const eduCount = d3.rollups(
-      data,
-      v => v.length,
-      d => d.education
-    ).map(([education, count]) => ({ education, count }));
+        // Gender data
+        const genderCount = d3.rollups(
+          csvData,
+          v => v.length,
+          d => d.gender
+        ).map(([gender, count]) => ({
+          gender,
+          count,
+          proportion: (count / totalCount) * 100
+        }));
+        setGenderData(genderCount);
 
-    setEduData(eduCount);
-  }, [data]);
+        // Education data
+        const eduCount = d3.rollups(
+          csvData,
+          v => v.length,
+          d => d.education
+        ).map(([education, count]) => ({
+          education,
+          count,
+          proportion: (count / totalCount) * 100
+        }));
+        setEduData(eduCount);
+
+        // Loan data
+        const loanCount = d3.rollups(
+          csvData,
+          v => v.length,
+          d => d.loan
+        ).map(([loan, count]) => ({
+          loan,
+          count,
+          proportion: (count / totalCount) * 100
+        }));
+        setLoanData(loanCount);
+      } catch (error) {
+        console.error('Error fetching or processing data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
 
   useEffect(() => {
     if (isEmpty(genderData)) return;
     d3.select('#donut-svg').selectAll('*').remove(); // Clear previous chart
     initDonutChart_1(); // Initialize the gender donut chart
-    initDonutChart_2(); // Initialize the education donut chart
-  }, [genderData, eduData]);
+    // initDonutChart_2(); // Initialize the education donut chart
+    initDonutChart_3(); // Initialize the loan donut chart
+  }, [genderData, eduData, loanData, size]);
 
   // Gender Donut Chart (Outer)
   function initDonutChart_1() {
     const svg = d3
       .select('#donut-svg')
-      .attr('width', size.width)
-      .attr('height', size.height)
+      .attr('viewBox', `0 0 ${size.width} ${size.height}`)
+      .attr('preserveAspectRatio', 'xMinYMin meet')
       .append('g')
       .attr('transform', `translate(${size.width / 2},${size.height / 2})`);
 
-    const outerRadius = Math.min(size.width, size.height) / 2 - margin.top;
+    const outerRadius = Math.min(size.width, size.height) / 1.5 - margin.top;
+    const customColors = ['#5dade2', '#ec7063', '#f9e79f'];
+    const color = d3.scaleOrdinal(customColors);
 
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    const pie = d3
-      .pie<GenderData>()
+    const pie = d3.pie<GenderData>()
       .value(d => d.count)
       .sort(null);
 
-    const arc = d3
-      .arc<d3.PieArcDatum<GenderData>>()
-      .innerRadius(outerRadius / 2) // Inner radius for the "donut" hole
+    const arc = d3.arc<d3.PieArcDatum<GenderData>>()
+      .innerRadius(outerRadius / 1.3)
       .outerRadius(outerRadius);
-
-    const arcLabel = d3
-      .arc<d3.PieArcDatum<GenderData>>()
-      .innerRadius(outerRadius * 0.8) // Distance from center for the label lines
-      .outerRadius(outerRadius * 0.8);
 
     const arcs = svg
       .selectAll('g.arc')
@@ -112,63 +151,44 @@ export default function DonutChart() {
       .append('g')
       .attr('class', 'arc');
 
-    // Draw the donut slices
     arcs
       .append('path')
       .attr('d', arc)
       .attr('fill', d => color(d.data.gender));
 
-    // Add label lines
-    arcs
-      .append('line')
-      .attr('x1', d => arc.centroid(d)[0])
-      .attr('y1', d => arc.centroid(d)[1])
-      .attr('x2', d => arcLabel.centroid(d)[0])
-      .attr('y2', d => arcLabel.centroid(d)[1])
-      .attr('stroke', 'black')
-      .attr('stroke-width', 1);
-
-    // Add labels outside the chart
     arcs
       .append('text')
-      .attr('transform', d => {
-        const pos = arcLabel.centroid(d);
-        const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
-        pos[0] = outerRadius * (midAngle < Math.PI ? 1.1 : -1.1); // Adjust the x position depending on which side of the chart
-        return `translate(${pos})`;
-      })
-      .attr('dy', '0.35em')
-      .style('text-anchor', d => (d.startAngle + d.endAngle) / 2 < Math.PI ? 'start' : 'end') // Text anchor based on location
+      .attr('transform', d => `translate(${arc.centroid(d)})`)
+      .attr('dy', '0.1em')
+      .style('text-anchor', d => (d.startAngle + d.endAngle) / 2 < Math.PI ? 'start' : 'end')
+      .style('font-family', 'Arial')
       .text(d => `${d.data.gender} (${d.data.count})`);
 
-    // Add title to the chart
     svg
       .append('text')
       .attr('x', 0)
-      .attr('y', 0 - (size.height / 2) + margin.top - 10)
+      .attr('y', 0 - (size.height / 2) + margin.top - 30)
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('font-weight', 'bold')
-      .text('Gender Proportion in Data');
+      .style('font-family', 'Arial')
+      .text('Financial Purpose Proportion Data');
   }
 
-  // Education Donut Chart (Inner)
+  // Education Donut Chart (Middle)
   function initDonutChart_2() {
     const svg = d3.select('#donut-svg g'); // Reuse the same svg as above (inside the outer donut chart)
 
-    const innerRadius = Math.min(size.width, size.height) / 4 - margin.top;
-    const outerRadius = Math.min(size.width, size.height) / 2 - margin.top;
+    const innerRadius = Math.min(size.width, size.height) / 4; // Adjust the radius for middle chart
 
     const color = d3.scaleOrdinal(d3.schemeSet3);
 
-    const pie = d3
-      .pie<EducationData>()
+    const pie = d3.pie<EducationData>()
       .value(d => d.count)
       .sort(null);
 
-    const arc = d3
-      .arc<d3.PieArcDatum<EducationData>>()
-      .innerRadius(30) // This will create a smaller full pie chart (no donut hole)
+    const arc = d3.arc<d3.PieArcDatum<EducationData>>()
+      .innerRadius(innerRadius / 1.5)
       .outerRadius(innerRadius);
 
     const arcs = svg
@@ -178,26 +198,61 @@ export default function DonutChart() {
       .append('g')
       .attr('class', 'inner-arc');
 
-    // Draw the inner donut slices
     arcs
       .append('path')
       .attr('d', arc)
       .attr('fill', d => color(d.data.education));
 
-    // Add labels to the slices
     arcs
       .append('text')
       .attr('transform', d => `translate(${arc.centroid(d)})`)
       .attr('text-anchor', 'middle')
-      .attr('font-size', '14px')
+      .attr('font-size', '12px')
+      .style('font-family', 'Arial')
       .text(d => `${d.data.education} (${d.data.count})`);
   }
 
+  // Loan Purpose Donut Chart (Inner)
+  function initDonutChart_3() {
+    const svg = d3.select('#donut-svg g'); // Reuse the same svg again
+
+    const innerRadius = Math.min(size.width, size.height) / 4; // Adjust the inner radius
+    const outerRadius = Math.min(size.width, size.height) / 6; // Adjust the outer radius
+
+    const color = d3.scaleOrdinal(d3.schemeTableau10);
+
+    const pie = d3.pie<LoanData>()
+      .value(d => d.count)
+      .sort(null);
+
+    const arc = d3.arc<d3.PieArcDatum<LoanData>>()
+      .innerRadius(innerRadius)
+      .outerRadius(outerRadius);
+
+    const arcs = svg
+      .selectAll('g.inner-arc')
+      .data(pie(loanData))
+      .enter()
+      .append('g')
+      .attr('class', 'inner-arc');
+
+    arcs
+      .append('path')
+      .attr('d', arc)
+      .attr('fill', d => color(d.data.loan));
+
+    arcs
+      .append('text')
+      .attr('transform', d => `translate(${arc.centroid(d)})`)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '10px')
+      .style('font-family', 'Arial')
+      .text(d => `${d.data.loan} (${d.data.count})`);
+  }
+
   return (
-    <>
-      <div ref={chartRef} className='chart-container'>
-        <svg id='donut-svg' width='800px' height='800px'></svg>
-      </div>
-    </>
+    <div ref={chartRef} className='chart-container' style={{ width: '100%' }}>
+      <svg id='donut-svg' style={{ width: '100%', height: '100%' }}></svg>
+    </div>
   );
 }

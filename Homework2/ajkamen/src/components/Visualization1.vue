@@ -1,6 +1,6 @@
 <template>
   <div v-if="data" class="chart-container">
-    <h2>Average Income by Age Group and Risk Distribution</h2> <!-- Title -->
+    <h2 class="chart-title">Average Income by Age Group and Risk Distribution</h2> <!-- Title -->
     <div class="bar-graph-box">
       <div ref="barChart"></div>
       <div class="legend">
@@ -176,6 +176,11 @@ export default {
   border: 1px solid black; /* Box surrounding the chart */
 }
 
+/* Title Styling */
+.chart-title {
+  color: black !important; /* Force the title text to be black */
+}
+
 .bar-graph-box {
   position: relative;
   width: 800px; /* Increased width to accommodate legend */
@@ -205,5 +210,19 @@ export default {
   height: 15px;
   margin-right: 5px;
   border: 1px solid black;
+}
+
+/* Force black font color for all text inside bar-graph-box */
+.bar-graph-box h2,
+.bar-graph-box g text,
+.bar-graph-box text,
+.bar-graph-box .legend {
+  color: black !important; /* Ensure black font color */
+}
+
+/* SVG Text Labels */
+.bar-graph-box text {
+  font-family: Arial, sans-serif;
+  color: black !important; /* Force the text color to black */
 }
 </style>

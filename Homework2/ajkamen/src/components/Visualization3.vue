@@ -78,15 +78,14 @@ export default {
     },
 
     drawParallelCoordinatesPlot() {
-      // Adjust margins, especially at the bottom
-      const margin = { top: 30, right: 30, bottom: 50, left: 50 };  // Increased bottom margin to 50
+      const margin = { top: 30, right: 30, bottom: 50, left: 50 };
       const width = 800 - margin.left - margin.right;
       const height = 400 - margin.top - margin.bottom;
 
       const svg = d3.select(this.$refs.parallelCoordinatesPlot)
         .append('svg')
         .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom + 30)  // Added 30 to the total height for extra padding
+        .attr('height', height + margin.top + margin.bottom + 30)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
@@ -118,7 +117,7 @@ export default {
         return d3.line()(dimensions.map(dim => [x(dim), y[dim](d[dim])]));
       }
 
-      // Draw the lines
+      // Draw the lines first
       svg.selectAll('myPath')
         .data(this.data)
         .enter()
@@ -132,7 +131,7 @@ export default {
       dimensions.forEach(dim => {
         svg.append('g')
           .attr('transform', `translate(${x(dim)}, 0)`)
-          .each(function(d) {
+          .each(function() {
             d3.select(this).call(d3.axisLeft().scale(y[dim]));
           })
           .append('text')
@@ -142,7 +141,7 @@ export default {
           .style('fill', 'black');
       });
 
-      // Add point labels for each line (below the dots)
+      // Add labels with larger font size and bold style
       svg.selectAll('.line-label')
         .data(this.data)
         .enter()
@@ -151,11 +150,12 @@ export default {
           dimensions.forEach(dim => {
             svg.append('text')
               .attr('x', x(dim))
-              .attr('y', y[dim](d[dim]) + 15)
+              .attr('y', y[dim](d[dim]) + 15)  // Position below each point
               .text(d[dim])
               .style('text-anchor', 'middle')
               .style('fill', 'black')
-              .style('font-size', '10px');
+              .style('font-size', '14px')  // Increase font size to 14px
+              .style('font-weight', 'bold');  // Make the text bold
           });
         });
     }

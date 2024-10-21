@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+import { ComponentSize, Margin } from '../types';
+import { useDebounceCallback, useResizeObserver } from 'usehooks-ts';
 
 interface VehicleData {
   year: number;
@@ -7,23 +9,52 @@ interface VehicleData {
   mmr: number;
 }
 
-interface ScatterPlotProps {
-  data: VehicleData[];
-}
 
-const ScatterPlot: React.FC<ScatterPlotProps> = ({ data }) => {
-  const svgRef = useRef<SVGSVGElement | null>(null);
+const ScatterPlot: React.FC = () => {
+  const svgRef = useRef<HTMLDivElement | null>(null);
+  const [data, setData] = useState<VehicleData[]>([]);
+  const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
+  const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200)
+
+  useResizeObserver({ ref: svgRef, onResize });
+
 
   useEffect(() => {
-    const margin = { top: 50, right: 30, bottom: 50, left: 100 };
+    const loadData = async () => {
+      try {
+        const csvData = await d3.csv('/data/car_prices.csv', d => ({
+          mmr: +d['mmr'],
+          year: +d['year'],
+          sellingprice: +d['sellingprice']
+        }));
+
+        const filteredData = csvData.filter(
+          d =>
+            d.mmr > 0 &&
+            d.year > 0 &&
+            d.sellingprice > 0
+        ) as VehicleData[];
+
+        setData(filteredData);
+      } catch (error) {
+        console.error('Error loading CSV file:', error);
+      }
+    };
+
+    loadData();
+  }, []);
+
+
+  useEffect(() => {
+    const margin: Margin = { top: 50, right: 30, bottom: 50, left: 100 };
     const width = 800 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
     // Clear previous SVG content
-    d3.select(svgRef.current).selectAll('*').remove();
+    d3.select('#scatter-svg').selectAll('*').remove();
 
     // Create the SVG container
-    const svg = d3.select(svgRef.current)
+    const svg = d3.select('#scatter-svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
@@ -89,7 +120,13 @@ const ScatterPlot: React.FC<ScatterPlotProps> = ({ data }) => {
       .text('Profit over Year of Vehicle');
   }, [data]);
 
-  return <svg ref={svgRef}></svg>;
+  return (
+    <>
+      <div ref={svgRef} className='chart-container'>
+        <svg id='scatter-svg' width='100%' height='100%'></svg>
+      </div>
+    </>
+  )
 };
 
 export default ScatterPlot;

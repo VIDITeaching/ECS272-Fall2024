@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+import { ComponentSize, Margin } from '../types';
+import { useDebounceCallback, useResizeObserver } from 'usehooks-ts';
 
 interface VehicleData {
   year: number;
@@ -7,25 +9,54 @@ interface VehicleData {
   sellingprice: number;
 }
 
-interface StreamPlotProps {
-  data: VehicleData[];
-}
-
-const StreamPlot: React.FC<StreamPlotProps> = ({ data }) => {
-  const svgRef = useRef<SVGSVGElement | null>(null);
+const StreamPlot: React.FC = () => {
   const [hoveredMake, setHoveredMake] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number } | null>(null);
+  const svgRef = useRef<HTMLDivElement | null>(null);
+  const [data, setData] = useState<VehicleData[]>([]);
+  const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
+  const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200)
+
+  useResizeObserver({ ref: svgRef, onResize });
+
 
   useEffect(() => {
-    const margin = { top: 50, right: 30, bottom: 50, left: 100 };
-    const width = 900 - margin.left - margin.right;
-    const height = 800 - margin.top - margin.bottom;
+    const loadData = async () => {
+      try {
+        const csvData = await d3.csv('/data/car_prices.csv', d => ({
+          make: d['make'],
+          year: +d['year'],
+          sellingprice: +d['sellingprice']
+        }));
+
+        const filteredData = csvData.filter(
+          d =>
+            d.make != '' &&
+            d.year > 0 &&
+            d.sellingprice > 0
+        ) as VehicleData[];
+
+        setData(filteredData);
+      } catch (error) {
+        console.error('Error loading CSV file:', error);
+      }
+    };
+
+    loadData();
+  }, []);
+
+
+
+  useEffect(() => {
+    const margin: Margin = { top: 100, right: 10, bottom: 50, left: 250 };
+    const width = 800 - margin.left - margin.right;
+    const height = 600 - margin.top - margin.bottom;
 
     // Clear previous SVG content
-    d3.select(svgRef.current).selectAll('*').remove();
+    d3.select('#stream-svg').selectAll('*').remove();
 
     // Create the SVG container
-    const svg = d3.select(svgRef.current)
+    const svg = d3.select('#stream-svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
@@ -137,7 +168,7 @@ const StreamPlot: React.FC<StreamPlotProps> = ({ data }) => {
     svg.append('text')
       .attr('transform', 'rotate(-90)')
       .attr('x', -height / 2)
-      .attr('y', -margin.left + 20)
+      .attr('y', -margin.left + 170)
       .attr('text-anchor', 'middle')
       .text('Price (Sum of Selling Price)');
 
@@ -168,8 +199,12 @@ const StreamPlot: React.FC<StreamPlotProps> = ({ data }) => {
           {hoveredMake}
         </div>
       )}
-      <svg ref={svgRef}></svg>
+    
+    <div ref={svgRef} className='chart-container'>
+      <svg id='stream-svg' width='100%' height='100%'></svg>
     </div>
+  
+  </div>
   );
 };
 

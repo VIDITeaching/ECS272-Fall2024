@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+import { ComponentSize, Margin } from '../types';
+import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
+import { isEmpty } from 'lodash';
+
 
 // Helper function to calculate correlation
 const calculateCorrelation = (x: number[], y: number[]): number => {
@@ -23,8 +27,12 @@ interface VehicleData {
 }
 
 const Heatmap: React.FC = () => {
-  const svgRef = useRef<SVGSVGElement | null>(null);
+  const svgRef = useRef<HTMLDivElement | null>(null);
   const [data, setData] = useState<VehicleData[]>([]);
+  const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
+  const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200)
+
+  useResizeObserver({ ref: svgRef, onResize });
 
   // Load CSV data asynchronously
   useEffect(() => {
@@ -58,21 +66,29 @@ const Heatmap: React.FC = () => {
 
   // Draw heatmap when data is loaded
   useEffect(() => {
-    if (data.length === 0) return;
+    if (isEmpty(data)) return;
+    if (size.width === 0 || size.height === 0) return;
 
-    const margin = { top: 50, right: 50, bottom: 50, left: 80 };
-    const width = Math.min(window.innerWidth, 600) - margin.left - margin.right;
-    const height = Math.min(window.innerWidth, 600) - margin.top - margin.bottom;
-
+    const margin: Margin = { top: 100, right: 80, bottom: 50, left: 80 };
+    const width = 800 - margin.left - margin.right;
+    const height = 600 - margin.top - margin.bottom;
+    
     const variables = ['year', 'condition', 'odometer', 'mmr', 'sellingprice'];
     const n = variables.length;
 
     // Clear previous SVG content
-    d3.select(svgRef.current).selectAll('*').remove();
+    d3.select('#heatmap-svg').selectAll('*').remove();
 
     // Create scales
-    const xScale = d3.scaleBand().domain(variables).range([0, width]).padding(0.01);
-    const yScale = d3.scaleBand().domain(variables).range([0, height]).padding(0.01);
+    const xScale = d3.scaleBand()
+      .domain(variables)
+      .range([0, size.width])
+      .padding(0.01)
+
+    const yScale = d3.scaleBand()
+      .domain(variables)
+      .range([0, height])
+      .padding(0.01);
     const colorScalePositive = d3.scaleSequential(d3.interpolateReds).domain([0, 1]);
     const colorScaleNegative = d3.scaleSequential(d3.interpolateReds).domain([0, -1]);
 
@@ -88,7 +104,7 @@ const Heatmap: React.FC = () => {
     }
 
     // Create SVG container
-    const svg = d3.select(svgRef.current)
+    const svg = d3.select('#heatmap-svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
@@ -128,9 +144,24 @@ const Heatmap: React.FC = () => {
     svg.append('g')
       .call(d3.axisLeft(yScale));
 
-  }, [data]);
+    // Add title
+    svg.append('text')
+    .attr('x', width / 2)
+    .attr('y', -margin.top / 2)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '16px')
+    .style('font-weight', 'bold')
+    .text('Correlation Heatmap');
 
-  return <svg ref={svgRef} style={{ width: '100%', height: '100%' }} />;
+  }, [data, size]);
+
+  return (
+    <>
+      <div ref={svgRef} className='chart-container'>
+        <svg id='heatmap-svg' width='100%' height='100%'></svg>
+      </div>
+    </>
+  )
 };
 
 export default Heatmap;

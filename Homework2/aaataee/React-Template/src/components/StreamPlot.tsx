@@ -1,19 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { ComponentSize, Margin } from '../types';
+import { ComponentSize, Margin, VehicleData } from '../types';
 import { useDebounceCallback, useResizeObserver } from 'usehooks-ts';
 
-interface VehicleData {
-  year: number;
+interface StreamData extends VehicleData {
   make: string;
-  sellingprice: number;
 }
 
 const StreamPlot: React.FC = () => {
   const [hoveredMake, setHoveredMake] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number } | null>(null);
   const svgRef = useRef<HTMLDivElement | null>(null);
-  const [data, setData] = useState<VehicleData[]>([]);
+  const [data, setData] = useState<StreamData[]>([]);
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
   const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200)
 
@@ -34,7 +32,7 @@ const StreamPlot: React.FC = () => {
             d.make != '' &&
             d.year > 0 &&
             d.sellingprice > 0
-        ) as VehicleData[];
+        ) as StreamData[];
 
         setData(filteredData);
       } catch (error) {
@@ -48,7 +46,7 @@ const StreamPlot: React.FC = () => {
 
 
   useEffect(() => {
-    const margin: Margin = { top: 100, right: 10, bottom: 50, left: 250 };
+    const margin: Margin = { top: 100, right: 10, bottom: 50, left: 220 };
     const width = 800 - margin.left - margin.right;
     const height = 600 - margin.top - margin.bottom;
 
@@ -57,7 +55,7 @@ const StreamPlot: React.FC = () => {
 
     // Create the SVG container
     const svg = d3.select('#stream-svg')
-      .attr('width', width + margin.left + margin.right)
+      .attr('width', size.width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -98,7 +96,7 @@ const StreamPlot: React.FC = () => {
     // X Scale (year) - start from the first year that has a selling price > 0
     const xScale = d3.scaleLinear()
       .domain([minYearWithPrice || 0, d3.max(filteredData, d => d.year) as number])  // Adjusted to start with year with prices > 0
-      .range([0, width]);
+      .range([0, size.width]);
 
     // Y Scale (stacked price) - ensure non-negative values using stackOffsetNone
     const yScale = d3.scaleLinear()
@@ -159,7 +157,7 @@ const StreamPlot: React.FC = () => {
 
     // Add X label
     svg.append('text')
-      .attr('x', width / 2)
+      .attr('x', size.width / 2)
       .attr('y', height + margin.bottom - 10)
       .attr('text-anchor', 'middle')
       .text('Year');
@@ -168,19 +166,19 @@ const StreamPlot: React.FC = () => {
     svg.append('text')
       .attr('transform', 'rotate(-90)')
       .attr('x', -height / 2)
-      .attr('y', -margin.left + 170)
+      .attr('y', -margin.left + 140)
       .attr('text-anchor', 'middle')
       .text('Price (Sum of Selling Price)');
 
     // Add title
     svg.append('text')
-      .attr('x', width / 2)
+      .attr('x', size.width / 2)
       .attr('y', -margin.top / 2)
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('font-weight', 'bold')
       .text('Stream Plot of Vehicle Prices by Make Over Year');
-  }, [data]);
+  }, [data, size]);
 
   return (
     <div>

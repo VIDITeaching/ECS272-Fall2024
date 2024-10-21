@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { ComponentSize, Margin } from '../types';
+import { ComponentSize, Margin, VehicleData } from '../types';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import { isEmpty } from 'lodash';
 
@@ -18,17 +18,15 @@ const calculateCorrelation = (x: number[], y: number[]): number => {
   return denominator === 0 ? 0 : numerator / denominator;
 };
 
-interface VehicleData {
+interface HeatmapData extends VehicleData {
   mmr: number;
-  year: number;
   condition: number;
   odometer: number;
-  sellingprice: number;
 }
 
 const Heatmap: React.FC = () => {
   const svgRef = useRef<HTMLDivElement | null>(null);
-  const [data, setData] = useState<VehicleData[]>([]);
+  const [data, setData] = useState<HeatmapData[]>([]);
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
   const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200)
 
@@ -53,7 +51,7 @@ const Heatmap: React.FC = () => {
             d.condition > 0 &&
             d.odometer > 0 &&
             d.sellingprice > 0
-        ) as VehicleData[];
+        ) as HeatmapData[];
 
         setData(filteredData);
       } catch (error) {
@@ -97,15 +95,15 @@ const Heatmap: React.FC = () => {
     for (let i = 0; i < n; i++) {
       correlationMatrix[i] = [];
       for (let j = 0; j < n; j++) {
-        const x = data.map(d => d[variables[i] as keyof VehicleData]);
-        const y = data.map(d => d[variables[j] as keyof VehicleData]);
+        const x = data.map(d => d[variables[i] as keyof HeatmapData]);
+        const y = data.map(d => d[variables[j] as keyof HeatmapData]);
         correlationMatrix[i][j] = calculateCorrelation(x, y);
       }
     }
 
     // Create SVG container
     const svg = d3.select('#heatmap-svg')
-      .attr('width', width + margin.left + margin.right)
+      .attr('width', size.width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -146,7 +144,7 @@ const Heatmap: React.FC = () => {
 
     // Add title
     svg.append('text')
-    .attr('x', width / 2)
+    .attr('x', size.width / 2)
     .attr('y', -margin.top / 2)
     .attr('text-anchor', 'middle')
     .style('font-size', '16px')
@@ -158,7 +156,7 @@ const Heatmap: React.FC = () => {
   return (
     <>
       <div ref={svgRef} className='chart-container'>
-        <svg id='heatmap-svg' width='100%' height='100%'></svg>
+        <svg id='heatmap-svg' width='100%' height='50%'></svg>
       </div>
     </>
   )

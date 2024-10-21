@@ -16,6 +16,7 @@ export interface Point {
     readonly posY: number;
 }
 
-export interface Bar{
-    readonly value: number;
+export interface VehicleData{
+    readonly year: number;
+    readonly sellingprice: number;
 }

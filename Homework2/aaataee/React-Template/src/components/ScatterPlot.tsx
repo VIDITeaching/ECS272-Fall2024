@@ -1,18 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { ComponentSize, Margin } from '../types';
+import { ComponentSize, Margin, VehicleData } from '../types';
 import { useDebounceCallback, useResizeObserver } from 'usehooks-ts';
 
-interface VehicleData {
-  year: number;
-  sellingprice: number;
+interface ScatterData extends VehicleData {
   mmr: number;
 }
 
 
 const ScatterPlot: React.FC = () => {
   const svgRef = useRef<HTMLDivElement | null>(null);
-  const [data, setData] = useState<VehicleData[]>([]);
+  const [data, setData] = useState<ScatterData[]>([]);
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
   const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200)
 
@@ -33,7 +31,7 @@ const ScatterPlot: React.FC = () => {
             d.mmr > 0 &&
             d.year > 0 &&
             d.sellingprice > 0
-        ) as VehicleData[];
+        ) as ScatterData[];
 
         setData(filteredData);
       } catch (error) {
@@ -55,7 +53,7 @@ const ScatterPlot: React.FC = () => {
 
     // Create the SVG container
     const svg = d3.select('#scatter-svg')
-      .attr('width', width + margin.left + margin.right)
+      .attr('width', size.width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -69,7 +67,7 @@ const ScatterPlot: React.FC = () => {
     // X Scale
     const xScale = d3.scaleLinear()
       .domain(d3.extent(parsedData, d => d.year) as [number, number])
-      .range([0, width]);
+      .range([0, size.width]);
 
     // Y Scale
     const yScale = d3.scaleLinear()
@@ -97,7 +95,7 @@ const ScatterPlot: React.FC = () => {
 
     // Add X label
     svg.append('text')
-      .attr('x', width / 2)
+      .attr('x', size.width / 2)
       .attr('y', height + margin.bottom - 10)
       .attr('text-anchor', 'middle')
       .text('Year');
@@ -112,13 +110,13 @@ const ScatterPlot: React.FC = () => {
 
     // Add title
     svg.append('text')
-      .attr('x', width / 2)
+      .attr('x', size.width / 2)
       .attr('y', -margin.top / 2)
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('font-weight', 'bold')
       .text('Profit over Year of Vehicle');
-  }, [data]);
+  }, [data, size]);
 
   return (
     <>

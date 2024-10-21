@@ -115,7 +115,7 @@ const ScatterPlot: React.FC = () => {
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('font-weight', 'bold')
-      .text('Profit over Year of Vehicle');
+      .text('Profit Over the Manu. Year of Vehicle');
   }, [data, size]);
 
   return (

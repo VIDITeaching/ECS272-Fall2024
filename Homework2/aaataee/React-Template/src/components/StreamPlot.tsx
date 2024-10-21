@@ -177,7 +177,7 @@ const StreamPlot: React.FC = () => {
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('font-weight', 'bold')
-      .text('Stream Plot of Vehicle Prices by Make Over Year');
+      .text('Stream Plot of Vehicle Prices by Make Over the Manu. Year');
   }, [data, size]);
 
   return (

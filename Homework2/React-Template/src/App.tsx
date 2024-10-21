@@ -1,7 +1,9 @@
-import Example from './components/Example'
+import BarChart from './components/BarChart'
+import Parallel from './components/Parallel'
+import Dendrogram from './components/Dendrogram'
 import Notes from './components/Notes'
 import { NotesWithReducer, CountProvider } from './components/NotesWithReducer';
-import Grid from '@mui/material/Grid';
+import {Grid, Divider} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 
@@ -21,25 +23,32 @@ const theme = createTheme({
 
 function Layout() {
   return (
-    <Grid container spacing={1} direction='column' id="main-container">
-      <Grid container item xs={6} sm={6} md={6} lg={6}>
-        <Grid item xs={5} sm={5} md={5} lg={5}>
-          <Example />
-        </Grid>
-        <Grid item xs sm md lg/>
-      </Grid>
-      <Grid item xs sm md lg>
-        {
-        <Notes msg={"This is a message sent from App.tsx as component prop"} />
-        }
-        { // Uncomment the following to see how state management works in React.
-        /*
-          <CountProvider>
-            <NotesWithReducer msg={"This is a message sent from App.tsx as component prop"} />
-          </CountProvider>*/
-        }
-      </Grid>
+    <Grid container id="main-container" style={{ height: '100vh', flexDirection: 'column' }}>
+  {/* Top section containing BarChart and Parallel */}
+  <Grid container item style={{ height: '50%'}}>
+    {/* BarChart in the top-left quarter */}
+    <Grid item xs={5}>
+      <BarChart  />   
     </Grid>
+    <Divider orientation="vertical" sx={{ height: '100%', width: '2px', bgcolor: 'black' }} />
+    {/* Parallel in the top-right quarter */}
+    <Grid item xs={6}>
+      <Parallel/>
+    </Grid>
+  </Grid>
+  <Divider sx={{ 
+        width: '100%', 
+        height: '4px', // Thickness
+        bgcolor: 'black' // Darker color
+      }} /> 
+  {/* Dendrogram taking 40% of the screen height */}
+  <Grid container item style={{ height: '45%', overflow: 'hidden' }}>
+    <Grid item xs={12} style={{ height: '100%' }}>
+      <Dendrogram />
+    </Grid>
+  </Grid>
+</Grid>
+
   )
 }
 

@@ -6,7 +6,7 @@ interface DataRow {
   'Do you have Depression?': string;
   'Do you have Anxiety?': string;
   'Do you have Panic attack?': string;
-  [key: string]: string; // Allow additional string indexing
+  [key: string]: string;
 }
 
 const ChordDiagram: React.FC = () => {
@@ -15,7 +15,7 @@ const ChordDiagram: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const rawData = await d3.csv('/data/StudentMentalhealth.csv');
-      const data = rawData as unknown as DataRow[]; // Type assertion
+      const data = rawData as unknown as DataRow[];
       if (data) createChordDiagram(data);
     };
 
@@ -24,29 +24,30 @@ const ChordDiagram: React.FC = () => {
 
   const createChordDiagram = (data: DataRow[]) => {
     const svg = d3.select(ref.current);
-    const width = 900; // Increased width for better spacing
-    const height = 900; // Increased height for better spacing
-    const innerRadius = Math.min(width, height) * 0.3; // Reduced inner radius
+    const width = 900;
+    const height = 900;
+    const innerRadius = Math.min(width, height) * 0.3;
     const outerRadius = innerRadius * 1.1;
 
     svg.attr('width', width).attr('height', height);
 
-    const ageGroups = ['Under 20', '20-25', '25-30', '30+'];
+    const ages = Array.from({length: 7}, (_, i) => (i + 18).toString());
     const conditions = ['Depression', 'Anxiety', 'Panic attack'];
-    const nodes = [...ageGroups, ...conditions];
+    const nodes = [...ages, ...conditions];
 
     const matrix = Array(nodes.length).fill(null).map(() => Array(nodes.length).fill(0));
 
     data.forEach((d) => {
-      const ageGroup = getAgeGroup(parseInt(d.Age));
-      const ageIndex = ageGroups.indexOf(ageGroup);
-
-      conditions.forEach((condition, conditionIndex) => {
-        if (d[`Do you have ${condition}?`] === 'Yes') {
-          matrix[ageIndex][ageGroups.length + conditionIndex]++;
-          matrix[ageGroups.length + conditionIndex][ageIndex]++;
-        }
-      });
+      const age = parseInt(d.Age);
+      if (age >= 18 && age <= 24) {
+        const ageIndex = age - 18;
+        conditions.forEach((condition, conditionIndex) => {
+          if (d[`Do you have ${condition}?`] === 'Yes') {
+            matrix[ageIndex][ages.length + conditionIndex]++;
+            matrix[ages.length + conditionIndex][ageIndex]++;
+          }
+        });
+      }
     });
 
     const chord = d3.chord()
@@ -84,11 +85,10 @@ const ChordDiagram: React.FC = () => {
       .attr('dy', '.35em')
       .attr('transform', (d) => {
         const angle = ((d as any).angle * 180 / Math.PI - 90);
-        let radius = outerRadius + 40; // Increased default distance from the outer ring
+        let radius = outerRadius + 40;
         
-        // If the label is in the bottom half, move it further out
         if (angle > 90 || angle < -90) {
-          radius += 30; // Increased value to move lower labels further out
+          radius += 30;
         }
         
         const x = radius * Math.cos(angle * Math.PI / 180);
@@ -136,13 +136,6 @@ const ChordDiagram: React.FC = () => {
           .duration(500)
           .style('opacity', 0);
       });
-  };
-
-  const getAgeGroup = (age: number): string => {
-    if (age < 20) return 'Under 20';
-    if (age >= 20 && age < 25) return '20-25';
-    if (age >= 25 && age < 30) return '25-30';
-    return '30+';
   };
 
   return <svg ref={ref}></svg>;

@@ -29,8 +29,8 @@ const App: React.FC = () => {
           <ScatterPlot />
           <p>
             This scatter plot shows the relationship between a student's age and their CGPA.
-            Each point represents a student, with the shape indicating gender (square for male, 
-            circle for female) and the color indicating whether they reported having depression 
+            Each point represents a student, with the shape indicating gender (square for male,
+            circle for female) and the color indicating whether they reported having depression
             (red) or not (blue).
           </p>
           <p>
@@ -50,16 +50,16 @@ const App: React.FC = () => {
           </p>
         </section>
         <section className="chart-section">
-          <h2>Age Groups and Mental Health Conditions Chord Diagram</h2>
+          <h2>Ages 18-24 and Mental Health Conditions Chord Diagram</h2>
           <ChordDiagram />
           <p>
-            This chord diagram illustrates the relationships between age groups and mental health conditions.
-            It shows how different age categories (Under 20, 20-25, 25-30, 30+) are associated with 
+            This chord diagram illustrates the relationships between individual ages (18 to 24) 
+            and mental health conditions. It shows how each age from 18 to 24 is associated with 
             mental health conditions like depression, anxiety, and panic attacks.
           </p>
           <p>
-            The thickness of the chords represents the number of students in each age group 
-            experiencing a particular mental health condition. Hover over the chords and arcs 
+            The thickness of the chords represents the number of students of each age
+            experiencing a particular mental health condition. Hover over the chords and arcs
             for more detailed information.
           </p>
         </section>

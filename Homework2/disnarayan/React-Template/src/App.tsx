@@ -1,8 +1,8 @@
 import React from 'react';
 import MentalHealthChart from './components/MentalHealthChart';
-import ScatterPlot from './components/ScatterPlot';
 import SankeyDiagram from './components/SankeyDiagram';
 import ChordDiagram from './components/ChordDiagram';
+import StackedBarChart from './components/StackedBarChart';
 
 const App: React.FC = () => {
   return (
@@ -12,29 +12,20 @@ const App: React.FC = () => {
       </header>
       <main>
         <section className="chart-section">
-          <h2>Mental Health Conditions Bar Chart</h2>
-          <MentalHealthChart />
+          <h2>Overview of Student Data by Categories</h2>
+          <StackedBarChart />
           <p>
-            This chart displays the prevalence of mental health conditions among students,
-            including depression, anxiety, and panic attacks. The data is based on a survey
-            of student responses, showing the number of students who reported experiencing
-            each condition (True) versus those who did not (False).
-          </p>
-          <p>
-            Hover over the bars to see detailed information about each category.
+            This stacked bar chart provides an overview of various categories, such as Gender, Course, CGPA,
+            Year of Study, and more. Each bar is divided into its corresponding value (e.g., Male/Female for Gender).
           </p>
         </section>
         <section className="chart-section">
-          <h2>Age vs CGPA Scatter Plot</h2>
-          <ScatterPlot />
+          <h2>Mental Health Conditions Bar Chart</h2>
+          <MentalHealthChart />
           <p>
-            This scatter plot shows the relationship between a student's age and their CGPA.
-            Each point represents a student, with the shape indicating gender (square for male,
-            circle for female) and the color indicating whether they reported having depression
-            (red) or not (blue).
-          </p>
-          <p>
-            Hover over the points to see detailed information about each student.
+            This chart displays the prevalence of mental health conditions among students, including depression, anxiety,
+            and panic attacks. The data is based on a survey of student responses, showing the number of students who
+            reported experiencing each condition (True) versus those who did not (False).
           </p>
         </section>
         <section className="chart-section">
@@ -45,9 +36,6 @@ const App: React.FC = () => {
             to their mental health condition (specifically, whether they have depression or not).
             The width of each flow represents the number of students in that path.
           </p>
-          <p>
-            Hover over the nodes and links to see more detailed information.
-          </p>
         </section>
         <section className="chart-section">
           <h2>Ages 18-24 and Mental Health Conditions Chord Diagram</h2>
@@ -56,11 +44,6 @@ const App: React.FC = () => {
             This chord diagram illustrates the relationships between individual ages (18 to 24) 
             and mental health conditions. It shows how each age from 18 to 24 is associated with 
             mental health conditions like depression, anxiety, and panic attacks.
-          </p>
-          <p>
-            The thickness of the chords represents the number of students of each age
-            experiencing a particular mental health condition. Hover over the chords and arcs
-            for more detailed information.
           </p>
         </section>
       </main>

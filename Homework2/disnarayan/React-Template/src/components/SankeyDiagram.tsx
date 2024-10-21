@@ -20,6 +20,11 @@ const SankeyDiagram: React.FC = () => {
   const [data, setData] = useState<{ nodes: RawNode[], links: RawLink[] }>({ nodes: [], links: [] });
   const svgRef = useRef<SVGSVGElement>(null);
 
+  const normalizeYearOfStudy = (year: string): string => {
+    const normalized = year.toLowerCase().replace(/\s+/g, '');
+    return normalized.startsWith('year') ? 'Year ' + normalized.replace('year', '') : year;
+  };
+
   useEffect(() => {
     csv('/data/StudentMentalhealth.csv').then((csvData) => {
       const nodes: RawNode[] = [];
@@ -27,7 +32,7 @@ const SankeyDiagram: React.FC = () => {
 
       csvData.forEach(row => {
         const course = row['What is your course?'];
-        const year = row['Your current year of Study'];
+        const year = normalizeYearOfStudy(row['Your current year of Study']);
         const mentalHealth = row['Do you have Depression?'] === 'Yes' ? 'Depression' : 'No Depression';
 
         [course, year, mentalHealth].forEach(item => {

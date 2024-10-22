@@ -25,3 +25,8 @@ If you want to use Vue.js but not with TypeScript, just remove any type specific
  * [pinia](https://pinia.vuejs.org/introduction.html) for store management in Vue.js
  * [Vuetify](https://next.vuetifyjs.com/en/components/all/) for UI that follows Google Material Design 3.
  * [lodash](https://lodash.com/) for utility functions in JavaScript.
+
+
+## Template Pic
+![pic1](/data/template1.jpg "pic1")
+![pic2](/data/template2.jpg "pic2")

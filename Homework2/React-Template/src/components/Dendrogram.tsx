@@ -135,7 +135,6 @@ export default function Dendrogram() {
 
 svg.selectAll('*').remove();
 
-// Define hierarchical data (3 layers, 2 branches per layer)
 const data: HierarchyData = {
   name: 'Students: ' + (bars[0].value + bars[1].value).toLocaleString(),
   children: [
@@ -196,7 +195,6 @@ const data: HierarchyData = {
   ],
 };
 
-// Set dimensions and margins for the diagram
 const width = size.width - 150;
 const height = size.height;
 const margin = { top: 20, right: 200, bottom: 10, left: 150 };
@@ -205,7 +203,6 @@ const root = d3.hierarchy<HierarchyData>(data);
 const treeLayout = d3.tree<HierarchyData>().size([size.height, size.width - 2 * margin.left - margin.right]);
 const nodes = treeLayout(root);
 
-// Add title
 svg.append('text')
   .attr('x', width / 2)
   .attr('y', margin.top )
@@ -237,7 +234,6 @@ g.selectAll('.link')
     return `M${source.y},${source.x}C${(source.y + target.y) / 2},${source.x} ${(source.y + target.y) / 2},${target.x} ${target.y},${target.x}`;
   });
 
-// Add nodes
 const node = g
   .selectAll('.node')
   .data(nodes.descendants())
@@ -246,14 +242,12 @@ const node = g
   .attr('class', 'node')
   .attr('transform', d => `translate(${d.y},${d.x})`);
 
-// Add gradient color to circles
 node.append('circle')
   .attr('r', 6)
   .attr('fill', 'url(#gradient)')
   .attr('stroke', '#6baed6')
   .attr('stroke-width', '2px');
 
-// Define gradient
 svg.append('defs')
   .append('linearGradient')
   .attr('id', 'gradient')
@@ -271,7 +265,6 @@ svg.append('defs')
   .attr('offset', d => d.offset)
   .attr('stop-color', d => d.color);
 
-// Add hover effect for text
 node.append('text')
   .attr('dy', '.35em')
   .attr('x', d => (d.children ? 38 : 10))
@@ -288,7 +281,6 @@ node.append('text')
     d3.select(this).style('font-weight', 'normal').style('fill', '#333');
   });
 
-// Add smooth transition
 node.transition()
   .duration(500)
   .attr('transform', d => `translate(${d.y},${d.x})`);

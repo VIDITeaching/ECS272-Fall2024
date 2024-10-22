@@ -24,24 +24,20 @@ const theme = createTheme({
 function Layout() {
   return (
     <Grid container id="main-container" style={{ height: '100vh', flexDirection: 'column' }}>
-  {/* Top section containing BarChart and Parallel */}
   <Grid container item style={{ height: '50%'}}>
-    {/* BarChart in the top-left quarter */}
     <Grid item xs={5}>
       <BarChart  />   
     </Grid>
     <Divider orientation="vertical" sx={{ height: '100%', width: '2px', bgcolor: 'black' }} />
-    {/* Parallel in the top-right quarter */}
     <Grid item xs={6}>
       <Parallel/>
     </Grid>
   </Grid>
   <Divider sx={{ 
         width: '100%', 
-        height: '4px', // Thickness
-        bgcolor: 'black' // Darker color
+        height: '4px', 
+        bgcolor: 'black'
       }} /> 
-  {/* Dendrogram taking 40% of the screen height */}
   <Grid container item style={{ height: '45%', overflow: 'hidden' }}>
     <Grid item xs={12} style={{ height: '100%' }}>
       <Dendrogram />

@@ -32,7 +32,6 @@ export default function BarChart() {
     const dataFromCSV = async () => {
       try {
         const csvData = await d3.csv('../../data/Student Mental health.csv', d => {
-          // This callback allows you to rename the keys, format values, and drop columns you don't need
           return {gender: d['Choose your gender'], year: d['Your current year of Study'], depression: d['Do you have Depression?'], anxiety: d['Do you have Anxiety?'], panic: d['Do you have Panic attack?']};
         });
         let femaleDepression=0
@@ -99,7 +98,7 @@ export default function BarChart() {
     let xScale = d3.scaleBand()
       .rangeRound([margin.left, size.width - margin.right])
       .domain(xCategories)
-      .padding(0.2); // Increase padding for gaps between category groups
+      .padding(0.2);
 
     let yScale = d3.scaleLinear()
       .range([size.height - margin.bottom, margin.top])
@@ -125,7 +124,6 @@ export default function BarChart() {
       .text('Mental Health Issues')
       .style('font-size', '.8rem');
 
-    // Create a pair of bars for each category
     const chartBars = chartContainer.append('g')
       .selectAll('g')
       .data<CategoricalBar>(bars)
@@ -148,7 +146,6 @@ export default function BarChart() {
       .attr('height', (d: CategoricalBar) => Math.abs(yScale(0) - yScale(d.mal_value)))
       .attr('fill', 'blue');
 
-    // Title
     const title = chartContainer.append('g')
       .append('text')
       .attr('transform', `translate(${size.width / 2}, ${size.height - margin.top + 15})`)
@@ -157,11 +154,9 @@ export default function BarChart() {
       .style('font-weight', 'bold')
       .text('Breakdown of Mental Issues By Gendered Population');
 
-    // Legend
     const legend = chartContainer.append('g')
       .attr('transform', `translate(${size.width - margin.right - 60}, ${margin.top})`);
 
-    // Pink bar legend
     legend.append('rect')
       .attr('x', 0)
       .attr('y', 0)
@@ -175,7 +170,6 @@ export default function BarChart() {
       .text('Female')
       .style('font-size', '.8rem');
 
-    // Blue bar legend
     legend.append('rect')
       .attr('x', 0)
       .attr('y', 25)

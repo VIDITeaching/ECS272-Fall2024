@@ -60,7 +60,6 @@ export default function Parallel() {
           onResize({ width, height });
         }
         const csvData = await d3.csv('../../data/Student Mental health.csv', d => {
-          // This callback allows you to rename the keys, format values, and drop columns you don't need
           return {gender: d['Choose your gender'], year: d['Your current year of Study'].toLowerCase(), depression: d['Do you have Depression?'], anxiety: d['Do you have Anxiety?'], panic: d['Do you have Panic attack?']};
         });
         let depressionCount=0
@@ -251,7 +250,6 @@ export default function Parallel() {
       const legend = svg.append("g")
       .attr("transform", `translate(${size.width - 125}, 20)`);
 
-    // Depression legend
     legend.append("rect")
       .attr("x", 0)
       .attr("y", 0)
@@ -265,7 +263,6 @@ export default function Parallel() {
       .text("Depression")
       .attr("alignment-baseline", "middle");
 
-    // No Depression legend
     legend.append("rect")
       .attr("x", 0)
       .attr("y", 20)

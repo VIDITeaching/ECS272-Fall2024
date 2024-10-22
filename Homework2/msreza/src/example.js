@@ -9,8 +9,8 @@ var size = { width: 0, height: 0 }
 const data = await d3.csv('./data/mental-health.csv', (d) => { 
     return { 
         depression: d["Do you have Depression?"],
-        anxiety: +d["Do you have Anxiety?"],
-        panic: d["Do you have Panic attack?"],
+        //anxiety: +d["Do you have Anxiety?"],
+        //panic: d["Do you have Panic attack?"],
         gpa: d["What is your CGPA?"]
     }
 });

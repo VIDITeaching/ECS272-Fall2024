@@ -136,7 +136,7 @@ const LineChart: React.FC = () => {
       .attr("text-anchor", "middle")
       .style("font-size", "22px")
       .style("font-weight", "bold")
-      .text("Average Car Sale Price between 2005 and 2015 (Sales Amount \u{2265}5000)");
+      .text("Average Sale Price of Car (Made in 2005 - 2015, Sales Amount \u{2265}5000)");
 
     svg.append("text")
       .attr("x", (size.width - margin.left - margin.right) / 2)

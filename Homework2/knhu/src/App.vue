@@ -23,7 +23,7 @@ export default {
     <v-row no-gutters>
       <v-col>
         <ParallelCoordinates msg="This is a message sent from App.vue as component property"/>
-        <PieChart msg="This is a message sent from App.vue as component property"/> <!-- Sankey diagram is now displayed -->
+        <PieChart msg="This is a message sent from App.vue as component property"/> 
       </v-col>
     </v-row>
   </v-container>

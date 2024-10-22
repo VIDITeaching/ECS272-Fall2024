@@ -24,7 +24,7 @@ export default {
     <v-row no-gutters>
       <v-col>
         <Notes msg="This is a message sent from App.vue as component property"/>
-        <!-- <NotesWithStore msg="This is a message sent from App.vue as component property"/> -->
+        <NotesWithStore msg="This is a message sent from App.vue as component property"/>
       </v-col>
     </v-row>
   </v-container>

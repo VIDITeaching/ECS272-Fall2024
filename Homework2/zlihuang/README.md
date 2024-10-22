@@ -31,4 +31,4 @@ If you want to use Vue.js but not with TypeScript, just remove any type specific
 ![pic1](data/template1.jpg "pic1")
 
 
-![pic2](/data/template2.jpg "pic2")
+![pic2](data/template2.jpg "pic2")

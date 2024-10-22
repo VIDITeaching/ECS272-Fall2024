@@ -6,7 +6,7 @@ const margin = { left: 40, right: 20, top: 20, bottom: 60 }
 var size = { width: 0, height: 0 }
 
 // Read in csv files
-const dataF = await d3.csv('./data/mental-health.csv', (d) => { 
+const data = await d3.csv('./data/mental-health.csv', (d) => { 
     return { 
         depression: d["Do you have Depression?"],
         anxiety: +d["Do you have Anxiety?"],
@@ -15,7 +15,7 @@ const dataF = await d3.csv('./data/mental-health.csv', (d) => {
     }
 });
 
-var bars = dataFromCSV
+var bars = data
 
 const onResize = (targets) => {
     targets.forEach(target => {
@@ -118,6 +118,5 @@ function initChart() {
         .text('Distribution of Demo Data') // text content
 
 }
-
 
 

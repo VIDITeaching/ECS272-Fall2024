@@ -28,5 +28,7 @@ If you want to use Vue.js but not with TypeScript, just remove any type specific
 
 
 ## Template Pic
-![pic1](/data/template1.jpg "pic1")
+![pic1](ECS272-Fall2024/Homework2/zlihuang/datatemplate1.jpg "pic1")
+
+
 ![pic2](/data/template2.jpg "pic2")

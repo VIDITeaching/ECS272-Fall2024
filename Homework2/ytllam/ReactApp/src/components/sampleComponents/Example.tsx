@@ -59,7 +59,7 @@ export default function Example() {
     if (size.width === 0 || size.height === 0) return;
     d3.select('#bar-svg').selectAll('*').remove();
     initChart();
-  }, [bars, size])
+  }, [bars, size]) // Bug - if size not in array then will not re-render after data loads. Can't figure out why for now so.. if it ain't broke don't fix it
 
   function initChart() {
     // select the svg tag so that we can insert(render) elements, i.e., draw the chart, within it.

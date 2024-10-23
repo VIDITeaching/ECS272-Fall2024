@@ -1,12 +1,11 @@
 import Example from './components/sampleComponents/Example.js'
-import Notes from './components/sampleComponents/Notes.js'
-import Viz1 from './components/Viz1'
-import { NotesWithReducer, CountProvider } from './components/sampleComponents/NotesWithReducer.js';
+import Viz1 from './components/Viz1.js'
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import { useState, useEffect } from 'react';
-import DataContext from './stores/DataContext.js';
+import DataContext from './stores/DataContext.ts';
+
 import * as d3 from 'd3';
 import * as types from './types';
 
@@ -47,14 +46,14 @@ function Layout() {
             travelTime: r.traveltime as types.TravelTimeEnum,
             studyTime: r.studytime as types.WeeklyStudyTimeEnum,
             failures: r.failures as types.NumClassesFailedEnum,
-            schoolSup: r.schoolsup === "yes",
-            famSup: r.famsup === "yes",
-            paid: r.paid === "yes",
-            activities: r.activities === "yes",
-            nursery: r.nursery === "yes",
-            higher: r.higher === "yes",
-            internet: r.internet === "yes",
-            romantic: r.romantic === "yes",
+            schoolSup: r.schoolsup === 'yes',
+            famSup: r.famsup === 'yes',
+            paid: r.paid === 'yes',
+            activities: r.activities === 'yes',
+            nursery: r.nursery === 'yes',
+            higher: r.higher === 'yes',
+            internet: r.internet === 'yes',
+            romantic: r.romantic === 'yes',
             famRel: r.famrel as types.QualityEnum,
             freeTime: r.freetime as types.FrequencyEnum,
             goOut: r.goout as types.FrequencyEnum,
@@ -68,27 +67,33 @@ function Layout() {
           }
         });
         setData(csvData);
-        // console.log(csvData);
+        // console.log('APP', csvData);
       } catch (error) {
         console.error('Error loading CSV:', error);
       }
     }
     readCSV();
-  }, []);
+  }, []); // empty dependency array [] - run once
 
 
   return (
     <DataContext.Provider value={data}>
-      <Grid container spacing={1} direction='column' id="main-container">
-        <Grid container item xs={6} sm={6} md={6} lg={6}>
-          <Grid item xs={5} sm={5} md={5} lg={5}>
-            <p>Vertical grid item 2</p>
+      {/* Top level grid container: vertical */}
+      <Grid container spacing={1} direction='column' id='main-container'>
+        {/* Horizontal grids as cells */}
+        <Grid container item xs={8} sm={8} md={8} lg={8} display='flex' justifyContent='center'>
+          <Grid item xs sm={10} md={8} lg={4}>
             <Viz1/>
           </Grid>
-          <Grid item xs sm md lg/>
         </Grid>
-        <Grid item xs sm md lg>
-          <p>Vertical grid item 2</p>
+        <Grid container item xs={2} sm md lg={3} display='flex' justifyContent='center'>
+          <Grid item xs={6} sm={6} md={6} lg={5}>
+            <p>Horizontal grid item 1</p>
+          </Grid>
+          <Grid item xs={6} sm={6} md={6} lg={5}>
+            <p>Horizontal grid item 2</p>
+            <Example/>
+          </Grid>
         </Grid>
       </Grid>
     </DataContext.Provider>

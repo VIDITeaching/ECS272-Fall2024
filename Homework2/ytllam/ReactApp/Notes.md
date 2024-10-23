@@ -5,7 +5,7 @@ Chosen dataset is https://www.kaggle.com/datasets/uciml/student-alcohol-consumpt
 ## Visualizations
 
 ### Visualization 1
-The factors that contribute to grade
+The factors that contribute to final grade
 - Parallel coordinates plot. Color coded according to final grade (consistent with heatmap above).
 - Include numeric dimensions like drinking, social and family relationships.
 - selected dimensions. Probably household or social.

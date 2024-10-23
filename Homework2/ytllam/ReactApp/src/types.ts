@@ -119,6 +119,7 @@ export enum FrequencyEnum {
 
 export interface DataRow {
     // readonly columns: string;
+    [index: string] : string | boolean | number | null | undefined;
     readonly school: SchoolEnum;
     readonly sex: SexEnum;
     readonly age: number;
@@ -153,3 +154,5 @@ export interface DataRow {
     readonly G2: number;
     readonly G3: number;
 }
+
+export const NUMBER_COLUMNS = 33;

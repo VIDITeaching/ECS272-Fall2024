@@ -1,16 +1,16 @@
-### Visualization # 1: Histogram of Student Mental Health Responses - Overview
+## Visualization # 1: Histogram of Student Mental Health Responses - Overview
 
 Since the dataset is centered around the mental health of students, I wanted my first visualization (also my overview visualization in this case) to focus on the mental health responses contained in the data. Since this visualization was meant to be an overview, I positioned it in the top left of the dashboard, as that position is the location I tend to divert my attention first thing to when navigating to a new web page. 
 
 This visualization is a histogram of the students' responses to some of the various mental health questions asked, in which students answered either "yes" or "no". Since there were data from multiple questions within the CSV file, I decided for my histogram to combine and display three variables: whether the student has depression, whether the student has anxiety, and whether the student suffers panic attacks. To provide distinction, I color coded each bar for the variable it corresponds to and added a legend indicating what each color represents. 
 
-### Visusalization # 2: Pie Chart of GPA Distributions among Depressed Students
+## Visusalization # 2: Pie Chart of GPA Distributions among Depressed Students
 
 For this visualization, I wanted to build on the first visualization that gave an overview of the data and provide a more focused view. I decided to focus on just the depression variable, rather than combining multiple variables, as that would allow me to focus on a single variable that I thought was more significant than the others in terms of portraying mental health status. In particular, I wanted to focus on students that answered "yes" to being depressed, and filtered the data accordingly. 
 
 This visualization is a pie chart containing the GPA category distributions among students that suffer from depression. I wanted my pie chart to explore GPA distributions in particular because I thought that would show correspondence with the GPA distributions in the pie chart. As a student myself, I find myself struggling with mental health and even dealing with depression at times due to grades and/or concerns with my GPA. 
 
-### Visualization # 3: Parallel Coordinates Plot of Gender, GPA, Year of Study, and Depression
+## Visualization # 3: Parallel Coordinates Plot of Gender, GPA, Year of Study, and Depression
 
 For my third and advanced visualization, I wanted to provide another focused view while building on the first two visualizations. Since this visualization was long (containing 4 axes), I decided to include it below the first two visualizations, where it takes up a lot of horizontal space. This makes sense for the context of my visualizations as well, since it is my third one and is meant to build on the two visualizations above it.
 

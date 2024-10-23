@@ -8,7 +8,7 @@ export default function Example() {
   const [bars, setBars] = useState([]);
   const barRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
-  const margin: Margin = { top: 20, right: 150, bottom: 100, left: 100 }; 
+  const margin: Margin = { top: 20, right: 150, bottom: 100, left: 150 }; 
   const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 20);
 
   useResizeObserver({ ref: barRef, onResize });
@@ -129,7 +129,7 @@ export default function Example() {
     legend.append('text')
       .attr('x', 20)
       .attr('y', 10)
-      .text('Dalc/p');
+      .text('Daily');
 
     legend.append('rect')
       .attr('x', 0)
@@ -140,13 +140,13 @@ export default function Example() {
     legend.append('text')
       .attr('x', 20)
       .attr('y', 30)
-      .text('Walc/p');
+      .text('Weekend');
   }
 
   return (
     <>
       <div ref={barRef} className='chart-container'>
-        <svg id='bar-svg' width='100%' height='300'></svg>
+        <svg id='bar-svg' width='100%' height='500'></svg>
       </div>
     </>
   );

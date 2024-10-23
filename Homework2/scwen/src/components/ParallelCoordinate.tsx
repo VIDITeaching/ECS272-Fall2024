@@ -40,9 +40,7 @@ const ParallelCoordinate: React.FC = () => {
   useEffect(() => {
     if (!data.length) return;
 
-    const width = size.width;
-    const height = size.height;
-
+    const { width, height } = size;
     d3.select(chartRef.current).selectAll('*').remove();
 
     const dimensionLabels = {
@@ -57,21 +55,17 @@ const ParallelCoordinate: React.FC = () => {
 
     dimensions.forEach(dimension => {
       if (dimension === 'year') {
-        const uniqueYears = Array.from(new Set(data.map(d => d.year))).sort();
-        yScales[dimension] = d3
-          .scalePoint()
-          .domain(uniqueYears)
+        yScales[dimension] = d3.scalePoint()
+          .domain(Array.from(new Set(data.map(d => d.year))).sort())
           .range([height - margin.bottom, margin.top]);
       } else {
-        yScales[dimension] = d3
-          .scaleLinear()
+        yScales[dimension] = d3.scaleLinear()
           .domain(d3.extent(data, d => d[dimension]) as [number, number])
           .range([height - margin.bottom, margin.top]);
       }
     });
 
-    const xScale = d3
-      .scalePoint()
+    const xScale = d3.scalePoint()
       .domain(dimensions)
       .range([margin.left, width - margin.right]);
 
@@ -107,7 +101,6 @@ const ParallelCoordinate: React.FC = () => {
 
     dimensions.forEach(dimension => {
       const axis = dimension === 'sellingprice' ? d3.axisRight(yScales[dimension]) : d3.axisLeft(yScales[dimension]);
-
       svg.append('g')
         .attr('transform', `translate(${xScale(dimension)}, 0)`)
         .call(axis);
@@ -120,9 +113,9 @@ const ParallelCoordinate: React.FC = () => {
         .text(dimensionLabels[dimension]);
     });
 
-    const legendHeight = 200;
+    const legendHeight = height - margin.top - margin.bottom;
     const legend = svg.append('g')
-      .attr('transform', `translate(${width - margin.right + 50}, ${margin.top})`);
+      .attr('transform', `translate(${width - margin.right + 60}, ${margin.top})`);
 
     const gradient = legend.append('defs')
       .append('linearGradient')
@@ -151,13 +144,9 @@ const ParallelCoordinate: React.FC = () => {
       .domain(conditionExtent as [number, number])
       .range([0, legendHeight]);
 
-    const legendAxis = d3.axisRight(legendScale)
-      .ticks(5)
-      .tickFormat(d => `${d.toFixed(2)}`);
-
     legend.append('g')
       .attr('transform', 'translate(25, 0)')
-      .call(legendAxis);
+      .call(d3.axisRight(legendScale).ticks(5).tickFormat(d => `${d.toFixed(2)}`));
 
     legend.append('text')
       .attr('x', 0)
@@ -167,11 +156,7 @@ const ParallelCoordinate: React.FC = () => {
       .text('Condition');
   }, [data, size]);
 
-  return (
-    <div>
-      <svg ref={chartRef} />
-    </div>
-  );
+  return <svg ref={chartRef}></svg>;
 };
 
 export default ParallelCoordinate;

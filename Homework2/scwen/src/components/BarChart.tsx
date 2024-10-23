@@ -1,55 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { isEmpty } from 'lodash';
-import { Margin, ComponentSize } from '../types';
+import { ComponentSize } from '../types';
 
 const BarChart: React.FC = () => {
   const chartRef = useRef(null);
   const [bars, setBars] = useState<any[]>([]);
   const [size, setSize] = useState<ComponentSize>({ width: 800, height: 500 });
-
-  const margin: Margin = { top: 50, right: 30, bottom: 100, left: 60 };
+  const margin = { top: 50, right: 30, bottom: 100, left: 60 };
 
   useEffect(() => {
-    const dataFromCSV = async () => {
-      try {
-        const csvData = await d3.csv('../../data/car_prices.csv', d => {
-          const make = d.make.trim();
-          return make ? { make: make.toUpperCase() } : null;
-        });
-
-        setBars(csvData);
-      } catch (error) {
-        console.error('Error loading CSV:', error);
-      }
+    const loadData = async () => {
+      const csvData = await d3.csv('../../data/car_prices.csv', d => {
+        const make = d.make.trim();
+        return make ? { make: make.toUpperCase() } : null;
+      });
+      setBars(csvData);
     };
-
-    dataFromCSV();
+    loadData();
   }, []);
 
   useEffect(() => {
-    if (isEmpty(bars)) return;
-    if (size.width === 0 || size.height === 0) return;
-
+    if (!bars.length || !size.width || !size.height) return;
     d3.select(chartRef.current).selectAll('*').remove();
     initChart();
   }, [bars, size]);
 
   const initChart = () => {
-    const salesByMake = d3.rollup(
-      bars,
-      v => v.length,
-      d => d.make
-    );
-
-    const salesArray = Array.from(salesByMake, ([make, count]) => ({
-      make,
-      count
-    }));
-
-    const filteredData = salesArray.filter(d => d.count >= 5000);
-
-    filteredData.sort((a, b) => b.count - a.count);
+    const salesByMake = d3.rollup(bars, v => v.length, d => d.make);
+    const filteredData = Array.from(salesByMake, ([make, count]) => ({ make, count }))
+      .filter(d => d.count >= 5000)
+      .sort((a, b) => b.count - a.count);
 
     const svg = d3.select(chartRef.current)
       .attr('width', size.width)
@@ -70,9 +50,9 @@ const BarChart: React.FC = () => {
       .attr('transform', `translate(0,${size.height - margin.top - margin.bottom})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
-      .style("font-size", "10px")
       .attr("transform", "rotate(-45)")
-      .style("text-anchor", "end");
+      .style("text-anchor", "end")
+      .style("font-size", "10px");
 
     svg.append('g').call(d3.axisLeft(y));
 
@@ -91,9 +71,9 @@ const BarChart: React.FC = () => {
       .attr("x", (size.width - margin.left - margin.right) / 2)
       .attr("y", -margin.top / 2)
       .attr("text-anchor", "middle")
-      .style("font-size", "22px")
+      .style("font-size", "20px")
       .style("font-weight", "bold")
-      .text("Total Car Sales Amount by Make (Sales Amount \u{2265}5000)");
+      .text("Total Car Sales by Make (Sales ≥ 5000)");
 
     svg.append("text")
       .attr("x", (size.width - margin.left - margin.right) / 2)

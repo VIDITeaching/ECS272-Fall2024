@@ -97,20 +97,18 @@ export default function Viz3() {
       labels.style('display', 'none');
     }
 
-    DRINKING_FREQ_BINS.forEach((binLabel, i) => {
+    DRINKING_FREQ_BINS.toReversed().forEach((binLabel, i) => {
       colorLegend.append('rect')
         .attr('transform', `translate(0, ${(20 + 15) * i})`)
         .attr('width', 20)
         .attr('height', 20)
         .style('fill', color(binLabel));
-    });
-    DRINKING_FREQ_BINS.forEach((binLabel, i) => {
+      
       colorLegend.append('text')
         .attr('transform', `translate(25, ${(20 + 15) * i + 15})`)
         .attr('text-anchor', 'start')
-        .text(DRINKING_FREQ_BINS[i])
-    });
-    
+        .text(binLabel)
+    });    
     
     // Chart title
     svg.append('g')

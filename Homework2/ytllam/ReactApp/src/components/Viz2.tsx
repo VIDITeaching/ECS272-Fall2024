@@ -7,7 +7,7 @@ import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import DataContext from '../stores/DataContext.js';
 
 import { Bar, ComponentSize, Margin } from '../types.js';
-// A 'extends' B means A inherits the properties and methods from B.
+// A "extends" B means A inherits the properties and methods from B.
 interface CategoricalBar extends Bar{
   category: string;
 }
@@ -46,15 +46,15 @@ export default function Viz2() {
   function renderHeatMap() {
     // Compute average grade by drinking frequency for G1, G2, G3. This is displayed inside a cell.
     let drinkToMeanGradeMatrix = new Map<string, Map<String, number>>();
-    // For each term,
+    // For each period,
     GRADE_COLUMNS.forEach((grade) => {
       let meanGradeMap = new Map<string, number>();
       // For each drinking frequency, 
       DRINKING_FREQ_BINS.forEach((drinkingFrequency, index) => {
         // Computer mean grade, ignoring missing grades. (NaNs should not exist in dataset though)
-        // Drinking frequency is 1-indexed. There are two columns for drinking frequency (weekend/end), determined by DRINKING_DAY.
+        // Drinking frequency is 1-indexed. There are two columns for drinking frequency (weekend/end), deperiodined by DRINKING_DAY.
         let meanGradeForDrinkingAmount = d3.mean(data, d => d[DRINKING_DAY] === (index + 1).toString() ? +d[grade]! : NaN)?.toFixed(2);
-        console.log('mean grade for ', drinkingFrequency + ' X ' + grade, meanGradeForDrinkingAmount);
+        console.log("mean grade for ", drinkingFrequency + " X " + grade, meanGradeForDrinkingAmount);
         meanGradeMap.set(drinkingFrequency, meanGradeForDrinkingAmount || -1);
       });
       drinkToMeanGradeMatrix.set(grade, meanGradeMap);
@@ -83,7 +83,7 @@ export default function Viz2() {
     svg.append('g')
       .attr('transform', `translate(${size.width / 2 + 20}, ${size.height - margin.bottom + 35})`)
       .append('text')
-      .text('Grade Term')
+      .text('Grade period')
       .style('font-size', '.8rem')
 
     // y axis
@@ -102,9 +102,9 @@ export default function Viz2() {
       .attr('transform', `translate(${(size.width + margin.left) / 2 - 10}, ${margin.top / 2})`)
       .style('text-anchor', 'middle')
       .style('font-weight', 'bold')
-      .text('Weekend drinking frequency and mean term grade');
+      .text('Weekend drinking frequency and mean period grade');
 
-    console.log('zipped', d3.cross(GRADE_COLUMNS, DRINKING_FREQ_BINS))
+    console.log("zipped", d3.cross(GRADE_COLUMNS, DRINKING_FREQ_BINS))
     
     // Plot cells
     let cells = svg.append('g')
@@ -114,14 +114,14 @@ export default function Viz2() {
       .append('g');
     
     cells.append('rect')
-        // get by grade term then get mean grade by drinking frequency
+        // get by grade period then get mean grade by drinking frequency
       .attr('x', d => x(d[0]))
       .attr('y', d => y(d[1]))
-      .attr('width', x.bandwidth())
-      .attr('height', y.bandwidth())
+      .attr("width", x.bandwidth())
+      .attr("height", y.bandwidth())
       .style('fill', d => color(drinkToMeanGradeMatrix.get(d[0])?.get(d[1])))      
       .append('title') // tooltip for final score for each plotted line
-        .text(d => 'Average math score for term: ' + drinkToMeanGradeMatrix.get(d[0])?.get(d[1]) + '/20')
+        .text(d => 'Average math score for period: ' + drinkToMeanGradeMatrix.get(d[0])?.get(d[1]) + '/20')
     
     cells.append('text')
       // same x,y as cells

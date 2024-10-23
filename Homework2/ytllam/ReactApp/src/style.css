@@ -21,5 +21,16 @@ body {
 .chart-container{
   height: 100%;
   max-width: 100%
+}
+
+.overview-chart-container{
+  height: 100%;
+  max-width: 100%
+  /* background-color: lightblue; */
+}
+
+.detail-chart-container {
+  height: 100%;
+  max-width: 100%;
   /* background-color: lightblue; */
 }

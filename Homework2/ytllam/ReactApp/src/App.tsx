@@ -1,5 +1,6 @@
-import Example from './components/sampleComponents/Example.js'
-import Viz1 from './components/Viz1.js'
+import Example from './components/sampleComponents/Example.tsx'
+import Viz1 from './components/Viz1.tsx'
+import Viz2 from './components/Viz2.tsx'
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
@@ -29,6 +30,7 @@ function Layout() {
   useEffect(() => {
     const readCSV = async () => {
       try {
+        // HW3 todo: interactivity to toggle between math and portugese datasets
         const csvData : types.DataRow[] = await d3.csv('../../data/student-mat.csv', r => {
           return {
             school: r.school as types.SchoolEnum,
@@ -81,19 +83,23 @@ function Layout() {
       {/* Top level grid container: vertical */}
       <Grid container spacing={1} direction='column' id='main-container'>
         {/* Horizontal grids as cells */}
-        <Grid container item xs={8} sm={8} md={8} lg={8} display='flex' justifyContent='center'>
-          <Grid item xs sm={10} md={8} lg={4}>
+        <Grid container item xs={8} sm={8} md={8} lg={7} display='flex' justifyContent='center'>
+          <Grid item xs sm={10} md={8} lg={3}>
             <Viz1/>
           </Grid>
         </Grid>
-        <Grid container item xs={2} sm md lg={3} display='flex' justifyContent='center'>
-          <Grid item xs={6} sm={6} md={6} lg={5}>
-            <p>Horizontal grid item 1</p>
+        <Grid container item xs={2} sm md={3} lg={4}
+          display='flex' justifyContent='center'>
+
+          <Grid md={0} lg={1}/>
+          <Grid item md={5} lg={4}>
+            <Viz2/>
           </Grid>
-          <Grid item xs={6} sm={6} md={6} lg={5}>
-            <p>Horizontal grid item 2</p>
+          <Grid md={1} lg={0}/>
+          <Grid item md={5} lg={4}>
             <Example/>
           </Grid>
+          <Grid md={0} lg={1}/>
         </Grid>
       </Grid>
     </DataContext.Provider>

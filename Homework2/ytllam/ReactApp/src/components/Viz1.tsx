@@ -134,7 +134,8 @@ export default function Viz1() {
         .attr('transform', `translate(${size.width / 2}, ${margin.top / 4})`)
         .style('text-anchor', 'middle')
         .style('font-weight', 'bold')
-        .text('Math grade as related to select student characteristics')
+        .style('font-size', 'large')
+        .text('Math grade as related to selected student characteristics')
     
     // Chart subtitle
     paraCoordPlot.append('g')

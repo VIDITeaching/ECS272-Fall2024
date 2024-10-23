@@ -30,7 +30,7 @@ const App: React.FC = () => {
           maxWidth: '800px',
           margin: '0 auto'
         }}>
-          A comprehensive analysis of student mental health data across various demographics and conditions
+          Comprehensive analysis of student mental health across demographics and conditions
         </p>
       </header>
 

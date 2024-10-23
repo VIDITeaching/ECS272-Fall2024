@@ -1,0 +1,5 @@
+medal_type,medal_code,medal_date,name,gender,discipline,event,event_type,url_event,code,country_code,country,country_long
+Gold Medal,x,x,x,x,running,short,x,x,x,AAA,a,a
+Gold Medal,x,x,x,x,running,long,x,x,x,AAA,a,a
+Gold Medal,x,x,x,x,running,short,x,x,x,BBB,b,b
+Gold Medal,x,x,x,x,running,long,x,x,x,BBB,b,b

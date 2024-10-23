@@ -10,7 +10,7 @@ It shows the alcohol consumption of students studying Portuguese in school.
 ## Files I Have Changed
 * `./App/tsx` 
 * `./src/components/` 
-please install d3-sankey to run the Application. Use code below
+please install d3-sankey to run the Application. Shows below
 ```bash
   npm install d3-sankey
 ```

@@ -22,6 +22,7 @@
         </div>
       </div>
     </div>
+    <div class="tooltip" style="opacity: 0"></div> <!-- Tooltip div added -->
   </div>
   <div v-else>Loading data...</div>
 </template>
@@ -123,11 +124,14 @@ export default {
         .domain(['Low', 'Medium', 'High'])
         .range(['#0000ff', '#ffff00', '#ff0000'])
 
+      // Tooltip div selection
+      const tooltip = d3.select('.tooltip')
+
       function path(d) {
         return d3.line()(dimensions.map(dim => [x(dim), y[dim](d[dim])]))
       }
 
-      // Draw the lines first
+      // Draw the lines first with tooltip interaction
       svg
         .selectAll('myPath')
         .data(this.data)
@@ -137,6 +141,37 @@ export default {
         .style('fill', 'none')
         .style('stroke', d => color(d['Risk Rating']))
         .style('opacity', 0.5)
+        .on('mouseover', function (event, d) {
+          d3.select(this)
+            .style('opacity', 1)
+            .style('stroke', 'black')  // Change the stroke color to black
+            .style('stroke-width', 3); // Increase stroke width to make the line bold
+
+          tooltip
+            .style('opacity', 1)
+            .html(
+              `Risk Rating: ${d['Risk Rating']}<br>
+               Age Bracket: ${d['Age Bracket']}<br>
+               Income Bracket: ${d['Income Bracket']}<br>
+               Credit Score: ${d['Credit Score Bracket']}<br>
+               Loan Amount: ${d['Loan Amount Bracket']}<br>
+               Debt-to-Income Ratio: ${d['Debt-to-Income Ratio Bracket']}`
+            )
+            .style('left', event.pageX + 10 + 'px')
+            .style('top', event.pageY - 30 + 'px')
+        })
+        .on('mousemove', function (event) {
+          tooltip
+            .style('left', event.pageX + 10 + 'px')
+            .style('top', event.pageY - 30 + 'px')
+        })
+        .on('mouseout', function () {
+          d3.select(this)
+            .style('opacity', 0.5)
+            .style('stroke', d => color(d['Risk Rating']))  // Reset the original color
+            .style('stroke-width', 1);  // Reset stroke width
+
+        })
 
       // Add each axis
       dimensions.forEach(dim => {
@@ -153,7 +188,7 @@ export default {
           .style('fill', 'black')
       })
 
-      // Add labels with larger font size and bold style
+      // Add point labels for each line
       svg
         .selectAll('.line-label')
         .data(this.data)
@@ -205,11 +240,6 @@ export default {
 /* Legend Styling */
 .legend-box {
   background-color: white;
-  padding: 10;
-}
-
-.legend-box {
-  background-color: white;
   padding: 10px;
   border: 1px solid black; /* Box around the legend */
   position: absolute;
@@ -238,5 +268,18 @@ export default {
 .legend-item span {
   font-size: 12px;
   color: black !important; /* Force font color to black */
+}
+
+/* Tooltip styling */
+.tooltip {
+  position: absolute;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  pointer-events: none; /* Prevent tooltip from blocking interactions */
+  font-size: 12px;
+  color: black;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
 }
 </style>

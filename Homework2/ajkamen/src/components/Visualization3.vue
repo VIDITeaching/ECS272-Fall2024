@@ -217,6 +217,7 @@ export default {
   background-color: white;
   padding: 20px;
   position: relative;
+  /* Keep the background, but let's control the width */
 }
 
 /* Force black font color for all text inside chart-container */
@@ -228,13 +229,16 @@ export default {
 }
 
 /* This is the enclosing box for the entire chart including the legend */
+
 .chart-box {
-  background-color: white;
   padding: 20px;
   width: 900px;
-  border: 1px solid black; /* Black border around the chart */
+  max-width: 900px; /* Set a maximum width */
+  margin: 0 auto;   /* Center the chart-box horizontally */
+  border: 1px solid black; /* Keep the border */
+  background-color: white; /* Keep the white background */
   position: relative;
-  margin-top: 10px; /* Adds some spacing below the title */
+  margin-top: 10px;
 }
 
 /* Legend Styling */

@@ -81,13 +81,8 @@ export default function StreamGraph() {
     // This is to get the unique categories from the data using Set, then store in an array.
 
 	let typeKeys = ["low", "medium", "high"]
-    // We need a way to map our data to where it should be rendered within the svg (in screen pixels), based on the data value, 
-    //      so the extents and the unique values above help us define the limits.
-    // Scales are just like mapping functions y = f(x), where x refers to domain, y refers to range. 
-    //      In our case, x should be the data, y should be the screen pixels.
-    // We have the margin here just to leave some space
-    // In viewport (our screen), the leftmost side always refer to 0 in the horizontal coordinates in pixels (x). 
-    let xScale = d3.scaleLinear()
+    
+  let xScale = d3.scaleLinear()
       .rangeRound([margin.left, size.width - margin.right])
       .domain(xExtents)
 
@@ -132,9 +127,6 @@ export default function StreamGraph() {
       .text('Age')
       .style('font-size', '.8rem')
     
-    // "g" is grouping element that does nothing but helps avoid DOM looking like a mess
-    // We iterate through each <CategoricalBar> element in the array, create a rectangle for each and indicate the coordinates, the rectangle, and the color.
-	
 
 	let stack = d3.stack()
 		.keys(typeKeys)

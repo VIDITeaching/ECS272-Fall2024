@@ -1,54 +1,151 @@
 import React from 'react';
-import MentalHealthChart from './components/MentalHealthChart';
 import SankeyDiagram from './components/SankeyDiagram';
 import ChordDiagram from './components/ChordDiagram';
 import StackedBarChart from './components/StackedBarChart';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Student Mental Health Analysis</h1>
+    <div className="app-container" style={{
+      maxWidth: '1440px',
+      margin: '0 auto',
+      padding: '20px',
+      backgroundColor: '#f5f7fa'
+    }}>
+      <header style={{
+        textAlign: 'center',
+        padding: '20px 0',
+        marginBottom: '40px',
+        backgroundColor: '#ffffff',
+        borderRadius: '8px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      }}>
+        <h1 style={{
+          fontSize: '2.5rem',
+          color: '#1a365d',
+          marginBottom: '10px'
+        }}>Student Mental Health Analysis</h1>
+        <p style={{
+          fontSize: '1.1rem',
+          color: '#4a5568',
+          maxWidth: '800px',
+          margin: '0 auto'
+        }}>
+          A comprehensive analysis of student mental health data across various demographics and conditions
+        </p>
       </header>
-      <main>
-        <section className="chart-section">
-          <h2>Overview of Student Data by Categories</h2>
-          <StackedBarChart />
-          <p>
-            This stacked bar chart provides an overview of various categories, such as Gender, Course, CGPA,
-            Year of Study, and more. Each bar is divided into its corresponding value (e.g., Male/Female for Gender).
+
+      <main style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '40px'
+      }}>
+
+        {/* Demographics Analysis */}
+        <section className="analysis-section" style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '8px',
+          padding: '30px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center' // Centers the content horizontally
+        }}>
+          <h2 style={{
+            fontSize: '1.8rem',
+            color: '#2d3748',
+            marginBottom: '20px',
+            textAlign: 'center'
+          }}>Overview of Student Data by Category</h2>
+          <div style={{ marginBottom: '20px' }}>
+            <StackedBarChart />
+          </div>
+          <p style={{
+            fontSize: '1.1rem',
+            color: '#4a5568',
+            textAlign: 'center',
+            maxWidth: '800px',
+            margin: '0 auto'
+          }}>
+            Analysis of student demographics including gender, age groups, and academic years,
+            showing the distribution across different mental health conditions.
           </p>
         </section>
-        <section className="chart-section">
-          <h2>Mental Health Conditions Bar Chart</h2>
-          <MentalHealthChart />
-          <p>
-            This chart displays the prevalence of mental health conditions among students, including depression, anxiety,
-            and panic attacks. The data is based on a survey of student responses, showing the number of students who
-            reported experiencing each condition (True) versus those who did not (False).
+
+        {/* Flow Analysis */}
+        <section className="analysis-section" style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '8px',
+          padding: '30px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center' // Centers the content horizontally
+        }}>
+          <h2 style={{
+            fontSize: '1.8rem',
+            color: '#2d3748',
+            marginBottom: '20px',
+            textAlign: 'center'
+          }}>Educational Path and Mental Health Flow</h2>
+          <div style={{ marginBottom: '20px' }}>
+            <SankeyDiagram />
+          </div>
+          <p style={{
+            fontSize: '1.1rem',
+            color: '#4a5568',
+            textAlign: 'center',
+            maxWidth: '800px',
+            margin: '0 auto'
+          }}>
+            Visualization of how students flow through different courses and years of study,
+            and their corresponding mental health conditions.
           </p>
         </section>
-        <section className="chart-section">
-          <h2>Course to Year of Study to Mental Health Condition Flow</h2>
-          <SankeyDiagram />
-          <p>
-            This Sankey diagram visualizes the flow of students from their course to year of study
-            to their mental health condition (specifically, whether they have depression or not).
-            The width of each flow represents the number of students in that path.
-          </p>
-        </section>
-        <section className="chart-section">
-          <h2>Ages 18-24 and Mental Health Conditions Chord Diagram</h2>
-          <ChordDiagram />
-          <p>
-            This chord diagram illustrates the relationships between individual ages (18 to 24) 
-            and mental health conditions. It shows how each age from 18 to 24 is associated with 
-            mental health conditions like depression, anxiety, and panic attacks.
+
+        {/* Age Relationships */}
+        <section className="analysis-section" style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '8px',
+          padding: '30px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center' // Centers the content horizontally
+        }}>
+          <h2 style={{
+            fontSize: '1.8rem',
+            color: '#2d3748',
+            marginBottom: '20px',
+            textAlign: 'center'
+          }}>Age and Mental Health Relationships</h2>
+          <div style={{ marginBottom: '20px' }}>
+            <ChordDiagram />
+          </div>
+          <p style={{
+            fontSize: '1.1rem',
+            color: '#4a5568',
+            textAlign: 'center',
+            maxWidth: '800px',
+            margin: '0 auto'
+          }}>
+            Complex relationships between age groups and various mental health conditions,
+            showing patterns and correlations across different age ranges.
           </p>
         </section>
       </main>
-      <footer className="App-footer">
-        <p>Data source: Student Mental Health Survey</p>
+
+      <footer style={{
+        marginTop: '40px',
+        padding: '20px',
+        textAlign: 'center',
+        backgroundColor: '#ffffff',
+        borderRadius: '8px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      }}>
+        <p style={{
+          fontSize: '1rem',
+          color: '#4a5568'
+        }}>Data source: Student Mental Health Survey | Created with React and D3.js</p>
       </footer>
     </div>
   );

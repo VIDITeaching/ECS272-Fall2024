@@ -31,6 +31,24 @@ const ChordDiagram: React.FC = () => {
 
     svg.attr('width', width).attr('height', height);
 
+    // Add title
+    svg.append('text')
+      .attr('x', width / 2)
+      .attr('y', 50)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '24px')
+      .style('font-weight', 'bold')
+      .text('Student Mental Health Conditions by Age Group');
+    
+    // Add subtitle
+    svg.append('text')
+      .attr('x', width / 2)
+      .attr('y', 80)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '16px')
+      .style('fill', '#666')
+      .text('Relationships between age (18-24) and mental health conditions');
+
     const ages = Array.from({length: 7}, (_, i) => (i + 18).toString());
     const conditions = ['Depression', 'Anxiety', 'Panic attack'];
     const nodes = [...ages, ...conditions];
@@ -66,7 +84,7 @@ const ChordDiagram: React.FC = () => {
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     const g = svg.append('g')
-      .attr('transform', `translate(${width / 2}, ${height / 2})`)
+      .attr('transform', `translate(${width / 2}, ${height / 2 + 30})`) // Adjusted for title space
       .datum(chords);
 
     const group = g.append('g')
@@ -79,7 +97,6 @@ const ChordDiagram: React.FC = () => {
       .attr('stroke', 'white')
       .attr('d', arc);
 
-    // Improved label positioning and styling
     group.append('text')
       .each((d) => { (d as any).angle = (d.startAngle + d.endAngle) / 2; })
       .attr('dy', '.35em')
@@ -111,7 +128,6 @@ const ChordDiagram: React.FC = () => {
       .attr('fill', (d) => color(d.source.index.toString()))
       .attr('stroke', 'white');
 
-    // Add tooltips
     const tooltip = d3.select('body').append('div')
       .attr('class', 'tooltip')
       .style('opacity', 0)

@@ -30,22 +30,36 @@ const SankeyDiagram: React.FC = () => {
       const nodes: RawNode[] = [];
       const links: { [key: string]: number } = {};
 
+      const mentalHealthConditions = [
+        { name: 'Depression', column: 'Do you have Depression?' },
+        { name: 'Anxiety', column: 'Do you have Anxiety?' },
+        { name: 'Panic Attack', column: 'Do you have Panic attack?' }
+      ];
+
       csvData.forEach(row => {
         const course = row['What is your course?'];
         const year = normalizeYearOfStudy(row['Your current year of Study']);
-        const mentalHealth = row['Do you have Depression?'] === 'Yes' ? 'Depression' : 'No Depression';
-
-        [course, year, mentalHealth].forEach(item => {
+        
+        [course, year].forEach(item => {
           if (!nodes.some(node => node.name === item)) {
             nodes.push({ name: item });
           }
         });
 
-        const linkKey1 = `${course}|${year}`;
-        const linkKey2 = `${year}|${mentalHealth}`;
+        const courseYearKey = `${course}|${year}`;
+        links[courseYearKey] = (links[courseYearKey] || 0) + 1;
 
-        links[linkKey1] = (links[linkKey1] || 0) + 1;
-        links[linkKey2] = (links[linkKey2] || 0) + 1;
+        mentalHealthConditions.forEach(condition => {
+          const hasCondition = row[condition.column] === 'Yes';
+          const conditionNode = `${condition.name} - ${hasCondition ? 'Yes' : 'No'}`;
+          
+          if (!nodes.some(node => node.name === conditionNode)) {
+            nodes.push({ name: conditionNode });
+          }
+
+          const yearConditionKey = `${year}|${conditionNode}`;
+          links[yearConditionKey] = (links[yearConditionKey] || 0) + 1;
+        });
       });
 
       const sankeyLinks: RawLink[] = Object.entries(links).map(([key, value]) => {
@@ -64,8 +78,9 @@ const SankeyDiagram: React.FC = () => {
   useEffect(() => {
     if (data.nodes.length === 0 || !svgRef.current) return;
 
-    const margin = { top: 50, right: 20, bottom: 20, left: 20 };
-    const width = 1000 - margin.left - margin.right;
+    // Reduced margins and overall dimensions
+    const margin = { top: 40, right: 80, bottom: 20, left: 80 };
+    const width = 900 - margin.left - margin.right;
     const height = 600 - margin.top - margin.bottom;
 
     d3.select(svgRef.current).selectAll("*").remove();
@@ -78,13 +93,30 @@ const SankeyDiagram: React.FC = () => {
 
     const sankeyGenerator = sankey<RawNode, RawLink>()
       .nodeWidth(15)
-      .nodePadding(10)
+      .nodePadding(8)  // Slightly reduced padding
       .extent([[0, 0], [width, height]]);
 
     const { nodes, links } = sankeyGenerator(data as unknown as SankeyGraph<RawNode, RawLink>);
 
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    // Color scales
+    const courseColor = d3.scaleOrdinal(d3.schemeCategory10);
+    const yearColor = d3.scaleOrdinal(d3.schemeSet3);
+    const conditionColors = {
+      'Depression - Yes': '#ff7f7f',
+      'Depression - No': '#7fbf7f',
+      'Anxiety - Yes': '#ff7f7f',
+      'Anxiety - No': '#7fbf7f',
+      'Panic Attack - Yes': '#ff7f7f',
+      'Panic Attack - No': '#7fbf7f'
+    };
 
+    const getNodeColor = (name: string) => {
+      if (name.startsWith('Year')) return yearColor(name);
+      if (Object.keys(conditionColors).includes(name)) return conditionColors[name as keyof typeof conditionColors];
+      return courseColor(name);
+    };
+
+    // Draw nodes
     svg.append('g')
       .selectAll('rect')
       .data(nodes)
@@ -93,10 +125,11 @@ const SankeyDiagram: React.FC = () => {
       .attr('y', d => d.y0!)
       .attr('height', d => d.y1! - d.y0!)
       .attr('width', d => d.x1! - d.x0!)
-      .attr('fill', d => color(d.name))
+      .attr('fill', d => getNodeColor(d.name))
       .append('title')
-      .text(d => `${d.name}\n${d.value}`);
+      .text(d => `${d.name}\nCount: ${d.value}`);
 
+    // Draw links
     const link = svg.append('g')
       .attr('fill', 'none')
       .attr('stroke-opacity', 0.5)
@@ -107,14 +140,14 @@ const SankeyDiagram: React.FC = () => {
 
     link.append('path')
       .attr('d', sankeyLinkHorizontal())
-      .attr('stroke', d => color((d.source as ProcessedNode).name))
+      .attr('stroke', d => getNodeColor((d.source as ProcessedNode).name))
       .attr('stroke-width', d => Math.max(1, d.width!));
 
     link.append('title')
-      .text(d => `${(d.source as ProcessedNode).name} → ${(d.target as ProcessedNode).name}\n${d.value}`);
+      .text(d => `${(d.source as ProcessedNode).name} → ${(d.target as ProcessedNode).name}\nCount: ${d.value}`);
 
+    // Add node labels
     svg.append('g')
-      .style('font', '10px sans-serif')
       .selectAll('text')
       .data(nodes)
       .join('text')
@@ -122,16 +155,17 @@ const SankeyDiagram: React.FC = () => {
       .attr('y', d => (d.y1! + d.y0!) / 2)
       .attr('dy', '0.35em')
       .attr('text-anchor', d => d.x0! < width / 2 ? 'start' : 'end')
-      .text(d => d.name);
+      .text(d => d.name)
+      .style('font-size', '11px');  // Slightly reduced font size
 
-    // Improved title positioning and styling
+    // Title
     svg.append('text')
       .attr('x', width / 2)
       .attr('y', -margin.top / 2)
       .attr('text-anchor', 'middle')
-      .style('font-size', '18px')
+      .style('font-size', '16px')  // Slightly reduced title size
       .style('font-weight', 'bold')
-      .text('Course to Year of Study to Mental Health Condition Flow');
+      .text('Course to Year of Study to Mental Health Conditions Flow');
 
   }, [data]);
 

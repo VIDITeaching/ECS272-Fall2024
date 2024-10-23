@@ -33,10 +33,9 @@ function Layout() {
         <Notes msg={"This is a message sent from App.tsx as component prop"} />
         }
         { // Uncomment the following to see how state management works in React.
-        /*
           <CountProvider>
             <NotesWithReducer msg={"This is a message sent from App.tsx as component prop"} />
-          </CountProvider>*/
+          </CountProvider>
         }
       </Grid>
     </Grid>

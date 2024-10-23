@@ -1,3 +1,5 @@
+// CONSULT README FILE FOR RATIONALE BEHIND CHOSEN VISUALIZATIONS
+
 // necessary imports
 import * as d3 from 'd3';
 import axios from 'axios';

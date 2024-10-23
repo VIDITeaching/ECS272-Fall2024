@@ -74,7 +74,7 @@ export default function Viz1() {
     const y = d3.scalePoint(SELECTED_COLUMNS, [margin.top-10, height - margin.bottom]);
     // color for plotted lines - corresponds to final grade G3
     // Not super distinguishable right now but will be better when made brushable.
-    const color = d3.scaleLinear([0, 20], ['orangered', 'lime']);
+    const color = d3.scaleLinear([0, 20], ['red', 'lime']);
     
     // Create path generator
     function path(row : DataRow) {
@@ -97,7 +97,7 @@ export default function Viz1() {
         .attr('d', path)
         .attr('fill', 'none')
         .attr('stroke', d => color(d[COLOR_COLUMN]))
-        .attr('stroke-opacity', 0.5)
+        .attr('stroke-opacity', 0.75)
         .attr('stroke-width', 1.6)
       .append('title') // tooltip for final score for each plotted line
         .text(d => 'Final G3 math score: ' + d[COLOR_COLUMN] + '/20');

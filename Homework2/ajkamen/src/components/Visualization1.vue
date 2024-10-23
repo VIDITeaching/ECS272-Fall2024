@@ -12,7 +12,8 @@
           Risk
         </div>
         <div class="legend-item">
-          <span class="legend-color" style="background-color: orange"></span> Medium Risk
+          <span class="legend-color" style="background-color: orange"></span>
+          Medium Risk
         </div>
         <div class="legend-item">
           <span class="legend-color" style="background-color: red"></span> High
@@ -20,7 +21,8 @@
         </div>
       </div>
     </div>
-    <div id="tooltip" class="tooltip" style="opacity: 0"></div> <!-- Tooltip div -->
+    <div id="tooltip" class="tooltip" style="opacity: 0"></div>
+    <!-- Tooltip div -->
   </div>
   <div v-else>Loading data...</div>
 </template>
@@ -220,7 +222,7 @@ export default {
 
 .tooltip {
   font-weight: bold; /* Make the tooltip text bold */
-  color: black;      /* Set the font color to black */
+  color: black; /* Set the font color to black */
 }
 
 .chart-title {

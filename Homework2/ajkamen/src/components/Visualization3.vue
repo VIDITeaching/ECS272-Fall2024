@@ -22,7 +22,8 @@
         </div>
       </div>
     </div>
-    <div class="tooltip" style="opacity: 0"></div> <!-- Tooltip div added -->
+    <div class="tooltip" style="opacity: 0"></div>
+    <!-- Tooltip div added -->
   </div>
   <div v-else>Loading data...</div>
 </template>
@@ -144,8 +145,8 @@ export default {
         .on('mouseover', function (event, d) {
           d3.select(this)
             .style('opacity', 1)
-            .style('stroke', 'black')  // Change the stroke color to black
-            .style('stroke-width', 3); // Increase stroke width to make the line bold
+            .style('stroke', 'black') // Change the stroke color to black
+            .style('stroke-width', 3) // Increase stroke width to make the line bold
 
           tooltip
             .style('opacity', 1)
@@ -155,7 +156,7 @@ export default {
                Income Bracket: ${d['Income Bracket']}<br>
                Credit Score: ${d['Credit Score Bracket']}<br>
                Loan Amount: ${d['Loan Amount Bracket']}<br>
-               Debt-to-Income Ratio: ${d['Debt-to-Income Ratio Bracket']}`
+               Debt-to-Income Ratio: ${d['Debt-to-Income Ratio Bracket']}`,
             )
             .style('left', event.pageX + 10 + 'px')
             .style('top', event.pageY - 30 + 'px')
@@ -168,9 +169,8 @@ export default {
         .on('mouseout', function () {
           d3.select(this)
             .style('opacity', 0.5)
-            .style('stroke', d => color(d['Risk Rating']))  // Reset the original color
-            .style('stroke-width', 1);  // Reset stroke width
-
+            .style('stroke', d => color(d['Risk Rating'])) // Reset the original color
+            .style('stroke-width', 1) // Reset stroke width
         })
 
       // Add each axis
@@ -234,7 +234,7 @@ export default {
   padding: 20px;
   width: 900px;
   max-width: 900px; /* Set a maximum width */
-  margin: 0 auto;   /* Center the chart-box horizontally */
+  margin: 0 auto; /* Center the chart-box horizontally */
   border: 1px solid black; /* Keep the border */
   background-color: white; /* Keep the white background */
   position: relative;

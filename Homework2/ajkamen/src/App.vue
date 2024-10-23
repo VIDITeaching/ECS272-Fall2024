@@ -62,9 +62,9 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr;
-  grid-template-areas: 
-    "vis1 vis2"
-    "vis3 vis3";
+  grid-template-areas:
+    'vis1 vis2'
+    'vis3 vis3';
   gap: 20px;
   padding: 20px;
   width: 100%;
@@ -91,15 +91,13 @@ export default {
   width: 80%; /* Allow it to take full width, but .chart-box will control the internal size */
 }
 
-
 @media (max-width: 768px) {
   .grid-container {
     grid-template-columns: 1fr;
-    grid-template-areas: 
-      "vis1"
-      "vis2"
-      "vis3";
+    grid-template-areas:
+      'vis1'
+      'vis2'
+      'vis3';
   }
 }
 </style>
-

@@ -21,6 +21,7 @@ export default function Sankey() {
   ];
 
   const margin = { top: 100, right: 10, bottom: 100, left: 10 };
+  // TODO: all nodes should have different colors.
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
   // Component size, not window size. Depends on grid size.
@@ -34,6 +35,8 @@ export default function Sankey() {
   // Important: ref cannot be read while rendering, must be done in event handler or useEffect().
   const graphRef = useRef<HTMLDivElement>(null);
   useResizeObserver({ ref: graphRef, onResize });
+
+  const [selectedNodes, setSelectedNodes] = useState([]);
 
   useEffect(() => {
     // if (isEmpty(data)) return;
@@ -59,18 +62,16 @@ export default function Sankey() {
           'target': toNodeId,
           'value': data.reduce((count, row) =>
             // count rows where source and target values both match
-            row[fromCol] == fromNodeVal && row[toCol] == toNodeVal
+            row[fromCol] === fromNodeVal && row[toCol] === toNodeVal
               ? count + 1
               : count, 0) 
         });
       });
       return cross;
     });
-    console.log('nodes', nodes);
-    console.log('links', links);
 
     renderGraph([...nodes], [...links]);
-  }, [data, size]) // For some reason if we don't include size then data will not render.
+  }, [data, selectedNodes, size]) // For some reason if we don't include size then data will not render.
 
   /**
    *  Determines order of nodes on sankey chart.
@@ -88,13 +89,72 @@ export default function Sankey() {
     // returning 0 seems to sort links by order of target.
     return 0;
   }
+
+  function nodeSelected(nodes, d) {
+    return nodes.some(n => n.index === d.index);
+  }
+
+  // function linkSelected(links, d) {
+  //   return links.some(l => l.index === d.index);
+  // }
+  
+  function handleNodeClick(e, d) {
+    let newNodes;
+    if (nodeSelected(selectedNodes, d)) {
+      newNodes = selectedNodes.filter(n => !(n.column === d.column && n.val === d.val));
+    } else {
+      newNodes = [...selectedNodes, d];
+    }
+    setSelectedNodes(newNodes);
+
+    /** NOTE: 
+     * Original plan: Highlight links that satisfy all selected nodes.
+     * 
+     * Issue: Links are not subdivisible by node. Selecting a small link that connects to a larger link in the next column
+     *        will higlight the entire larger link, not just the part that corresponds to data from the smaller link.
+     *        This can mislead viewers as to the actual number of rows that satisfy ALL selected nodes.
+     * 
+     *        e.g. if you select nodes col1.A, col2.B, and col3.C, links (col1.A -> col2.B) and (col2.B -> col3.C) will be highlighted.
+     *        However, the link (col2.B -> col3.C) corresponds to data where (col2 == B && col3 == C), not (col1 == A && col2 == B && col3 == C).
+     *        If there are more (col2 == B && col3 == C) rows than (col1 == A && col2 == B) rows, this will overestimate the number of 
+     *        (col1 == A && col2 == B && col3 == C) rows.
+     *
+     * New plan: On link mouseover, highlight link to show popup with link value.
+     *           On node selection/mouseover, update histogram viz to show total number of students, and new grade distribution.
+     *           Streeeeeetch goal: compute new link that satisfies all selected nodes and animate it. Feels like a bit too much work.
+     *           - When nodes col1.X and col2.Y are selected, split col1 X node into col1.(X && all other selected) and col1.(X && !(all other selected)).
+     *           - Recompute links.
+     */
+
+    // // selected nodes only highlights the node bar and changes the histogram in bottom right.
+    // let selectedCols = new Set(newNodes.map(n => n.column));
+    // const newLinks = newNodes.flatMap(n => links.filter(l => {
+    //   if (!isEmpty(newNodes)) { // no nodes selected
+    //     return false;
+    //   }
+    //   // if only nodes from one column selected
+    //   if (selectedCols.size === 1) {
+    //     return (l.source.id === n.id || l.target.id === n.id);
+    //   } else {
+    //     return nodeSelected(newNodes, l.source) && nodeSelected(newNodes, l.target);
+    //   }
+    // }));
+    // console.log(newLinks);
+    // setSelectedLinks(newLinks);
+  }
+
+  // for logging changes in state
+  useEffect(() => {
+    console.log("nodes", selectedNodes);
+  }, [selectedNodes])
+
   function renderGraph(nodes, links) {
     // Define and configure Sankey generator
     const sankey = d3sankey.sankey()
         .nodeId(d => d.id)
         .nodeSort(sortNodes)
         .linkSort(sortLinks)
-        .nodeWidth(15)
+        .nodeWidth(20)
         .nodePadding(15)
         .extent([[margin.left, margin.top], [size.width - margin.right, size.height - margin.bottom]]);
 
@@ -104,6 +164,9 @@ export default function Sankey() {
       nodes: nodes.map(d => ({...d})),
       links: links.map(d => ({...d}))
     })
+
+    console.log('nodes', transformedData.nodes);
+    console.log('links', transformedData.links);
 
     let svg = d3.select('#sankey-diagram-svg').append('g');
 
@@ -116,7 +179,11 @@ export default function Sankey() {
         .attr('y', n => n.y0)
         .attr('height', n => n.y1 - n.y0)
         .attr('width', n => n.x1 - n.x0)
-        .attr('fill', n => color(n.val));
+        .attr('fill', n => color(n.id))
+        // Highlight selected node. If none selected, highlight all by default.
+        // TODO: add glow to selected nodes
+        .attr('opacity', n => isEmpty(selectedNodes) ? 1 : nodeSelected(selectedNodes, n) ? 1 : 0.5)
+        .on('click', (e, d) => handleNodeClick(e, d));
 
     // Render links
     const linkPaths = svg.append('g')
@@ -124,11 +191,14 @@ export default function Sankey() {
       .data(transformedData.links)
       .join('g')
         .attr('fill', 'none')
-        .attr('stroke-opacity', 0.4)
-        .style('mix-blend-mode', 'lighten')
+        .attr('stroke-opacity', isEmpty(selectedNodes) ? 0.6 : 0.3)
+        // .attr('stroke-opacity', l => linkSelected(selectedLinks, l) ? 0.8 : 0.2);
+        .style('mix-blend-mode', 'soft-light')
       .append('path')
         .attr('d', d3sankey.sankeyLinkHorizontal())
-        .attr('stroke', l => color(l.source.val)) // color flow by value of previous
+        // TODO: add highlight on hover over.
+        // TODO: color flows as gradient from source to target.
+        .attr('stroke', l => color(l.source.id)) // color flow by value of previous
         .attr('stroke-width', l => l.width);
 
     // TODO: add click to highlight/filter to nodes
@@ -151,7 +221,7 @@ export default function Sankey() {
         .attr('dy', '0.35em')
         // TODO: keep labels on right side but add enough margin/padding to not overflow
         .attr('text-anchor', n => n.x0 < size.width / 2 ? 'start' : 'end')
-        .text(n => n.label + ': ' + n.value);
+        .text(n => n.label + ': ' + n.value); // TODO: only keep value and move frequency to hover highlight
   }
 
   return (

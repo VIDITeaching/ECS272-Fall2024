@@ -123,6 +123,18 @@ export enum BooleanEnum {
   'No' = 'no',
 }
 
+export enum GradeTrendEnum {
+  Declined = "0",
+  Fluctuated = "1",
+  Maintained = "2",
+  Improved = "3",
+  // FluctuatedImproved = "2",
+  // FluctuatedDeclined = "3",
+  // FluctuatedMaintained = "4",
+  // Unknown = "6",
+  
+}
+
 export interface DataRow {
   // readonly columns: string;
   [index: string] : string | boolean | number | null | undefined;
@@ -159,6 +171,7 @@ export interface DataRow {
   readonly G1: number;
   readonly G2: number;
   readonly G3: number;
+  readonly gradeTrend: GradeTrendEnum;
 }
 
 export const COL_TO_ENUM_MAP = new Map(Object.entries({
@@ -190,6 +203,7 @@ export const COL_TO_ENUM_MAP = new Map(Object.entries({
   'weekdayAlc': FrequencyEnum,
   'weekendAlc': FrequencyEnum,
   'health': QualityEnum,
+  'gradeTrend': GradeTrendEnum,
 }));
 
 // issue: node ids need to be unique.

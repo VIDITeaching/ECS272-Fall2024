@@ -34,6 +34,34 @@ function Layout() {
       try {
         // HW3 todo: interactivity to toggle between math and portugese datasets
         const csvData : types.DataRow[] = await d3.csv('../../data/student-mat.csv', r => {
+          let trend;
+          let tolerance = 0.5
+          if (r.G3 === r.G2 && r.G2 === r.G1) {
+            console.log(r);
+            trend = types.GradeTrendEnum.Maintained;
+          } else if (r.G3 >= r.G2 && r.G2 >= r.G1) {
+            trend = types.GradeTrendEnum.Improved;
+          } else if (r.G3 <= r.G2 && r.G2 <= r.G1) {
+            trend = types.GradeTrendEnum.Declined;
+          } else {
+            trend = types.GradeTrendEnum.Fluctuated;
+          }
+
+          // if (r.G3 >= r.G2 && r.G2 >= r.G1) { // up up
+          //   trend = types.GradeTrendEnum.Improved;
+          // } else if (r.G3 < r.G2 && r.G2 < r.G1) { // down down
+          //   trend = types.GradeTrendEnum.Declined;
+          // } else if (r.G3 >= r.G1 && r.G2 >= r.G1) { // up down but overall better
+          //   trend = types.GradeTrendEnum["Down but overall better"];
+          // } else if (r.G3 >= r.G1 && r.G2 < r.G1) { // down up but overall better
+          //   trend = types.GradeTrendEnum["Up and better"];
+          // } else if (r.G3 < r.G1 && r.G3 < r.G2) { // up down but overall worse
+          //   trend = types.GradeTrendEnum["Down and worse"];
+          // } else if (r.G3 < r.G1 && r.G3 >= r.G2) { // down up but overall worse
+          //   trend = types.GradeTrendEnum["Up but worse"];
+          // } else {
+          //   trend = types.GradeTrendEnum.Unknown;
+          // }
           return {
             school: r.school as types.SchoolEnum,
             sex: r.sex as types.SexEnum,
@@ -67,7 +95,8 @@ function Layout() {
             absences: +r.absences,
             G1: +r.G1,
             G2: +r.G2,
-            G3: +r.G3
+            G3: +r.G3,
+            gradeTrend: trend as types.GradeTrendEnum,
           }
         });
         setData(csvData);

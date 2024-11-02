@@ -18,6 +18,7 @@ export default function Sankey() {
     'goOut',
     'studyTime',
     'failures',
+    'gradeTrend',
   ];
 
   const margin = { top: 100, right: 10, bottom: 100, left: 10 };
@@ -79,13 +80,13 @@ export default function Sankey() {
    *  Returns: -1 if the first node should be above the second, 1 if the second node should be above the first, 0 if order is not specified
    */
   function sortNodes(node1, node2) {
-    // TODO: determine if needed.
+    // TODO: sort in order of values.
     // returning 0 seems to sort nodes in order of values defined for enum.
     return 0;
   }
 
   function sortLinks(link1, link2) {
-    // TODO: determine if needed.
+    // TODO: determine if needed. Maybe sort links by % of source node link represents.
     // returning 0 seems to sort links by order of target.
     return 0;
   }

@@ -34,3 +34,52 @@ body {
   max-width: 100%;
   /* background-color: lightblue; */
 }
+
+.defaultNode {
+  opacity: 1;
+  transition: opacity 400ms;
+}
+
+.hoveredNode {
+  opacity: 1;
+  -webkit-filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, .2));
+  transition: opacity 400ms;
+}
+
+.selectedNonHoveredNode {
+  opacity: 0.6;
+  transition: opacity 400ms;
+}
+
+.nonHoveredNode {
+  opacity: 0.5;
+  /* transition: opacity 400ms; */
+}
+
+.hoveredLink {
+  -webkit-filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, .2));
+  mix-blend-mode: normal;
+  stroke-opacity: 0.8;
+  transition: stroke-opacity 400ms;
+}
+
+/* onClick interrupts onHover event */
+
+.transparentLink {
+  mix-blend-mode: soft-light;
+  stroke-opacity: 0.25;
+  transition: stroke-opacity 400ms;
+}
+
+.defaultLink {
+  mix-blend-mode: soft-light;
+  stroke-opacity: 0.6;
+  transition: stroke-opacity 400ms;
+}
+
+/* TODO: Fix classes for highlighting selections */
+/* TODO: Fix transitions flashing. */
+
+/* https://stackoverflow.com/questions/6092239/css3-one-way-transition */

@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import * as d3 from 'd3';
 import * as d3sankey from 'd3-sankey';
+import * as style from '../style.css'
 import { isEmpty } from 'lodash';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import DataContext from '../stores/DataContext.ts';
@@ -22,7 +23,7 @@ export default function Sankey() {
   ];
 
   const margin = { top: 100, right: 200, bottom: 100, left: 200 };
-  const NODE_WIDTH = 20;
+  const NODE_WIDTH = 24;
   // TODO: all nodes should have different colors.
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -173,7 +174,7 @@ export default function Sankey() {
         .nodeSort(sortNodes)
         .linkSort(sortLinks)
         .nodeWidth(NODE_WIDTH)
-        .nodePadding(15)
+        .nodePadding(NODE_WIDTH * 3 / 4)
         .extent([[margin.left, margin.top], [size.width - margin.right, size.height - margin.bottom]]);
 
     // Deep copy nodes/links so sankeyData is not mutated.
@@ -199,7 +200,7 @@ export default function Sankey() {
         .attr('width', n => n.x1 - n.x0)
         .attr('fill', n => color(n.id))
         // Highlight selected node. If none selected, highlight all by default.
-        // TODO: add glow to selected nodes
+        // TODO: convert to class
         .attr('opacity', n => isEmpty(selectedNodes) ? 1 : nodeSelected(n) ? 1 : 0.5)
         .on('click', (e, d) => handleNodeClick(e, d));
 
@@ -208,26 +209,51 @@ export default function Sankey() {
       .selectAll()
       .data(transformedData.links)
       .join('g')
-        .attr('fill', 'none')
-        .attr('stroke-opacity', isEmpty(selectedNodes) ? 0.6 : 0.3)
-        // .attr('stroke-opacity', l => linkSelected(selectedLinks, l) ? 0.8 : 0.2);
-        .style('mix-blend-mode', 'soft-light')
       .append('path')
+        .attr('fill', 'none')
         .attr('d', d3sankey.sankeyLinkHorizontal())
-        // TODO: add highlight on hover over.
         // TODO: color flows as gradient from source to target.
         .attr('stroke', l => color(l.source.id)) // color flow by value of previous
+        .classed('defaultLink', isEmpty(selectedNodes))
+        .classed('transparentLink', !isEmpty(selectedNodes))
         .attr('stroke-width', l => l.width);
 
     // Add tooltip to nodes.
     nodeRects.append('title')
     .text(n => `${n.label}\n${n.value}`);
+
+    // Add mouseover to nodes.
+    // Need to use function instead of arrow function due to scoping for d3.select(this)
+    nodeRects.on('mouseover', function (e, d) {
+      const nodeHighlighted = (n) => (n.id === d.id);
+      nodeRects.data(transformedData.nodes)
+        .classed('hoveredNode', n => nodeHighlighted(n))
+        .classed('nonHoveredNode', n => !nodeHighlighted(n) && !nodeSelected(n))
+        .classed('selectedNonHoveredNode', n => !nodeHighlighted(n) && nodeSelected(n));;
+
+      const linkHighlighted = (l) => (l.source.id === d.id || l.target.id === d.id);
+      linkPaths.data(transformedData.links)
+        .classed('hoveredLink', l => linkHighlighted(l))
+        .classed('defaultLink', false)
+        .classed('transparentLink', l => !linkHighlighted(l));
+    });
+    nodeRects.on('mouseout', function (e, d) {
+      nodeRects.data(transformedData.nodes)
+        .classed('hoveredNode', false)
+        .classed('nonHoveredNode', false)
+        .classed('selectedNonHoveredNode', false);
+      
+      linkPaths.data(transformedData.links)
+        .classed('hoveredLink', false)
+        .classed('defaultLink', isEmpty(selectedNodes))
+        .classed('transparentLink', !isEmpty(selectedNodes));
+    });
     
-    // TODO: add hover for highlight/value to links
     // Add tooltip to links.
     linkPaths.append('title')
     .text(l => `${l.source.column}=${l.source.label} --> ${l.target.column}=${l.target.label}: \n${l.value}`);
 
+    // TODO: add hover for highlight/value to links
     // Add labels to nodes
     let nodeLabels = svg.append('g');
     nodeLabels.selectAll()
@@ -245,6 +271,7 @@ export default function Sankey() {
       .attr('opacity', 0.4)
       .attr('stroke', 'gray');
 
+    // TODO: add hover to column labels
     // Add labels to columns
     let columnCoords = [];
     SELECTED_COLUMNS.forEach(c => {
@@ -256,7 +283,6 @@ export default function Sankey() {
         y: topNodeForCol.y0,
       });
     });
-
     let columnLabels = svg.append('g');
     columnLabels.selectAll('g')
     .data(columnCoords)

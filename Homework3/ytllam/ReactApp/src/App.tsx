@@ -37,7 +37,6 @@ function Layout() {
           let trend;
           let tolerance = 0.5
           if (r.G3 === r.G2 && r.G2 === r.G1) {
-            console.log(r);
             trend = types.GradeTrendEnum.Maintained;
           } else if (r.G3 >= r.G2 && r.G2 >= r.G1) {
             trend = types.GradeTrendEnum.Improved;
@@ -115,7 +114,7 @@ function Layout() {
       <Grid container spacing={1} direction='column' id='main-container'>
         {/* Horizontal grids as cells */}
         <Grid container item xs={6} sm={6} md={8} lg={8} display='flex' justifyContent='center'>
-          <Grid item xs={12} sm={10} md={10}>
+          <Grid item xs={12} sm={12} md={12}>
             <Sankey/>
           </Grid>
         </Grid>

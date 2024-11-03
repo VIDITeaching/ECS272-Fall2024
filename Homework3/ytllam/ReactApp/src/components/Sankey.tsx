@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import DataContext from '../stores/DataContext.ts';
 
-import { ComponentSize, DataRow, BooleanEnum, COL_TO_ENUM_MAP, ALL_NODES } from '../types.ts';
+import { ComponentSize, DataRow, BooleanEnum, COL_TO_ENUM_MAP, ALL_NODES, COL_TO_LABEL_MAP } from '../types.ts';
 
 export default function Sankey() {
   // Get data from context
@@ -21,7 +21,8 @@ export default function Sankey() {
     'gradeTrend',
   ];
 
-  const margin = { top: 100, right: 10, bottom: 100, left: 10 };
+  const margin = { top: 100, right: 200, bottom: 100, left: 200 };
+  const NODE_WIDTH = 20;
   // TODO: all nodes should have different colors.
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -38,6 +39,7 @@ export default function Sankey() {
   useResizeObserver({ ref: graphRef, onResize });
 
   const [selectedNodes, setSelectedNodes] = useState([]);
+  const [selectedCols, setSelectedCols] = useState([]);
 
   useEffect(() => {
     // if (isEmpty(data)) return;
@@ -72,7 +74,7 @@ export default function Sankey() {
     });
 
     renderGraph([...nodes], [...links]);
-  }, [data, selectedNodes, size]) // For some reason if we don't include size then data will not render.
+  }, [data, selectedNodes, selectedCols, size]) // For some reason if we don't include size then data will not render.
 
   /**
    *  Determines order of nodes on sankey chart.
@@ -81,7 +83,7 @@ export default function Sankey() {
    */
   function sortNodes(node1, node2) {
     // TODO: sort in order of values.
-    // returning 0 seems to sort nodes in order of values defined for enum.
+    // returning 0 seems to sort nodes in order of enum value name.
     return 0;
   }
 
@@ -91,19 +93,26 @@ export default function Sankey() {
     return 0;
   }
 
-  function nodeSelected(nodes, d) {
-    return nodes.some(n => n.index === d.index);
+  function nodeSelected(d) {
+    return selectedNodes.some(n => n.index === d.index);
   }
 
-  // function linkSelected(links, d) {
-  //   return links.some(l => l.index === d.index);
-  // }
+  function colSelected(d) {
+    return selectedCols.includes(d.column);
+  }
   
-  function handleNodeClick(e, d) {
+  // On node click: select and highlight node
+  const handleNodeClick = (e, d) => {
     let newNodes;
-    if (nodeSelected(selectedNodes, d)) {
+    if (nodeSelected(d)) {
       newNodes = selectedNodes.filter(n => !(n.column === d.column && n.val === d.val));
+      if (!newNodes.some(n => n.column === d.column)) { // if no more nodes selected for column, unselect column
+        setSelectedCols(selectedCols.filter(c => c !== d.column));
+      }
     } else {
+      if (!colSelected(d)) {
+        setSelectedCols([...selectedCols, d.column]);
+      }
       newNodes = [...selectedNodes, d];
     }
     setSelectedNodes(newNodes);
@@ -126,28 +135,36 @@ export default function Sankey() {
      *           - When nodes col1.X and col2.Y are selected, split col1 X node into col1.(X && all other selected) and col1.(X && !(all other selected)).
      *           - Recompute links.
      */
+    /*
+    // selected nodes only highlights the node bar and changes the histogram in bottom right.
+    let selectedCols = new Set(newNodes.map(n => n.column));
+    const newLinks = newNodes.flatMap(n => links.filter(l => {
+      if (!isEmpty(newNodes)) { // no nodes selected
+        return false;
+      }
+      // if only nodes from one column selected
+      if (selectedCols.size === 1) {
+        return (l.source.id === n.id || l.target.id === n.id);
+      } else {
+        return nodeSelected(newNodes, l.source) && nodeSelected(newNodes, l.target);
+      }
+    }));
+    console.log(newLinks);
+    setSelectedLinks(newLinks);
+    */
+  }
 
-    // // selected nodes only highlights the node bar and changes the histogram in bottom right.
-    // let selectedCols = new Set(newNodes.map(n => n.column));
-    // const newLinks = newNodes.flatMap(n => links.filter(l => {
-    //   if (!isEmpty(newNodes)) { // no nodes selected
-    //     return false;
-    //   }
-    //   // if only nodes from one column selected
-    //   if (selectedCols.size === 1) {
-    //     return (l.source.id === n.id || l.target.id === n.id);
-    //   } else {
-    //     return nodeSelected(newNodes, l.source) && nodeSelected(newNodes, l.target);
-    //   }
-    // }));
-    // console.log(newLinks);
-    // setSelectedLinks(newLinks);
+  // On column click: deselect all nodes in column
+  const handleColumnClick = (e, d) => {
+    setSelectedCols(selectedCols.filter(c => !(c === d.column)));
+    setSelectedNodes(selectedNodes.filter(n => !(n.column === d.column)));
   }
 
   // for logging changes in state
   useEffect(() => {
     console.log("nodes", selectedNodes);
-  }, [selectedNodes])
+    console.log("cols", selectedCols);
+  }, [selectedNodes, selectedCols])
 
   function renderGraph(nodes, links) {
     // Define and configure Sankey generator
@@ -155,7 +172,7 @@ export default function Sankey() {
         .nodeId(d => d.id)
         .nodeSort(sortNodes)
         .linkSort(sortLinks)
-        .nodeWidth(20)
+        .nodeWidth(NODE_WIDTH)
         .nodePadding(15)
         .extent([[margin.left, margin.top], [size.width - margin.right, size.height - margin.bottom]]);
 
@@ -183,7 +200,7 @@ export default function Sankey() {
         .attr('fill', n => color(n.id))
         // Highlight selected node. If none selected, highlight all by default.
         // TODO: add glow to selected nodes
-        .attr('opacity', n => isEmpty(selectedNodes) ? 1 : nodeSelected(selectedNodes, n) ? 1 : 0.5)
+        .attr('opacity', n => isEmpty(selectedNodes) ? 1 : nodeSelected(n) ? 1 : 0.5)
         .on('click', (e, d) => handleNodeClick(e, d));
 
     // Render links
@@ -202,7 +219,6 @@ export default function Sankey() {
         .attr('stroke', l => color(l.source.id)) // color flow by value of previous
         .attr('stroke-width', l => l.width);
 
-    // TODO: add click to highlight/filter to nodes
     // Add tooltip to nodes.
     nodeRects.append('title')
     .text(n => `${n.label}\n${n.value}`);
@@ -212,17 +228,48 @@ export default function Sankey() {
     linkPaths.append('title')
     .text(l => `${l.source.column}=${l.source.label} --> ${l.target.column}=${l.target.label}: \n${l.value}`);
 
-    // Adds labels on the nodes.
-    svg.append('g')
-      .selectAll()
+    // Add labels to nodes
+    let nodeLabels = svg.append('g');
+    nodeLabels.selectAll()
       .data(transformedData.nodes)
       .join('text')
-        .attr('x', n => n.x0 < size.width / 2 ? n.x1 + 6 : n.x0 - 6)
+        .attr('x', n => n.x1 + 6)
         .attr('y', n => (n.y1 + n.y0) / 2)
         .attr('dy', '0.35em')
-        // TODO: keep labels on right side but add enough margin/padding to not overflow
-        .attr('text-anchor', n => n.x0 < size.width / 2 ? 'start' : 'end')
-        .text(n => n.label + ': ' + n.value); // TODO: only keep value and move frequency to hover highlight
+        .attr('text-anchor', n => 'start')
+        .text(n => n.label + ': ' + n.value); // TODO: show frequency on link hover
+    // drop shadow text for visibility
+    nodeLabels.selectAll('text')
+      .clone(true).lower()
+      .attr('stroke-width', 0.5)
+      .attr('opacity', 0.4)
+      .attr('stroke', 'gray');
+
+    // Add labels to columns
+    let columnCoords = [];
+    SELECTED_COLUMNS.forEach(c => {
+      let topNodeForCol = transformedData.nodes.find(n => n.column === c);
+      topNodeForCol && columnCoords.push({
+        column: topNodeForCol.column,
+        label: COL_TO_LABEL_MAP.get(topNodeForCol.column),
+        x: topNodeForCol.x0, 
+        y: topNodeForCol.y0,
+      });
+    });
+
+    let columnLabels = svg.append('g');
+    columnLabels.selectAll('g')
+    .data(columnCoords)
+    .enter()
+    .append('text')
+      .attr('x', c => c.x + NODE_WIDTH / 2)
+      .attr('y', c => c.y - 12)
+      .attr('text-anchor', 'middle')
+      .attr('fill', 'currentColor')
+      .attr('font-weight', 'bold')
+      .attr('font-size', 'medium')
+      .text(c => c.label)
+      .on('click', (e, d) => handleColumnClick(e, d));
   }
 
   return (

@@ -96,10 +96,10 @@ export enum WeeklyStudyTimeEnum {
 }
 
 export enum NumClassesFailedEnum {
-  'never' = '0',
-  'once' = '1',
-  'twice' = '2',
-  'thrice+' = '3',
+  'None' = '0',
+  '1 class' = '1',
+  '2 classes' = '2',
+  '3 or more classes' = '3',
 }
 
 export enum QualityEnum {
@@ -111,11 +111,11 @@ export enum QualityEnum {
 }
 
 export enum FrequencyEnum {
-  'Very Low' = '1',
-  'Low' = '2',
+  'Very infrequent' = '1',
+  'Infrequent' = '2',
   'Average' = '3',
-  'High' = '4',
-  'Very High' = '5'
+  'Somewhat frequent' = '4',
+  'Very frequent' = '5'
 }
 
 export enum BooleanEnum {
@@ -204,6 +204,39 @@ export const COL_TO_ENUM_MAP = new Map(Object.entries({
   'weekendAlc': FrequencyEnum,
   'health': QualityEnum,
   'gradeTrend': GradeTrendEnum,
+}));
+
+// TODO: bucket age, bucket absences
+export const COL_TO_LABEL_MAP = new Map(Object.entries({
+  'school': 'School',
+  'sex': 'Sex',
+  'address': 'Address',
+  'famSize': 'Family size',
+  'parentStatus': 'Parent cohabitation status',
+  'motherEdu': 'Mother\'s Max Education',
+  'fatherEdu': 'Faher\'s Max Education',
+  'motherJob': 'Mother\'s Occupation',
+  'fatherJob': 'Father\'s Occupation',
+  'reason': 'Reason for choosing school',
+  'guardian': 'Student\'s guardian',
+  'travelTime': 'Home to school travel time',
+  'studyTime': 'Weekly study time',
+  'failures': '# classes failed in the past',
+  'schoolSup': 'School support',
+  'famSup': 'Family support',
+  'paid': 'Took extra paid classes',
+  'activities': 'Had extracurriculars',
+  'nursery': 'Attended nursery school',
+  'higher': 'Wants to take higher ed',
+  'internet': 'Home internet access',
+  'romantic': 'In a relationship',
+  'famRel': 'Quality of family relationships',
+  'freeTime': 'Amount of free time',
+  'goOut': 'Freq. of going out w/ friends',
+  'weekdayAlc': 'Weekday alcohol consumption',
+  'weekendAlc': 'Weekend alcohol consumption',
+  'health': 'Health',
+  'gradeTrend': 'Grade change over periods',
 }));
 
 // issue: node ids need to be unique.

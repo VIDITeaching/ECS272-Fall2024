@@ -1,13 +1,14 @@
-import Example from './components/sampleComponents/Example.tsx'
-import Sankey from './components/Sankey.tsx'
-import Viz1 from './components/Viz1.tsx'
-import Viz2 from './components/Viz2.tsx'
-import Viz3 from './components/Viz3.tsx'
+import Example from './components/sampleComponents/Example.tsx';
+import Sankey from './components/Sankey.tsx';
+import Viz1 from './components/Viz1.tsx';
+import Viz2 from './components/Viz2.tsx';
+import Histogram from './components/Histogram.tsx';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import { useState, useEffect } from 'react';
 import DataContext from './stores/DataContext.ts';
+import SelectedDataContext from './stores/SelectedDataContext.ts';
 
 import * as d3 from 'd3';
 import * as types from './types';
@@ -28,6 +29,7 @@ const theme = createTheme({
 // For how Grid works, refer to https://mui.com/material-ui/react-grid/
 function Layout() {
   const [data, setData] = useState<types.DataRow[]>([]);
+  const [selectedData, setSelectedData] = useState([]);
 
   useEffect(() => {
     const readCSV = async () => {
@@ -110,6 +112,8 @@ function Layout() {
 
   return (
     <DataContext.Provider value={data}>
+      <SelectedDataContext.Provider value={{selectedData, setSelectedData}}>
+
       {/* Top level grid container: vertical */}
       <Grid container spacing={1} direction='column' id='main-container'>
         {/* Horizontal grids as cells */}
@@ -125,10 +129,11 @@ function Layout() {
           </Grid>
           <Grid item md={0} xl={1}/>
           <Grid item xs={12} sm={10} md={6} lg={5} xl={5}>
-            {/* <Viz3/> */}
+            <Histogram/>
           </Grid>
         </Grid>
       </Grid>
+      </SelectedDataContext.Provider>
     </DataContext.Provider>
   )
 }

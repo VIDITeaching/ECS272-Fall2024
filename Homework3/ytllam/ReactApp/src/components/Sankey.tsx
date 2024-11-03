@@ -5,12 +5,14 @@ import * as style from '../style.css'
 import { isEmpty } from 'lodash';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import DataContext from '../stores/DataContext.ts';
+import SelectedDataContext from '../stores/SelectedDataContext.ts';
 
 import { ComponentSize, DataRow, BooleanEnum, COL_TO_ENUM_MAP, ALL_NODES, COL_TO_LABEL_MAP } from '../types.ts';
 
 export default function Sankey() {
   // Get data from context
   const data = useContext(DataContext);
+  const { selectedData, setSelectedData } = useContext(SelectedDataContext);
 
   // TODO: determine what columns to show
   // TODO: Stretch goal - give users ability to select between groups of related columns
@@ -163,8 +165,9 @@ export default function Sankey() {
 
   // for logging changes in state
   useEffect(() => {
-    console.log("nodes", selectedNodes);
-    console.log("cols", selectedCols);
+    // console.log("nodes", selectedNodes);
+    // console.log("cols", selectedCols);
+    setSelectedData(selectedNodes);
   }, [selectedNodes, selectedCols])
 
   function renderGraph(nodes, links) {
@@ -184,8 +187,8 @@ export default function Sankey() {
       links: links.map(d => ({...d}))
     })
 
-    console.log('nodes', transformedData.nodes);
-    console.log('links', transformedData.links);
+    // console.log('trNodes', transformedData.nodes);
+    // console.log('trLinks', transformedData.links);
 
     let svg = d3.select('#sankey-diagram-svg').append('g');
 

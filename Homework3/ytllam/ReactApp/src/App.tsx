@@ -12,6 +12,7 @@ import SelectedDataContext from './stores/SelectedDataContext.ts';
 
 import * as d3 from 'd3';
 import * as types from './types';
+import SmallMultiples from './components/SmallMultiples.tsx';
 
 
 // Adjust the color theme for material ui
@@ -117,18 +118,18 @@ function Layout() {
       {/* Top level grid container: vertical */}
       <Grid container spacing={1} direction='column' id='main-container'>
         {/* Horizontal grids as cells */}
-        <Grid container item xs={6} sm={6} md={8} lg={8} display='flex' justifyContent='center'>
-          <Grid item xs={12} sm={12} md={12}>
+        <Grid container item xs={5} sm={5} md={5} lg={5} xl={5} display='flex' justifyContent='center'>
+          <Grid item xs sm md lg xl>
             <Sankey/>
           </Grid>
         </Grid>
-        <Grid container item xs={6} sm={6} md={4} lg={4}
+        {/* TODO: adjust grid spacing */}
+        <Grid container spacing={1} item xs={6} sm={6} md={6} lg={6} xl={6}
           display='flex' justifyContent='center'>
-          <Grid item xs={12} sm={10} md={6} lg={4} xl={4}>
-            {/* <Viz2/> */}
+          <Grid item xs sm md lg xl>
+            <SmallMultiples/>
           </Grid>
-          <Grid item md={0} xl={1}/>
-          <Grid item xs={12} sm={10} md={6} lg={5} xl={5}>
+          <Grid item xs sm md lg xl>
             <Histogram/>
           </Grid>
         </Grid>

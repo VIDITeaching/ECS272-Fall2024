@@ -14,7 +14,7 @@ export default function Histogram() {
   const data = useContext(DataContext);
   const { selectedData } = useContext(SelectedDataContext);
   const SCORE_DOMAIN = [0, 20];
-
+  const BAR_SPACING = 4;
 
   const margin = { top: 10, right: 20, bottom: 50, left: 20 };
 
@@ -47,7 +47,7 @@ export default function Histogram() {
       return filter;
     });
 
-    console.log(filters);
+    console.log('filters', filters);
     let filteredData;
     if (!isEmpty(filters)) {
       filteredData = data.filter(d => filters.every(f => f(d)));
@@ -64,7 +64,7 @@ export default function Histogram() {
   }, [])
 
   function renderGraph(filteredData) {
-    console.log("filtered", filteredData);
+    // console.log("filtered", filteredData);
     let svg = d3.select('#histogram-svg').append('g');
                 // .attr("transform", `translate(${margin.left}, ${margin.top})`);
     
@@ -75,12 +75,12 @@ export default function Histogram() {
     const binnedData = bin(filteredData);
 
     const x = d3.scaleLinear()
-      .domain(SCORE_DOMAIN)
+      .domain([binnedData[0].x0, binnedData[binnedData.length - 1].x1])
       .range([margin.left, size.width - margin.right]);
 
     svg.append('g')
       .attr("transform", `translate(0, ${size.height - margin.bottom})`)
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x).tickValues(Array.from(Array(SCORE_DOMAIN[1]).keys())));
     
     const y = d3.scaleLinear()
       .range([size.height - margin.bottom, margin.top])
@@ -89,19 +89,19 @@ export default function Histogram() {
     const yAxisTicks = y.ticks().filter(Number.isInteger); // so we don't get decimal ticks when there's only 1-2 items per bin
     svg.append('g')
       .attr('transform', `translate(${margin.left}, 0)`)
-      .call(d3.axisLeft(y).tickValues(yAxisTicks).tickFormat(d3.format('.0f')));
+      .call(d3.axisLeft(y).tickSizeOuter(0).tickValues(yAxisTicks).tickFormat(d3.format('.0f')));
     
 
-    console.log(binnedData.map(b => b.length));
+    // console.log(binnedData.map(b => b.length));
 
     const histBars = svg.append('g')
       .selectAll('rect')
       .data(binnedData)
       .join('rect')
-      .attr('x', (_, i) => x(i))
+      .attr('x', d => x(d.x0) + BAR_SPACING / 2)
       .attr('y', d => y(d.length))
-      .attr('width', d => x(d.x1) - x(d.x0) - 2)
-      .attr('height', d => Math.abs(y(0) - y(d.length))) 
+      .attr('width', d => x(d.x1) - x(d.x0) - BAR_SPACING)
+      .attr('height', d => Math.abs(y(0) - y(d.length)))
       .attr('fill', 'teal');
 
     // TODO: add chart, axis titles
@@ -115,12 +115,11 @@ export default function Histogram() {
     //      (note: timestepping between grades will stretch y axis unless the scale is fixed to max bin freq over all periods)
   }
 
+  // TODO: convert to scaleBand so ticks are middle aligned
   return (
     <>
       <div ref={graphRef} className='chart-container'>
-        <svg id='histogram-svg' width='100%' height='100%'>
-          <text>test</text>
-        </svg>
+        <svg id='histogram-svg' width='100%' height='100%'></svg>
       </div>
     </>
   )

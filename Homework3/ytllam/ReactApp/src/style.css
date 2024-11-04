@@ -23,6 +23,12 @@ body {
   max-width: 100%
 }
 
+.small-multiples-container{
+  /* max-height: 40vh;
+  min-height: 10vh; */
+  height: 100%;
+}
+
 .overview-chart-container{
   height: 100%;
   max-width: 100%

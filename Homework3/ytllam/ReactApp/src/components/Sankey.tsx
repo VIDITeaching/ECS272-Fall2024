@@ -24,7 +24,8 @@ export default function Sankey() {
     'gradeTrend',
   ];
 
-  const margin = { top: 100, right: 200, bottom: 100, left: 200 };
+  const margin = { top: 50, right: 150, bottom: 20, left: 150 };
+  // const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const NODE_WIDTH = 24;
   // TODO: all nodes should have different colors.
   const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -266,6 +267,7 @@ export default function Sankey() {
         .attr('y', n => (n.y1 + n.y0) / 2)
         .attr('dy', '0.35em')
         .attr('text-anchor', n => 'start')
+        .attr('font-size', '.8rem')
         .text(n => n.label + ': ' + n.value); // TODO: show frequency on link hover
     // drop shadow text for visibility
     nodeLabels.selectAll('text')
@@ -296,7 +298,7 @@ export default function Sankey() {
       .attr('text-anchor', 'middle')
       .attr('fill', 'currentColor')
       .attr('font-weight', 'bold')
-      .attr('font-size', 'medium')
+      .attr('font-size', '1rem')
       .text(c => c.label)
       .on('click', (e, d) => handleColumnClick(e, d));
   }

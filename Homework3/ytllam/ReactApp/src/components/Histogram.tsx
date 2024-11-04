@@ -20,7 +20,6 @@ export default function Histogram() {
 
   // Component size, not window size. Depends on grid size.
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
-  // const [sankey, setSankey] = useState<d3sankey.SankeyLayout<d3sankey.SankeyGraph<{}, {}>, {}, {}> | null>(null);
 
   // On window resize, call setSize with delay of 200 milliseconds
   const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200)

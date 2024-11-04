@@ -13,10 +13,10 @@ export default function Histogram() {
   // Get data from context
   const data = useContext(DataContext);
   const { selectedData } = useContext(SelectedDataContext);
+  const SCORE_DOMAIN = [0, 20];
 
-  const margin = { top: 100, right: 200, bottom: 100, left: 200 };
 
-  const color = d3.scaleOrdinal(d3.schemeCategory10);
+  const margin = { top: 10, right: 20, bottom: 50, left: 20 };
 
   // Component size, not window size. Depends on grid size.
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
@@ -40,6 +40,8 @@ export default function Histogram() {
     // Generate list of filters
     const filters = selectedData.map(n => {
       const col = n.column;
+      // TODO: OR filters in same column
+      // TODO: create strings for displaying filters
       // const colType = COL_TO_ENUM_MAP.get(col);
       const filter = d => d[col] === n.val;
       return filter;
@@ -62,13 +64,59 @@ export default function Histogram() {
   }, [])
 
   function renderGraph(filteredData) {
-    // let svg = d3.select('#histogram-svg').append('g');
     console.log("filtered", filteredData);
+    let svg = d3.select('#histogram-svg').append('g');
+                // .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    
+    const bin = d3.bin()
+      .domain(SCORE_DOMAIN)
+      .thresholds(20)
+      .value(d => d.G3);
+    const binnedData = bin(filteredData);
+
+    const x = d3.scaleLinear()
+      .domain(SCORE_DOMAIN)
+      .range([margin.left, size.width - margin.right]);
+
+    svg.append('g')
+      .attr("transform", `translate(0, ${size.height - margin.bottom})`)
+      .call(d3.axisBottom(x));
+    
+    const y = d3.scaleLinear()
+      .range([size.height - margin.bottom, margin.top])
+      .domain([0, d3.max(binnedData, bd => bd.length)]);
+
+    const yAxisTicks = y.ticks().filter(Number.isInteger); // so we don't get decimal ticks when there's only 1-2 items per bin
+    svg.append('g')
+      .attr('transform', `translate(${margin.left}, 0)`)
+      .call(d3.axisLeft(y).tickValues(yAxisTicks).tickFormat(d3.format('.0f')));
+    
+
+    console.log(binnedData.map(b => b.length));
+
+    const histBars = svg.append('g')
+      .selectAll('rect')
+      .data(binnedData)
+      .join('rect')
+      .attr('x', (_, i) => x(i))
+      .attr('y', d => y(d.length))
+      .attr('width', d => x(d.x1) - x(d.x0) - 2)
+      .attr('height', d => Math.abs(y(0) - y(d.length))) 
+      .attr('fill', 'teal');
+
+    // TODO: add chart, axis titles
+    // TODO: add tooltip for total number on top of bar
+    // TODO: highlight bar on hover
+    // TODO: add timestep for data shift
+    // TODO: color scheme for bars?
+    // TODO: display message when no students satisfy filters
+    // TODO: list selected filters
+    // TODO: add dropdown/radio button for grade period G1/G2/G3 and/or timestep between G1/G2/G3.
+    //      (note: timestepping between grades will stretch y axis unless the scale is fixed to max bin freq over all periods)
   }
 
   return (
     <>
-      <p>{selectedData.length}</p>
       <div ref={graphRef} className='chart-container'>
         <svg id='histogram-svg' width='100%' height='100%'>
           <text>test</text>

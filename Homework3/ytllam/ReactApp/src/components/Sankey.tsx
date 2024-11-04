@@ -204,7 +204,7 @@ export default function Sankey() {
         .attr('fill', n => color(n.id))
         // Highlight selected node. If none selected, highlight all by default.
         // TODO: convert to class
-        .attr('opacity', n => isEmpty(selectedNodes) ? 1 : nodeSelected(n) ? 1 : 0.5)
+        .attr('opacity', n => isEmpty(selectedNodes) ? 1 : nodeSelected(n) ? 1 : 0.4)
         .on('click', (e, d) => handleNodeClick(e, d));
 
     // Render links

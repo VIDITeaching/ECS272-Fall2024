@@ -11,8 +11,6 @@ import Grid from '@mui/material/Grid';
 
 import { ComponentSize, DataRow, BooleanEnum, COL_TO_ENUM_MAP, ALL_NODES, COL_TO_LABEL_MAP } from '../types.ts';
 
-// TODO: change histograms to box plots.
-
 export default function SmallMultiples() {
   // Get data from context
   const data = useContext(DataContext);
@@ -20,17 +18,15 @@ export default function SmallMultiples() {
 
   const SCORE_DOMAIN = [0, 20];
   const NUM_GRADE_PERIODS = 3;
-  const BAR_SPACING = 1;
 
   // const margin = { top: 10, right: 10, bottom: 20, left: 25 };
   const margin = { top: 20, right: 20, bottom: 20, left: 30 };
 
   // Component size, not window size. Depends on grid size.
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
-  const [selectedCol, setSelectedCol] = useState('weekendAlc');
+  const [selectedCol, setSelectedCol] = useState('gradeTrend');
   const colValues = Object.values(COL_TO_ENUM_MAP.get(selectedCol));
-  const boxWidth = size.width / NUM_GRADE_PERIODS;
-  const boxHeight = size.height / colValues.length;
+  const boxWidth = size.width / (NUM_GRADE_PERIODS);
 
   // On window resize, call setSize with delay of 200 milliseconds
   const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200)
@@ -45,78 +41,112 @@ export default function SmallMultiples() {
     if (size.width === 0 || size.height === 0) return; // if component not rendered
 
     // Reset graph
-    // TODO: reset each individually
     d3.select('#small-multiples-svg').selectAll('*').remove();
     renderGraph();
   }, [data, size]) // For some reason if we don't include size then data will not render.
 
   // for logging changes in state
   useEffect(() => {
-    // console.log("histogram render");
-    // TODO: depending on column selected, update cellLayout
+    // console.log('histogram render');
   }, [selectedData])
 
-  // TODO: add dropdown for selecting dimension
   function renderGraph() {
     let svg = d3.select('#small-multiples-svg')
+    const chartNodes = [];
 
     for (let i = 0; i < NUM_GRADE_PERIODS; i++) {    
-      for (let j = 0; j < colValues.length; j++) {
         const xOffset = boxWidth * i;
-        const yOffset = boxHeight * j;
-    
         const subChart = svg.append('g')
-                        .attr('transform', `translate(${xOffset}, ${yOffset})`);
+                        .attr('transform', `translate(${xOffset})`);
 
-        const gradePeriodColumnName = 'G' + (i + 1).toString();
-        const selectedColumnValueFilter = (d) => d[selectedCol] === colValues[j];
-        renderSingle(subChart, selectedColumnValueFilter, gradePeriodColumnName);
-      }
+        chartNodes.push(renderSingle(subChart, 'G' + (i + 1).toString()));
     }
-    // TODO: add chart, axis titles
-    // TODO: add tooltip for total number on top of bar
-    // TODO: highlight bar on hover
-    // TODO: add timestep for data shift
-    // TODO: color scheme for bars?
   }
 
-  function renderSingle(subChartNode, selectedColumnValueFilter, gradePeriodColumn) {
-    const bin = d3.bin()
-      .domain(SCORE_DOMAIN)
-      .thresholds(10)
-      .value(d => d[gradePeriodColumn]);
-    const binnedData = bin(data.filter(d => selectedColumnValueFilter(d)));
+  function renderSingle(subChartNode, gradePeriodColumn) {
+    const boxPlotForValue = subChartNode.append('g');
 
-    // TODO: use same y scale for all plots
-    const x = d3.scaleLinear()
-      .domain([binnedData[0].x0, binnedData[binnedData.length - 1].x1])
-      .range([margin.left, boxWidth - margin.right]);
+    // Set up scales and axes
+    const x = d3.scaleBand()
+    .domain(colValues)
+    .range([margin.left, boxWidth - margin.right])
+    .padding(0.45);
 
-    subChartNode.append('g')
-      .attr("transform", `translate(0, ${boxHeight - margin.bottom})`)
-      .call(d3.axisBottom(x));
-
-    const y = d3.scaleLinear()
-      .range([boxHeight - margin.bottom, margin.top])
-      .domain([0, d3.max(binnedData, bd => bd.length)]);
-
-    const yAxisTicks = y.ticks().filter(Number.isInteger); // so we don't get decimal ticks when there's only 1-2 items per bin
-    subChartNode.append('g')
-      .attr('transform', `translate(${margin.left}, 0)`)
-      .call(d3.axisLeft(y).tickSizeOuter(0).ticks(4, '.0f'));
+    const xAxis = subChartNode.append('g')
+    .attr('transform', `translate(0, ${size.height - margin.bottom})`)
+    .call(d3.axisBottom(x).tickSizeOuter(0));
     
-    const histBars = subChartNode.append('g')
-      .selectAll('rect')
-      .data(binnedData)
-      .join('rect')
-      .attr('x', d => x(d.x0) + BAR_SPACING / 2)
-      .attr('y', d => y(d.length))
-      .attr('width', d => Math.max((x(d.x1) - x(d.x0) - BAR_SPACING), 0))
-      .attr('height', d => Math.abs(y(0) - y(d.length))) 
-      .attr('fill', 'teal');
+    const y = d3.scaleLinear()
+      .domain(SCORE_DOMAIN)
+      .range([size.height - margin.bottom, margin.top]);
+    const yAxis = subChartNode.append('g')
+      .attr('transform', `translate(${margin.left}, 0)`)
+      .call(d3.axisLeft(y))
+
+    // Get statistics
+    colValues.forEach(v => {
+      const sortedGrades = data.filter(d => d[selectedCol] === v)
+        .map(d => d[gradePeriodColumn])
+        .sort((a, b) => a - b);
+      const min = sortedGrades[0];
+      const quartiles = [0.25, 0.5, 0.75].map(q => d3.quantile(sortedGrades, q));
+      const max = sortedGrades[sortedGrades.length - 1];
+      const iqr = quartiles[2] - quartiles[0];
+      const outlier_min = Math.max(min, quartiles[0] - iqr * 1.5);
+      const outlier_max = Math.min(max, quartiles[2] + iqr * 1.5);
+
+      // Vertical line
+      boxPlotForValue
+        .append('line')
+        .attr('x1', x(v) + x.bandwidth() / 2)
+        .attr('x2', x(v) + x.bandwidth() / 2)
+        .attr('y1', y(outlier_min))
+        .attr('y2', y(outlier_max))
+        .attr('stroke', 'black');
+      
+      // Horizontal lines
+      boxPlotForValue
+        .append('rect')
+        .attr('x', x(v))
+        .attr('y', y(quartiles[2]))
+        .attr('height', y(quartiles[0]) - y(quartiles[2]))
+        .attr('width', x.bandwidth())
+        .attr('stroke', 'black')
+        .style('fill', 'teal');
+      
+      boxPlotForValue.selectAll('horLine')
+        .data([outlier_min, quartiles[1], outlier_max])
+        .join('line')
+          .attr('x1', x(v))
+          .attr('x2', x(v) + x.bandwidth())
+          .attr('y1', d => y(d))
+          .attr('y2', d => y(d))
+          .attr('stroke', 'black');
+      
+      // Outliers, with a bit of jitter.
+      const jitter = x.bandwidth() * 0.6;
+      boxPlotForValue.append('g')
+      .selectAll('circle')
+      .data(sortedGrades)
+      .join('circle')
+        .attr('fill', d => d > outlier_max || d < outlier_min ? 'red' : 'deepskyblue')
+        .attr('fill-opacity', 0.4)
+        .attr('stroke', 'none')
+        .attr('r', 3)
+        .attr('cx', () => x(v) + x.bandwidth() / 2 - jitter / 2 + Math.random() * jitter)
+        .attr('cy', d => y(d));
+    })
+    return boxPlotForValue;
   }
 
-  // TODO: label rows/columns
+  // TODO: label rows/columns. Rows might need slanted labels if > bandwidth.
+  // TODO: add crosshair that renders across all 3 graphs for comparing across grade periods
+  // TODO: pick contrasty colors for boxes/datapoints
+  // TODO: add chart, axis titles
+  // TODO: add tooltip for total number on top of bar
+  // TODO: highlight bar on hover
+  // TODO: add timestep for data shift
+  // TODO: add dropdown for selecting column
   return (
     <>
       <div ref={graphRef} className='chart-container'>

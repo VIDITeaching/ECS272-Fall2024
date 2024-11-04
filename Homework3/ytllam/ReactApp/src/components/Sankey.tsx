@@ -24,7 +24,7 @@ export default function Sankey() {
     'gradeTrend',
   ];
 
-  const margin = { top: 50, right: 150, bottom: 20, left: 150 };
+  const margin = { top: 50, right: 150, bottom: 20, left: 150 }; //TODO: margin based on relative units
   // const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const NODE_WIDTH = 24;
   // TODO: all nodes should have different colors.

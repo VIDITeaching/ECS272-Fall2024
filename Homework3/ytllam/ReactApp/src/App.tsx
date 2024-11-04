@@ -54,13 +54,13 @@ function Layout() {
           // } else if (r.G3 < r.G2 && r.G2 < r.G1) { // down down
           //   trend = types.GradeTrendEnum.Declined;
           // } else if (r.G3 >= r.G1 && r.G2 >= r.G1) { // up down but overall better
-          //   trend = types.GradeTrendEnum["Down but overall better"];
+          //   trend = types.GradeTrendEnum['Down but overall better'];
           // } else if (r.G3 >= r.G1 && r.G2 < r.G1) { // down up but overall better
-          //   trend = types.GradeTrendEnum["Up and better"];
+          //   trend = types.GradeTrendEnum['Up and better'];
           // } else if (r.G3 < r.G1 && r.G3 < r.G2) { // up down but overall worse
-          //   trend = types.GradeTrendEnum["Down and worse"];
+          //   trend = types.GradeTrendEnum['Down and worse'];
           // } else if (r.G3 < r.G1 && r.G3 >= r.G2) { // down up but overall worse
-          //   trend = types.GradeTrendEnum["Up but worse"];
+          //   trend = types.GradeTrendEnum['Up but worse'];
           // } else {
           //   trend = types.GradeTrendEnum.Unknown;
           // }
@@ -110,7 +110,7 @@ function Layout() {
     readCSV();
   }, []); // empty dependency array [] - run once
 
-
+  // TODO: fix bottom half disappearing when window is tiny
   return (
     <DataContext.Provider value={data}>
       <SelectedDataContext.Provider value={{selectedData, setSelectedData}}>
@@ -118,18 +118,18 @@ function Layout() {
       {/* Top level grid container: vertical */}
       <Grid container spacing={1} direction='column' id='main-container'>
         {/* Horizontal grids as cells */}
-        <Grid container item xs={5} sm={5} md={6} lg={6} xl={6} display='flex' justifyContent='center'>
+        <Grid container item xs={5} sm={5} md={5} lg={6} xl={6} display='flex' justifyContent='center'>
           <Grid item xs sm md lg xl>
             <Sankey/>
           </Grid>
         </Grid>
         {/* TODO: adjust grid spacing */}
-        <Grid container spacing={1} item xs sm md lg xl
+        <Grid container spacing={5} item xs sm md lg xl
           display='flex' justifyContent='center'>
-          <Grid item xs sm md lg xl>
+          <Grid item xs={12} sm={12} md={12} lg={8} xl={8}>
             <SmallMultiples/>
           </Grid>
-          <Grid item xs sm md lg xl>
+          <Grid item xs={12} sm={12} md={12} lg xl>
             <Histogram/>
           </Grid>
         </Grid>

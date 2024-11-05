@@ -1,0 +1,38 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+#main-container{
+  height: 100vh;
+  width: 100vw;
+  max-height: 100vh; /* Set the main container height to viewport height */
+  overflow: hidden; /* Prevent scrolling */
+}
+
+.chart-container{
+  height: 100%;
+  width: 100%
+}
+
+.sankey-chart-container{
+  height:90%;
+  width: 90%
+}
+
+.highlighted-bar {
+  stroke: #000; /* Add a stroke to the whole bar */
+  stroke-width: 2; /* Adjust stroke width */
+  opacity: 0.8; /* Change the opacity to indicate selection */
+}
+

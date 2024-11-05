@@ -71,7 +71,7 @@ export enum JobEnum {
 export enum SchoolReasonEnum { 
   'Close To Home' = 'home',
   'Reputation' = 'reputation',
-  'CoursePreference' = 'course',
+  'Course Preference' = 'course',
   'Other' = 'other',
 }
 
@@ -114,7 +114,7 @@ export enum FrequencyEnum {
   'Very infrequent' = '1',
   'Infrequent' = '2',
   'Average' = '3',
-  'Somewhat frequent' = '4',
+  'Frequent' = '4',
   'Very frequent' = '5'
 }
 

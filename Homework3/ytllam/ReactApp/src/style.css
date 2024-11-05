@@ -13,6 +13,12 @@ body {
   margin: 0;
 }
 
+.select-label {
+  margin-right: 0.5rem;
+  display: inline-block;
+  height: 1.5rem;
+}
+
 #main-container{
   height: 100vh;
   width: 100vw;

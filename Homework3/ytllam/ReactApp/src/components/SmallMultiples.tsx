@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, useRef } from 'react';
 import * as d3 from 'd3';
 import * as d3sankey from 'd3-sankey';
 import * as style from '../style.css'
-import { isEmpty } from 'lodash';
+import { invertBy } from 'lodash';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import DataContext from '../stores/DataContext.ts';
 import SelectedDataContext from '../stores/SelectedDataContext.ts';
@@ -20,12 +20,15 @@ export default function SmallMultiples() {
   const NUM_GRADE_PERIODS = 3;
 
   // const margin = { top: 10, right: 10, bottom: 20, left: 25 };
-  const margin = { top: 20, right: 20, bottom: 20, left: 30 };
+  const margin = { top: 50, right: 20, bottom: 100, left: 30 };
 
   // Component size, not window size. Depends on grid size.
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
   const [selectedCol, setSelectedCol] = useState('gradeTrend');
-  const colValues = Object.values(COL_TO_ENUM_MAP.get(selectedCol));
+  const colOptions = Array.from(COL_TO_ENUM_MAP.keys()); // this map only contains categorical variables
+  const colEnumType = COL_TO_ENUM_MAP.get(selectedCol);
+  const colValues = Object.values(colEnumType);
+  const colValToLabels = invertBy(colEnumType);
   const boxWidth = size.width / (NUM_GRADE_PERIODS);
 
   // On window resize, call setSize with delay of 200 milliseconds
@@ -43,12 +46,12 @@ export default function SmallMultiples() {
     // Reset graph
     d3.select('#small-multiples-svg').selectAll('*').remove();
     renderGraph();
-  }, [data, size]) // For some reason if we don't include size then data will not render.
+  }, [data, selectedCol, size]) // For some reason if we don't include size then data will not render.
 
   // for logging changes in state
   useEffect(() => {
     // console.log('histogram render');
-  }, [selectedData])
+  }, [selectedData, ])
 
   function renderGraph() {
     let svg = d3.select('#small-multiples-svg')
@@ -74,8 +77,16 @@ export default function SmallMultiples() {
 
     const xAxis = subChartNode.append('g')
     .attr('transform', `translate(0, ${size.height - margin.bottom})`)
-    .call(d3.axisBottom(x).tickSizeOuter(0));
+    .call(d3.axisBottom(x).tickSizeOuter(0).tickFormat(d => colValToLabels[d][0]));
     
+    xAxis.selectAll('text')
+      .style('text-anchor', 'end')
+      .attr('dx', '-0.75em')
+      .attr('dy', '0.5em')
+      .attr('transform', 'rotate(-30)');
+
+    console.log(Object.keys(COL_TO_ENUM_MAP.get(selectedCol)));
+
     const y = d3.scaleLinear()
       .domain(SCORE_DOMAIN)
       .range([size.height - margin.bottom, margin.top]);
@@ -114,7 +125,8 @@ export default function SmallMultiples() {
         .attr('stroke', 'black')
         .style('fill', 'teal');
       
-      boxPlotForValue.selectAll('horLine')
+      boxPlotForValue.append('g')
+        .selectAll('horLine')
         .data([outlier_min, quartiles[1], outlier_max])
         .join('line')
           .attr('x1', x(v))
@@ -123,7 +135,7 @@ export default function SmallMultiples() {
           .attr('y2', d => y(d))
           .attr('stroke', 'black');
       
-      // Outliers, with a bit of jitter.
+      // Plot outliers with jitter for visibility
       const jitter = x.bandwidth() * 0.6;
       boxPlotForValue.append('g')
       .selectAll('circle')
@@ -145,12 +157,24 @@ export default function SmallMultiples() {
   // TODO: add chart, axis titles
   // TODO: add tooltip for total number on top of bar
   // TODO: highlight bar on hover
-  // TODO: add timestep for data shift
-  // TODO: add dropdown for selecting column
+  // TODO: hide scatter points when display too small
   return (
     <>
       <div ref={graphRef} className='chart-container'>
-        <svg id='small-multiples-svg' width='100%' height='100%'></svg>
+        <Grid container direction='column' height='100%'>
+          <Grid item xs={1} alignContent='center' justifyContent='center' display='flex'>
+            <label className='select-label'>Select column:</label>
+            <select id='box-plot-select' className='select-label'
+              value={selectedCol} defaultValue={'gradeTrend'} onChange={e => setSelectedCol(e.target.value)}>
+              {colOptions.map(c => 
+                <option id={c}>{c}</option>
+              )}
+            </select>
+          </Grid>
+          <Grid item xs>
+            <svg id='small-multiples-svg' width='100%' height='100%'></svg>
+          </Grid>
+        </Grid>
       </div>
     </>
   )

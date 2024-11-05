@@ -1,0 +1,76 @@
+{
+  "name": "root",
+  "children": [
+    {
+      "name": "Female",
+      "children": [
+        {
+          "name": "Year 1",
+          "children": [
+            { "name": "2.00 - 2.49", "size": 1 },
+            { "name": "2.50 - 2.99", "size": 2 },
+            { "name": "3.00 - 3.49", "size": 10 },
+            { "name": "3.50 - 4.00", "size": 20 }
+          ]
+        },
+        {
+          "name": "Year 2",
+          "children": [
+            { "name": "2.50 - 2.99", "size": 2 },
+            { "name": "3.00 - 3.49", "size": 6 },
+            { "name": "3.50 - 4.00", "size": 7 }
+          ]
+        },
+        {
+          "name": "Year 3",
+          "children": [
+            { "name": "0 - 1.99", "size": 2 },
+            { "name": "3.00 - 3.49", "size": 11 },
+            { "name": "3.50 - 4.00", "size": 7 }
+          ]
+        },
+        {
+          "name": "Year 4",
+          "children": [
+            { "name": "3.00 - 3.49", "size": 2 },
+            { "name": "3.50 - 4.00", "size": 5 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Male",
+      "children": [
+        {
+          "name": "Year 1",
+          "children": [
+            { "name": "0 - 1.99", "size": 2 },
+            { "name": "3.00 - 3.49", "size": 5 },
+            { "name": "3.50 - 4.00", "size": 3 }
+          ]
+        },
+        {
+          "name": "Year 2",
+          "children": [
+            { "name": "2.00 - 2.49", "size": 1 },
+            { "name": "3.00 - 3.49", "size": 7 },
+            { "name": "3.50 - 4.00", "size": 3 }
+          ]
+        },
+        {
+          "name": "Year 3",
+          "children": [
+            { "name": "3.00 - 3.49", "size": 1 },
+            { "name": "3.50 - 4.00", "size": 3 }
+          ]
+        },
+        {
+          "name": "Year 4",
+          "children": [
+            { "name": "3.00 - 3.49", "size": 1 }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+[
+    {
+      "cgpa": "0 - 1.99",
+      "depression_yes": 0,
+      "depression_no": 4,
+      "anxiety_yes": 0,
+      "anxiety_no": 4,
+      "panic_attack_yes": 1,
+      "panic_attack_no": 3,
+      "treatment_yes": 0,
+      "treatment_no": 4
+    },
+    {
+      "cgpa": "2.00 - 2.49",
+      "depression_yes": 0,
+      "depression_no": 2,
+      "anxiety_yes": 0,
+      "anxiety_no": 2,
+      "panic_attack_yes": 1,
+      "panic_attack_no": 1,
+      "treatment_yes": 0,
+      "treatment_no": 2
+    },
+    {
+      "cgpa": "2.50 - 2.99",
+      "depression_yes": 3,
+      "depression_no": 1,
+      "anxiety_yes": 1,
+      "anxiety_no": 3,
+      "panic_attack_yes": 3,
+      "panic_attack_no": 1,
+      "treatment_yes": 2,
+      "treatment_no": 2
+    },
+    {
+      "cgpa": "3.00 - 3.49",
+      "depression_yes": 19,
+      "depression_no": 24,
+      "anxiety_yes": 15,
+      "anxiety_no": 28,
+      "panic_attack_yes": 9,
+      "panic_attack_no": 34,
+      "treatment_yes": 0,
+      "treatment_no": 43
+    },
+    {
+      "cgpa": "3.50 - 4.00",
+      "depression_yes": 13,
+      "depression_no": 35,
+      "anxiety_yes": 18,
+      "anxiety_no": 30,
+      "panic_attack_yes": 19,
+      "panic_attack_no": 29,
+      "treatment_yes": 4,
+      "treatment_no": 44
+    }
+  ]
+  

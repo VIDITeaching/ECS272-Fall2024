@@ -1,0 +1,90 @@
+{
+    "nodes": [
+      {
+        "name": "Depression?: Yes"
+      },
+      {
+        "name": "Anxiety?: No"
+      },
+      {
+        "name": "Panic attack?: Yes"
+      },
+      {
+        "name": "Treatment?: No"
+      },
+      {
+        "name": "Depression?: No"
+      },
+      {
+        "name": "Anxiety?: Yes"
+      },
+      {
+        "name": "Panic attack?: No"
+      },
+      {
+        "name": "Treatment?: Yes"
+      }
+    ],
+    "links": [
+      {
+        "source": 0,
+        "target": 1,
+        "value": 17
+      },
+      {
+        "source": 1,
+        "target": 2,
+        "value": 20
+      },
+      {
+        "source": 2,
+        "target": 3,
+        "value": 29
+      },
+      {
+        "source": 4,
+        "target": 5,
+        "value": 16
+      },
+      {
+        "source": 5,
+        "target": 6,
+        "value": 21
+      },
+      {
+        "source": 6,
+        "target": 3,
+        "value": 66
+      },
+      {
+        "source": 0,
+        "target": 5,
+        "value": 18
+      },
+      {
+        "source": 5,
+        "target": 2,
+        "value": 13
+      },
+      {
+        "source": 1,
+        "target": 6,
+        "value": 47
+      },
+      {
+        "source": 4,
+        "target": 1,
+        "value": 50
+      },
+      {
+        "source": 2,
+        "target": 7,
+        "value": 4
+      },
+      {
+        "source": 6,
+        "target": 7,
+        "value": 2
+      }
+    ]
+  }

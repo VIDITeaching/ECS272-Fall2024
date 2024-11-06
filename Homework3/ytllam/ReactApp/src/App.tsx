@@ -38,7 +38,7 @@ function Layout() {
   useEffect(() => {
     const readCSV = async () => {
       try {
-        // HW3 todo: interactivity to toggle between math and portugese datasets
+        // Stretch goal: interactivity to toggle between math and portugese datasets
         const csvData : types.DataRow[] = await d3.csv('../../data/student-mat.csv', r => {
           let trend;
           let tolerance = 0.5

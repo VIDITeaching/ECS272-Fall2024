@@ -178,10 +178,8 @@ export default function Histogram() {
         .text('Student grade (out of 20)');
       
     // TODO: highlight bar and show total on top of bar on mouseover
-    // TODO: add timestep for data shift
+    // TODO: add timestep when changing between grade period
     // TODO: color scheme for bars?
-    // TODO: display message when no students satisfy filters
-    // TODO: add dropdown/radio button for grade period G1/G2/G3 and/or timestep between G1/G2/G3.
     //      (note: timestepping between grades will stretch y axis unless the scale is fixed to max bin freq over all periods)
   }
 

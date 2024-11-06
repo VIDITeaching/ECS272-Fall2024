@@ -1,0 +1,205 @@
+{
+    "name": "oh Car Brands",
+    "children": [
+        {
+            "name": "BMW",
+            "children": [
+                {
+                    "name": "3 Series",
+                    "total_selling_price": 14261700.0
+                },
+                {
+                    "name": "5 Series",
+                    "total_selling_price": 9330825.0
+                },
+                {
+                    "name": "4 Series",
+                    "total_selling_price": 5166000.0
+                },
+                {
+                    "name": "X5",
+                    "total_selling_price": 5060825.0
+                },
+                {
+                    "name": "X1",
+                    "total_selling_price": 3140150.0
+                }
+            ]
+        },
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 13830875.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 7165402.0
+                },
+                {
+                    "name": "Fusion",
+                    "total_selling_price": 5523853.0
+                },
+                {
+                    "name": "Explorer",
+                    "total_selling_price": 3798276.0
+                },
+                {
+                    "name": "Focus",
+                    "total_selling_price": 3446925.0
+                }
+            ]
+        },
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Camry",
+                    "total_selling_price": 11219278.0
+                },
+                {
+                    "name": "RAV4",
+                    "total_selling_price": 8281555.0
+                },
+                {
+                    "name": "Corolla",
+                    "total_selling_price": 4369959.0
+                },
+                {
+                    "name": "Highlander",
+                    "total_selling_price": 1934151.0
+                },
+                {
+                    "name": "Sienna",
+                    "total_selling_price": 1772351.0
+                }
+            ]
+        },
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 4250050.0
+                },
+                {
+                    "name": "Malibu",
+                    "total_selling_price": 2538253.0
+                },
+                {
+                    "name": "Equinox",
+                    "total_selling_price": 2288153.0
+                },
+                {
+                    "name": "Impala",
+                    "total_selling_price": 2019306.0
+                },
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 1635250.0
+                }
+            ]
+        },
+        {
+            "name": "Mercedes-Benz",
+            "children": [
+                {
+                    "name": "C-Class",
+                    "total_selling_price": 5536851.0
+                },
+                {
+                    "name": "E-Class",
+                    "total_selling_price": 4925053.0
+                },
+                {
+                    "name": "M-Class",
+                    "total_selling_price": 1798950.0
+                },
+                {
+                    "name": "GLK-Class",
+                    "total_selling_price": 1074001.0
+                },
+                {
+                    "name": "S-Class",
+                    "total_selling_price": 920400.0
+                }
+            ]
+        },
+        {
+            "name": "Hyundai",
+            "children": [
+                {
+                    "name": "Sonata",
+                    "total_selling_price": 5787851.0
+                },
+                {
+                    "name": "Elantra",
+                    "total_selling_price": 5723451.0
+                },
+                {
+                    "name": "Genesis",
+                    "total_selling_price": 598800.0
+                },
+                {
+                    "name": "Accent",
+                    "total_selling_price": 525250.0
+                },
+                {
+                    "name": "Veloster",
+                    "total_selling_price": 458100.0
+                }
+            ]
+        },
+        {
+            "name": "Kia",
+            "children": [
+                {
+                    "name": "Sorento",
+                    "total_selling_price": 4821550.0
+                },
+                {
+                    "name": "Optima",
+                    "total_selling_price": 3963454.0
+                },
+                {
+                    "name": "Soul",
+                    "total_selling_price": 1977103.0
+                },
+                {
+                    "name": "Forte",
+                    "total_selling_price": 1881001.0
+                },
+                {
+                    "name": "Sportage",
+                    "total_selling_price": 575125.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Altima",
+                    "total_selling_price": 5330860.0
+                },
+                {
+                    "name": "Rogue",
+                    "total_selling_price": 2447802.0
+                },
+                {
+                    "name": "Maxima",
+                    "total_selling_price": 2126556.0
+                },
+                {
+                    "name": "Sentra",
+                    "total_selling_price": 1181625.0
+                },
+                {
+                    "name": "Murano",
+                    "total_selling_price": 891400.0
+                }
+            ]
+        }
+    ]
+}

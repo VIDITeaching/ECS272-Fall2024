@@ -1,0 +1,205 @@
+{
+    "name": "on Car Brands",
+    "children": [
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Charger",
+                    "total_selling_price": 3538250.0
+                },
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 3202150.0
+                },
+                {
+                    "name": "Journey",
+                    "total_selling_price": 2460350.0
+                },
+                {
+                    "name": "Durango",
+                    "total_selling_price": 2362800.0
+                },
+                {
+                    "name": "Challenger",
+                    "total_selling_price": 385150.0
+                }
+            ]
+        },
+        {
+            "name": "Chrysler",
+            "children": [
+                {
+                    "name": "300",
+                    "total_selling_price": 6357400.0
+                },
+                {
+                    "name": "Town and Country",
+                    "total_selling_price": 4461350.0
+                },
+                {
+                    "name": "200",
+                    "total_selling_price": 1400600.0
+                },
+                {
+                    "name": "Sebring",
+                    "total_selling_price": 18850.0
+                },
+                {
+                    "name": "Aspen",
+                    "total_selling_price": 12100.0
+                }
+            ]
+        },
+        {
+            "name": "Jeep",
+            "children": [
+                {
+                    "name": "Grand Cherokee",
+                    "total_selling_price": 3962000.0
+                },
+                {
+                    "name": "Wrangler",
+                    "total_selling_price": 2180850.0
+                },
+                {
+                    "name": "Cherokee",
+                    "total_selling_price": 1403750.0
+                },
+                {
+                    "name": "Compass",
+                    "total_selling_price": 551300.0
+                },
+                {
+                    "name": "Patriot",
+                    "total_selling_price": 322150.0
+                }
+            ]
+        },
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 1759600.0
+                },
+                {
+                    "name": "Edge",
+                    "total_selling_price": 1702900.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 956300.0
+                },
+                {
+                    "name": "Flex",
+                    "total_selling_price": 487800.0
+                },
+                {
+                    "name": "Focus",
+                    "total_selling_price": 428250.0
+                }
+            ]
+        },
+        {
+            "name": "BMW",
+            "children": [
+                {
+                    "name": "3 Series",
+                    "total_selling_price": 2108550.0
+                },
+                {
+                    "name": "5 Series",
+                    "total_selling_price": 992350.0
+                },
+                {
+                    "name": "X5",
+                    "total_selling_price": 628600.0
+                },
+                {
+                    "name": "X3",
+                    "total_selling_price": 513400.0
+                },
+                {
+                    "name": "5 Series Gran Turismo",
+                    "total_selling_price": 178350.0
+                }
+            ]
+        },
+        {
+            "name": "Hyundai",
+            "children": [
+                {
+                    "name": "Sonata",
+                    "total_selling_price": 546550.0
+                },
+                {
+                    "name": "Elantra",
+                    "total_selling_price": 235000.0
+                },
+                {
+                    "name": "Genesis",
+                    "total_selling_price": 188100.0
+                },
+                {
+                    "name": "Accent",
+                    "total_selling_price": 141300.0
+                },
+                {
+                    "name": "Santa Fe Sport",
+                    "total_selling_price": 104700.0
+                }
+            ]
+        },
+        {
+            "name": "Mercedes-Benz",
+            "children": [
+                {
+                    "name": "C-Class",
+                    "total_selling_price": 456100.0
+                },
+                {
+                    "name": "M-Class",
+                    "total_selling_price": 171600.0
+                },
+                {
+                    "name": "GLK-Class",
+                    "total_selling_price": 140300.0
+                },
+                {
+                    "name": "S-Class",
+                    "total_selling_price": 90800.0
+                },
+                {
+                    "name": "GL-Class",
+                    "total_selling_price": 70600.0
+                }
+            ]
+        },
+        {
+            "name": "Volkswagen",
+            "children": [
+                {
+                    "name": "Jetta",
+                    "total_selling_price": 695800.0
+                },
+                {
+                    "name": "Tiguan",
+                    "total_selling_price": 47900.0
+                },
+                {
+                    "name": "Passat",
+                    "total_selling_price": 47500.0
+                },
+                {
+                    "name": "GTI",
+                    "total_selling_price": 26000.0
+                },
+                {
+                    "name": "Jetta SportWagen",
+                    "total_selling_price": 25600.0
+                }
+            ]
+        }
+    ]
+}

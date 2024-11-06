@@ -1,0 +1,129 @@
+{
+    "name": "ns Car Brands",
+    "children": [
+        {
+            "name": "Hyundai",
+            "children": [
+                {
+                    "name": "Santa Fe",
+                    "total_selling_price": 35200.0
+                },
+                {
+                    "name": "Elantra",
+                    "total_selling_price": 25700.0
+                },
+                {
+                    "name": "Sonata",
+                    "total_selling_price": 13600.0
+                },
+                {
+                    "name": "Tucson",
+                    "total_selling_price": 13000.0
+                },
+                {
+                    "name": "Elantra Touring",
+                    "total_selling_price": 11100.0
+                }
+            ]
+        },
+        {
+            "name": "Buick",
+            "children": [
+                {
+                    "name": "Verano",
+                    "total_selling_price": 41100.0
+                },
+                {
+                    "name": "Regal",
+                    "total_selling_price": 32600.0
+                }
+            ]
+        },
+        {
+            "name": "Chrysler",
+            "children": [
+                {
+                    "name": "300",
+                    "total_selling_price": 24300.0
+                },
+                {
+                    "name": "200",
+                    "total_selling_price": 21600.0
+                }
+            ]
+        },
+        {
+            "name": "BMW",
+            "children": [
+                {
+                    "name": "5 Series",
+                    "total_selling_price": 26700.0
+                },
+                {
+                    "name": "X3",
+                    "total_selling_price": 19100.0
+                }
+            ]
+        },
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "Focus",
+                    "total_selling_price": 22100.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 18200.0
+                },
+                {
+                    "name": "Explorer",
+                    "total_selling_price": 2900.0
+                }
+            ]
+        },
+        {
+            "name": "GMC",
+            "children": [
+                {
+                    "name": "Acadia",
+                    "total_selling_price": 27800.0
+                },
+                {
+                    "name": "Terrain",
+                    "total_selling_price": 10800.0
+                }
+            ]
+        },
+        {
+            "name": "MINI",
+            "children": [
+                {
+                    "name": "Cooper Countryman",
+                    "total_selling_price": 16600.0
+                },
+                {
+                    "name": "Cooper",
+                    "total_selling_price": 7200.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Journey",
+                    "total_selling_price": 13700.0
+                },
+                {
+                    "name": "Avenger",
+                    "total_selling_price": 4000.0
+                },
+                {
+                    "name": "Caravan",
+                    "total_selling_price": 1600.0
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,205 @@
+{
+    "name": "hi Car Brands",
+    "children": [
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 501850.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 393800.0
+                },
+                {
+                    "name": "Fusion",
+                    "total_selling_price": 276000.0
+                },
+                {
+                    "name": "Focus",
+                    "total_selling_price": 261650.0
+                },
+                {
+                    "name": "Explorer",
+                    "total_selling_price": 189750.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Altima",
+                    "total_selling_price": 480000.0
+                },
+                {
+                    "name": "Leaf",
+                    "total_selling_price": 452600.0
+                },
+                {
+                    "name": "Frontier",
+                    "total_selling_price": 151350.0
+                },
+                {
+                    "name": "Rogue",
+                    "total_selling_price": 102300.0
+                },
+                {
+                    "name": "Versa",
+                    "total_selling_price": 90250.0
+                }
+            ]
+        },
+        {
+            "name": "Honda",
+            "children": [
+                {
+                    "name": "Civic",
+                    "total_selling_price": 471450.0
+                },
+                {
+                    "name": "Accord",
+                    "total_selling_price": 254950.0
+                },
+                {
+                    "name": "CR-V",
+                    "total_selling_price": 173950.0
+                },
+                {
+                    "name": "Odyssey",
+                    "total_selling_price": 171900.0
+                },
+                {
+                    "name": "Pilot",
+                    "total_selling_price": 77250.0
+                }
+            ]
+        },
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Equinox",
+                    "total_selling_price": 308050.0
+                },
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 164050.0
+                },
+                {
+                    "name": "Malibu",
+                    "total_selling_price": 111850.0
+                },
+                {
+                    "name": "Traverse",
+                    "total_selling_price": 95750.0
+                },
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 94300.0
+                }
+            ]
+        },
+        {
+            "name": "Acura",
+            "children": [
+                {
+                    "name": "TSX",
+                    "total_selling_price": 432900.0
+                },
+                {
+                    "name": "TL",
+                    "total_selling_price": 273800.0
+                },
+                {
+                    "name": "MDX",
+                    "total_selling_price": 171750.0
+                },
+                {
+                    "name": "RDX",
+                    "total_selling_price": 153500.0
+                },
+                {
+                    "name": "ILX",
+                    "total_selling_price": 42500.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 197400.0
+                },
+                {
+                    "name": "Charger",
+                    "total_selling_price": 147450.0
+                },
+                {
+                    "name": "Avenger",
+                    "total_selling_price": 95200.0
+                },
+                {
+                    "name": "Durango",
+                    "total_selling_price": 58850.0
+                },
+                {
+                    "name": "Ram Pickup 1500",
+                    "total_selling_price": 52200.0
+                }
+            ]
+        },
+        {
+            "name": "Mercedes-Benz",
+            "children": [
+                {
+                    "name": "C-Class",
+                    "total_selling_price": 447250.0
+                },
+                {
+                    "name": "GLK-Class",
+                    "total_selling_price": 80250.0
+                },
+                {
+                    "name": "SLK-Class",
+                    "total_selling_price": 54250.0
+                },
+                {
+                    "name": "SL-Class",
+                    "total_selling_price": 45250.0
+                },
+                {
+                    "name": "M-Class",
+                    "total_selling_price": 35000.0
+                }
+            ]
+        },
+        {
+            "name": "Hyundai",
+            "children": [
+                {
+                    "name": "Sonata",
+                    "total_selling_price": 236000.0
+                },
+                {
+                    "name": "Elantra",
+                    "total_selling_price": 173450.0
+                },
+                {
+                    "name": "Tucson",
+                    "total_selling_price": 94000.0
+                },
+                {
+                    "name": "Accent",
+                    "total_selling_price": 44150.0
+                },
+                {
+                    "name": "Santa Fe",
+                    "total_selling_price": 31500.0
+                }
+            ]
+        }
+    ]
+}

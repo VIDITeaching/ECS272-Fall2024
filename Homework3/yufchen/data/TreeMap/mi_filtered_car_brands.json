@@ -1,0 +1,205 @@
+{
+    "name": "mi Car Brands",
+    "children": [
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 31000235.0
+                },
+                {
+                    "name": "Fusion",
+                    "total_selling_price": 12604555.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 11745754.0
+                },
+                {
+                    "name": "Explorer",
+                    "total_selling_price": 8024150.0
+                },
+                {
+                    "name": "Focus",
+                    "total_selling_price": 4858803.0
+                }
+            ]
+        },
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 6832301.0
+                },
+                {
+                    "name": "Malibu",
+                    "total_selling_price": 4502554.0
+                },
+                {
+                    "name": "Equinox",
+                    "total_selling_price": 3914900.0
+                },
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 3724605.0
+                },
+                {
+                    "name": "Impala",
+                    "total_selling_price": 3006767.0
+                }
+            ]
+        },
+        {
+            "name": "GMC",
+            "children": [
+                {
+                    "name": "Sierra 1500",
+                    "total_selling_price": 7850200.0
+                },
+                {
+                    "name": "Terrain",
+                    "total_selling_price": 2432600.0
+                },
+                {
+                    "name": "Sierra 2500HD",
+                    "total_selling_price": 2018800.0
+                },
+                {
+                    "name": "Acadia",
+                    "total_selling_price": 1967000.0
+                },
+                {
+                    "name": "Savana Cargo",
+                    "total_selling_price": 1128850.0
+                }
+            ]
+        },
+        {
+            "name": "Jeep",
+            "children": [
+                {
+                    "name": "Wrangler",
+                    "total_selling_price": 6374250.0
+                },
+                {
+                    "name": "Grand Cherokee",
+                    "total_selling_price": 5261950.0
+                },
+                {
+                    "name": "Liberty",
+                    "total_selling_price": 1406350.0
+                },
+                {
+                    "name": "Patriot",
+                    "total_selling_price": 671700.0
+                },
+                {
+                    "name": "Compass",
+                    "total_selling_price": 559400.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Ram Pickup 1500",
+                    "total_selling_price": 2443550.0
+                },
+                {
+                    "name": "Charger",
+                    "total_selling_price": 2221350.0
+                },
+                {
+                    "name": "Journey",
+                    "total_selling_price": 2072001.0
+                },
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 1656775.0
+                },
+                {
+                    "name": "Avenger",
+                    "total_selling_price": 1166102.0
+                }
+            ]
+        },
+        {
+            "name": "Chrysler",
+            "children": [
+                {
+                    "name": "Town and Country",
+                    "total_selling_price": 6053800.0
+                },
+                {
+                    "name": "300",
+                    "total_selling_price": 2870869.0
+                },
+                {
+                    "name": "200",
+                    "total_selling_price": 2769254.0
+                },
+                {
+                    "name": "Sebring",
+                    "total_selling_price": 182700.0
+                },
+                {
+                    "name": "PT Cruiser",
+                    "total_selling_price": 103800.0
+                }
+            ]
+        },
+        {
+            "name": "Ram",
+            "children": [
+                {
+                    "name": "1500",
+                    "total_selling_price": 7975100.0
+                },
+                {
+                    "name": "2500",
+                    "total_selling_price": 536300.0
+                },
+                {
+                    "name": "3500",
+                    "total_selling_price": 116700.0
+                },
+                {
+                    "name": "Promaster Cargo Van",
+                    "total_selling_price": 26500.0
+                },
+                {
+                    "name": "C/V Tradesman",
+                    "total_selling_price": 11600.0
+                }
+            ]
+        },
+        {
+            "name": "Lincoln",
+            "children": [
+                {
+                    "name": "MKZ",
+                    "total_selling_price": 2293500.0
+                },
+                {
+                    "name": "MKX",
+                    "total_selling_price": 2199400.0
+                },
+                {
+                    "name": "MKS",
+                    "total_selling_price": 1223100.0
+                },
+                {
+                    "name": "Navigator",
+                    "total_selling_price": 316800.0
+                },
+                {
+                    "name": "MKT",
+                    "total_selling_price": 223800.0
+                }
+            ]
+        }
+    ]
+}

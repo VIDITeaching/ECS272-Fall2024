@@ -1,0 +1,205 @@
+{
+    "name": "pr Car Brands",
+    "children": [
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Yaris",
+                    "total_selling_price": 2262200.0
+                },
+                {
+                    "name": "Corolla",
+                    "total_selling_price": 1309200.0
+                },
+                {
+                    "name": "Tacoma",
+                    "total_selling_price": 825400.0
+                },
+                {
+                    "name": "Highlander",
+                    "total_selling_price": 390100.0
+                },
+                {
+                    "name": "RAV4",
+                    "total_selling_price": 384100.0
+                }
+            ]
+        },
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "Escape",
+                    "total_selling_price": 544600.0
+                },
+                {
+                    "name": "Fiesta",
+                    "total_selling_price": 458900.0
+                },
+                {
+                    "name": "Edge",
+                    "total_selling_price": 365400.0
+                },
+                {
+                    "name": "Explorer",
+                    "total_selling_price": 363900.0
+                },
+                {
+                    "name": "Ranger",
+                    "total_selling_price": 326300.0
+                }
+            ]
+        },
+        {
+            "name": "Mitsubishi",
+            "children": [
+                {
+                    "name": "Lancer",
+                    "total_selling_price": 1293850.0
+                },
+                {
+                    "name": "Mirage",
+                    "total_selling_price": 446300.0
+                },
+                {
+                    "name": "Outlander Sport",
+                    "total_selling_price": 382950.0
+                },
+                {
+                    "name": "Outlander",
+                    "total_selling_price": 365400.0
+                },
+                {
+                    "name": "Lancer Sportback",
+                    "total_selling_price": 43300.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Versa",
+                    "total_selling_price": 479750.0
+                },
+                {
+                    "name": "Sentra",
+                    "total_selling_price": 341300.0
+                },
+                {
+                    "name": "Rogue",
+                    "total_selling_price": 312800.0
+                },
+                {
+                    "name": "Pathfinder",
+                    "total_selling_price": 258600.0
+                },
+                {
+                    "name": "Altima",
+                    "total_selling_price": 165300.0
+                }
+            ]
+        },
+        {
+            "name": "Kia",
+            "children": [
+                {
+                    "name": "Rio",
+                    "total_selling_price": 451700.0
+                },
+                {
+                    "name": "Soul",
+                    "total_selling_price": 363200.0
+                },
+                {
+                    "name": "Forte",
+                    "total_selling_price": 284800.0
+                },
+                {
+                    "name": "Sorento",
+                    "total_selling_price": 140800.0
+                },
+                {
+                    "name": "Sedona",
+                    "total_selling_price": 140600.0
+                }
+            ]
+        },
+        {
+            "name": "Jeep",
+            "children": [
+                {
+                    "name": "Wrangler",
+                    "total_selling_price": 959300.0
+                },
+                {
+                    "name": "Compass",
+                    "total_selling_price": 150500.0
+                },
+                {
+                    "name": "Grand Cherokee",
+                    "total_selling_price": 115300.0
+                },
+                {
+                    "name": "Patriot",
+                    "total_selling_price": 99800.0
+                },
+                {
+                    "name": "Liberty",
+                    "total_selling_price": 51300.0
+                }
+            ]
+        },
+        {
+            "name": "Hyundai",
+            "children": [
+                {
+                    "name": "Accent",
+                    "total_selling_price": 528400.0
+                },
+                {
+                    "name": "Veloster",
+                    "total_selling_price": 344300.0
+                },
+                {
+                    "name": "Tucson",
+                    "total_selling_price": 187900.0
+                },
+                {
+                    "name": "Sonata",
+                    "total_selling_price": 102600.0
+                },
+                {
+                    "name": "Genesis Coupe",
+                    "total_selling_price": 67500.0
+                }
+            ]
+        },
+        {
+            "name": "Mercedes-Benz",
+            "children": [
+                {
+                    "name": "C-Class",
+                    "total_selling_price": 428300.0
+                },
+                {
+                    "name": "GLK-Class",
+                    "total_selling_price": 269100.0
+                },
+                {
+                    "name": "E-Class",
+                    "total_selling_price": 154600.0
+                },
+                {
+                    "name": "M-Class",
+                    "total_selling_price": 127200.0
+                },
+                {
+                    "name": "S-Class",
+                    "total_selling_price": 107600.0
+                }
+            ]
+        }
+    ]
+}

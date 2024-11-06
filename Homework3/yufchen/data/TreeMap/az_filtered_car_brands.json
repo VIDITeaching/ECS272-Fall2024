@@ -1,0 +1,205 @@
+{
+    "name": "az Car Brands",
+    "children": [
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 2277450.0
+                },
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 1837000.0
+                },
+                {
+                    "name": "Malibu",
+                    "total_selling_price": 1688700.0
+                },
+                {
+                    "name": "Equinox",
+                    "total_selling_price": 1683650.0
+                },
+                {
+                    "name": "Impala",
+                    "total_selling_price": 1438350.0
+                }
+            ]
+        },
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 2065150.0
+                },
+                {
+                    "name": "Mustang",
+                    "total_selling_price": 2054600.0
+                },
+                {
+                    "name": "Focus",
+                    "total_selling_price": 1446425.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 1156000.0
+                },
+                {
+                    "name": "Explorer",
+                    "total_selling_price": 1111000.0
+                }
+            ]
+        },
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Camry",
+                    "total_selling_price": 3025800.0
+                },
+                {
+                    "name": "Corolla",
+                    "total_selling_price": 1651900.0
+                },
+                {
+                    "name": "Tundra",
+                    "total_selling_price": 1329650.0
+                },
+                {
+                    "name": "RAV4",
+                    "total_selling_price": 1027600.0
+                },
+                {
+                    "name": "Prius",
+                    "total_selling_price": 921000.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Altima",
+                    "total_selling_price": 2187375.0
+                },
+                {
+                    "name": "Maxima",
+                    "total_selling_price": 806700.0
+                },
+                {
+                    "name": "Versa",
+                    "total_selling_price": 687600.0
+                },
+                {
+                    "name": "Sentra",
+                    "total_selling_price": 665450.0
+                },
+                {
+                    "name": "Rogue",
+                    "total_selling_price": 622400.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 1444500.0
+                },
+                {
+                    "name": "Avenger",
+                    "total_selling_price": 945850.0
+                },
+                {
+                    "name": "Charger",
+                    "total_selling_price": 799900.0
+                },
+                {
+                    "name": "Journey",
+                    "total_selling_price": 694800.0
+                },
+                {
+                    "name": "Challenger",
+                    "total_selling_price": 571200.0
+                }
+            ]
+        },
+        {
+            "name": "Hyundai",
+            "children": [
+                {
+                    "name": "Sonata",
+                    "total_selling_price": 1144200.0
+                },
+                {
+                    "name": "Elantra",
+                    "total_selling_price": 790975.0
+                },
+                {
+                    "name": "Accent",
+                    "total_selling_price": 432500.0
+                },
+                {
+                    "name": "Tucson",
+                    "total_selling_price": 281100.0
+                },
+                {
+                    "name": "Genesis",
+                    "total_selling_price": 226300.0
+                }
+            ]
+        },
+        {
+            "name": "Ram",
+            "children": [
+                {
+                    "name": "2500",
+                    "total_selling_price": 1926000.0
+                },
+                {
+                    "name": "1500",
+                    "total_selling_price": 925800.0
+                },
+                {
+                    "name": "Promaster Cargo Van",
+                    "total_selling_price": 19000.0
+                },
+                {
+                    "name": "C/V Cargo Van",
+                    "total_selling_price": 8400.0
+                },
+                {
+                    "name": "C/V Tradesman",
+                    "total_selling_price": 8400.0
+                }
+            ]
+        },
+        {
+            "name": "Kia",
+            "children": [
+                {
+                    "name": "Sorento",
+                    "total_selling_price": 787000.0
+                },
+                {
+                    "name": "Optima",
+                    "total_selling_price": 620200.0
+                },
+                {
+                    "name": "Forte",
+                    "total_selling_price": 442000.0
+                },
+                {
+                    "name": "Soul",
+                    "total_selling_price": 334700.0
+                },
+                {
+                    "name": "Sportage",
+                    "total_selling_price": 177500.0
+                }
+            ]
+        }
+    ]
+}

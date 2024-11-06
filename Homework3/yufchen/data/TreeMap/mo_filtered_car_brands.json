@@ -1,0 +1,205 @@
+{
+    "name": "mo Car Brands",
+    "children": [
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "Escape",
+                    "total_selling_price": 14919975.0
+                },
+                {
+                    "name": "Fusion",
+                    "total_selling_price": 13320552.0
+                },
+                {
+                    "name": "F-150",
+                    "total_selling_price": 12892275.0
+                },
+                {
+                    "name": "Explorer",
+                    "total_selling_price": 11299326.0
+                },
+                {
+                    "name": "Focus",
+                    "total_selling_price": 7745001.0
+                }
+            ]
+        },
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 3759600.0
+                },
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 2706952.0
+                },
+                {
+                    "name": "Tahoe",
+                    "total_selling_price": 2356602.0
+                },
+                {
+                    "name": "Suburban",
+                    "total_selling_price": 2138800.0
+                },
+                {
+                    "name": "Impala",
+                    "total_selling_price": 1743376.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Altima",
+                    "total_selling_price": 7411704.0
+                },
+                {
+                    "name": "Maxima",
+                    "total_selling_price": 2503125.0
+                },
+                {
+                    "name": "Rogue",
+                    "total_selling_price": 1906551.0
+                },
+                {
+                    "name": "Sentra",
+                    "total_selling_price": 1268600.0
+                },
+                {
+                    "name": "Murano",
+                    "total_selling_price": 1051902.0
+                }
+            ]
+        },
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Camry",
+                    "total_selling_price": 3438178.0
+                },
+                {
+                    "name": "Corolla",
+                    "total_selling_price": 1686001.0
+                },
+                {
+                    "name": "RAV4",
+                    "total_selling_price": 1541200.0
+                },
+                {
+                    "name": "Tundra",
+                    "total_selling_price": 950700.0
+                },
+                {
+                    "name": "Sienna",
+                    "total_selling_price": 884801.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 2975475.0
+                },
+                {
+                    "name": "Avenger",
+                    "total_selling_price": 1627850.0
+                },
+                {
+                    "name": "Charger",
+                    "total_selling_price": 1525450.0
+                },
+                {
+                    "name": "Journey",
+                    "total_selling_price": 945950.0
+                },
+                {
+                    "name": "Durango",
+                    "total_selling_price": 777950.0
+                }
+            ]
+        },
+        {
+            "name": "Infiniti",
+            "children": [
+                {
+                    "name": "G Sedan",
+                    "total_selling_price": 5491780.0
+                },
+                {
+                    "name": "M",
+                    "total_selling_price": 834126.0
+                },
+                {
+                    "name": "G Coupe",
+                    "total_selling_price": 701100.0
+                },
+                {
+                    "name": "JX",
+                    "total_selling_price": 389400.0
+                },
+                {
+                    "name": "QX56",
+                    "total_selling_price": 359200.0
+                }
+            ]
+        },
+        {
+            "name": "Jeep",
+            "children": [
+                {
+                    "name": "Wrangler",
+                    "total_selling_price": 2448550.0
+                },
+                {
+                    "name": "Grand Cherokee",
+                    "total_selling_price": 2183000.0
+                },
+                {
+                    "name": "Patriot",
+                    "total_selling_price": 875550.0
+                },
+                {
+                    "name": "Compass",
+                    "total_selling_price": 811550.0
+                },
+                {
+                    "name": "Cherokee",
+                    "total_selling_price": 669400.0
+                }
+            ]
+        },
+        {
+            "name": "Kia",
+            "children": [
+                {
+                    "name": "Optima",
+                    "total_selling_price": 1687700.0
+                },
+                {
+                    "name": "Sorento",
+                    "total_selling_price": 1363651.0
+                },
+                {
+                    "name": "Soul",
+                    "total_selling_price": 1092125.0
+                },
+                {
+                    "name": "Forte",
+                    "total_selling_price": 848150.0
+                },
+                {
+                    "name": "Rio",
+                    "total_selling_price": 600850.0
+                }
+            ]
+        }
+    ]
+}

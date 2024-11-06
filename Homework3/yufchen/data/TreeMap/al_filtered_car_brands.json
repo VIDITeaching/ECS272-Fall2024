@@ -1,0 +1,113 @@
+{
+    "name": "al Car Brands",
+    "children": [
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Challenger",
+                    "total_selling_price": 17800.0
+                },
+                {
+                    "name": "Durango",
+                    "total_selling_price": 17800.0
+                },
+                {
+                    "name": "Charger",
+                    "total_selling_price": 9700.0
+                },
+                {
+                    "name": "Journey",
+                    "total_selling_price": 5000.0
+                }
+            ]
+        },
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 19000.0
+                },
+                {
+                    "name": "Explorer Sport Trac",
+                    "total_selling_price": 13700.0
+                },
+                {
+                    "name": "Expedition",
+                    "total_selling_price": 11400.0
+                },
+                {
+                    "name": "Freestar",
+                    "total_selling_price": 2800.0
+                }
+            ]
+        },
+        {
+            "name": "Infiniti",
+            "children": [
+                {
+                    "name": "G Sedan",
+                    "total_selling_price": 36300.0
+                }
+            ]
+        },
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 22800.0
+                },
+                {
+                    "name": "Tahoe",
+                    "total_selling_price": 3400.0
+                },
+                {
+                    "name": "Impala",
+                    "total_selling_price": 1800.0
+                },
+                {
+                    "name": "HHR",
+                    "total_selling_price": 1600.0
+                }
+            ]
+        },
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Tundra",
+                    "total_selling_price": 28700.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Maxima",
+                    "total_selling_price": 18200.0
+                }
+            ]
+        },
+        {
+            "name": "Buick",
+            "children": [
+                {
+                    "name": "LaCrosse",
+                    "total_selling_price": 12700.0
+                }
+            ]
+        },
+        {
+            "name": "Jeep",
+            "children": [
+                {
+                    "name": "Liberty",
+                    "total_selling_price": 6000.0
+                }
+            ]
+        }
+    ]
+}

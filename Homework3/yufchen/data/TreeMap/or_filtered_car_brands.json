@@ -1,0 +1,201 @@
+{
+    "name": "or Car Brands",
+    "children": [
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Malibu",
+                    "total_selling_price": 480200.0
+                },
+                {
+                    "name": "Equinox",
+                    "total_selling_price": 428150.0
+                },
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 363700.0
+                },
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 244500.0
+                },
+                {
+                    "name": "Traverse",
+                    "total_selling_price": 211000.0
+                }
+            ]
+        },
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 589200.0
+                },
+                {
+                    "name": "Fusion",
+                    "total_selling_price": 336200.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 331900.0
+                },
+                {
+                    "name": "Focus",
+                    "total_selling_price": 252050.0
+                },
+                {
+                    "name": "E-Series Van",
+                    "total_selling_price": 194800.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 172950.0
+                },
+                {
+                    "name": "Durango",
+                    "total_selling_price": 168200.0
+                },
+                {
+                    "name": "Challenger",
+                    "total_selling_price": 123350.0
+                },
+                {
+                    "name": "Journey",
+                    "total_selling_price": 83900.0
+                },
+                {
+                    "name": "Ram Pickup 2500",
+                    "total_selling_price": 83600.0
+                }
+            ]
+        },
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Corolla",
+                    "total_selling_price": 219600.0
+                },
+                {
+                    "name": "Tundra",
+                    "total_selling_price": 86700.0
+                },
+                {
+                    "name": "Sienna",
+                    "total_selling_price": 83800.0
+                },
+                {
+                    "name": "Camry",
+                    "total_selling_price": 66000.0
+                },
+                {
+                    "name": "Prius",
+                    "total_selling_price": 53800.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Altima",
+                    "total_selling_price": 241600.0
+                },
+                {
+                    "name": "Versa",
+                    "total_selling_price": 123750.0
+                },
+                {
+                    "name": "Maxima",
+                    "total_selling_price": 90800.0
+                },
+                {
+                    "name": "Pathfinder",
+                    "total_selling_price": 58300.0
+                },
+                {
+                    "name": "Sentra",
+                    "total_selling_price": 49950.0
+                }
+            ]
+        },
+        {
+            "name": "Jeep",
+            "children": [
+                {
+                    "name": "Grand Cherokee",
+                    "total_selling_price": 224100.0
+                },
+                {
+                    "name": "Wrangler",
+                    "total_selling_price": 178850.0
+                },
+                {
+                    "name": "Patriot",
+                    "total_selling_price": 117100.0
+                },
+                {
+                    "name": "Liberty",
+                    "total_selling_price": 52700.0
+                },
+                {
+                    "name": "Cherokee",
+                    "total_selling_price": 16800.0
+                }
+            ]
+        },
+        {
+            "name": "Ram",
+            "children": [
+                {
+                    "name": "2500",
+                    "total_selling_price": 337600.0
+                },
+                {
+                    "name": "1500",
+                    "total_selling_price": 206200.0
+                },
+                {
+                    "name": "3500",
+                    "total_selling_price": 23500.0
+                },
+                {
+                    "name": "C/V Cargo Van",
+                    "total_selling_price": 11600.0
+                }
+            ]
+        },
+        {
+            "name": "GMC",
+            "children": [
+                {
+                    "name": "Savana Cargo",
+                    "total_selling_price": 214000.0
+                },
+                {
+                    "name": "Yukon",
+                    "total_selling_price": 105200.0
+                },
+                {
+                    "name": "Terrain",
+                    "total_selling_price": 89500.0
+                },
+                {
+                    "name": "Sierra 1500",
+                    "total_selling_price": 27250.0
+                },
+                {
+                    "name": "Sierra 2500HD",
+                    "total_selling_price": 17600.0
+                }
+            ]
+        }
+    ]
+}

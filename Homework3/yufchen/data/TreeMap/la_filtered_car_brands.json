@@ -1,0 +1,205 @@
+{
+    "name": "la Car Brands",
+    "children": [
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 698000.0
+                },
+                {
+                    "name": "Impala",
+                    "total_selling_price": 486300.0
+                },
+                {
+                    "name": "Tahoe",
+                    "total_selling_price": 455100.0
+                },
+                {
+                    "name": "Equinox",
+                    "total_selling_price": 368701.0
+                },
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 331401.0
+                }
+            ]
+        },
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 1070300.0
+                },
+                {
+                    "name": "Fusion",
+                    "total_selling_price": 506100.0
+                },
+                {
+                    "name": "F-250 Super Duty",
+                    "total_selling_price": 441200.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 365800.0
+                },
+                {
+                    "name": "Explorer",
+                    "total_selling_price": 313401.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Altima",
+                    "total_selling_price": 682200.0
+                },
+                {
+                    "name": "Maxima",
+                    "total_selling_price": 361200.0
+                },
+                {
+                    "name": "Versa",
+                    "total_selling_price": 181900.0
+                },
+                {
+                    "name": "Armada",
+                    "total_selling_price": 159003.0
+                },
+                {
+                    "name": "Pathfinder",
+                    "total_selling_price": 128203.0
+                }
+            ]
+        },
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Camry",
+                    "total_selling_price": 472150.0
+                },
+                {
+                    "name": "Corolla",
+                    "total_selling_price": 263700.0
+                },
+                {
+                    "name": "Prius",
+                    "total_selling_price": 95600.0
+                },
+                {
+                    "name": "Sienna",
+                    "total_selling_price": 90600.0
+                },
+                {
+                    "name": "Venza",
+                    "total_selling_price": 90500.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 323300.0
+                },
+                {
+                    "name": "Avenger",
+                    "total_selling_price": 320900.0
+                },
+                {
+                    "name": "Charger",
+                    "total_selling_price": 175800.0
+                },
+                {
+                    "name": "Challenger",
+                    "total_selling_price": 140400.0
+                },
+                {
+                    "name": "Ram Pickup 1500",
+                    "total_selling_price": 103800.0
+                }
+            ]
+        },
+        {
+            "name": "GMC",
+            "children": [
+                {
+                    "name": "Sierra 1500",
+                    "total_selling_price": 361900.0
+                },
+                {
+                    "name": "Yukon XL",
+                    "total_selling_price": 247501.0
+                },
+                {
+                    "name": "Acadia",
+                    "total_selling_price": 215100.0
+                },
+                {
+                    "name": "Yukon",
+                    "total_selling_price": 134000.0
+                },
+                {
+                    "name": "Sierra 2500HD",
+                    "total_selling_price": 120000.0
+                }
+            ]
+        },
+        {
+            "name": "Mazda",
+            "children": [
+                {
+                    "name": "Mazda3",
+                    "total_selling_price": 207000.0
+                },
+                {
+                    "name": "Mazda6",
+                    "total_selling_price": 198700.0
+                },
+                {
+                    "name": "CX-5",
+                    "total_selling_price": 84300.0
+                },
+                {
+                    "name": "Mazda2",
+                    "total_selling_price": 77500.0
+                },
+                {
+                    "name": "Mazda5",
+                    "total_selling_price": 47701.0
+                }
+            ]
+        },
+        {
+            "name": "Jeep",
+            "children": [
+                {
+                    "name": "Wrangler",
+                    "total_selling_price": 253800.0
+                },
+                {
+                    "name": "Liberty",
+                    "total_selling_price": 164900.0
+                },
+                {
+                    "name": "Grand Cherokee",
+                    "total_selling_price": 102150.0
+                },
+                {
+                    "name": "Commander",
+                    "total_selling_price": 38100.0
+                },
+                {
+                    "name": "Compass",
+                    "total_selling_price": 26100.0
+                }
+            ]
+        }
+    ]
+}

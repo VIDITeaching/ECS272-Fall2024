@@ -1,0 +1,169 @@
+{
+    "name": "nm Car Brands",
+    "children": [
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "Escape",
+                    "total_selling_price": 37100.0
+                },
+                {
+                    "name": "F-150",
+                    "total_selling_price": 27400.0
+                },
+                {
+                    "name": "Focus",
+                    "total_selling_price": 25200.0
+                },
+                {
+                    "name": "F-250 Super Duty",
+                    "total_selling_price": 24250.0
+                },
+                {
+                    "name": "Fusion",
+                    "total_selling_price": 23100.0
+                }
+            ]
+        },
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Suburban",
+                    "total_selling_price": 62600.0
+                },
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 40750.0
+                },
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 34200.0
+                },
+                {
+                    "name": "Traverse",
+                    "total_selling_price": 24000.0
+                },
+                {
+                    "name": "Camaro",
+                    "total_selling_price": 19200.0
+                }
+            ]
+        },
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Highlander",
+                    "total_selling_price": 26400.0
+                },
+                {
+                    "name": "Corolla",
+                    "total_selling_price": 16700.0
+                },
+                {
+                    "name": "RAV4",
+                    "total_selling_price": 15500.0
+                },
+                {
+                    "name": "4Runner",
+                    "total_selling_price": 5600.0
+                },
+                {
+                    "name": "Matrix",
+                    "total_selling_price": 2700.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Challenger",
+                    "total_selling_price": 24500.0
+                },
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 24100.0
+                },
+                {
+                    "name": "Journey",
+                    "total_selling_price": 8500.0
+                },
+                {
+                    "name": "Ram Pickup 1500",
+                    "total_selling_price": 4200.0
+                },
+                {
+                    "name": "Durango",
+                    "total_selling_price": 2100.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Altima",
+                    "total_selling_price": 29100.0
+                },
+                {
+                    "name": "Rogue",
+                    "total_selling_price": 26300.0
+                },
+                {
+                    "name": "Armada",
+                    "total_selling_price": 6750.0
+                }
+            ]
+        },
+        {
+            "name": "Cadillac",
+            "children": [
+                {
+                    "name": "Escalade ESV",
+                    "total_selling_price": 41500.0
+                },
+                {
+                    "name": "DeVille",
+                    "total_selling_price": 1000.0
+                },
+                {
+                    "name": "Escalade",
+                    "total_selling_price": 400.0
+                }
+            ]
+        },
+        {
+            "name": "Chrysler",
+            "children": [
+                {
+                    "name": "200",
+                    "total_selling_price": 18200.0
+                },
+                {
+                    "name": "300",
+                    "total_selling_price": 17400.0
+                },
+                {
+                    "name": "Town and Country",
+                    "total_selling_price": 2700.0
+                },
+                {
+                    "name": "PT Cruiser",
+                    "total_selling_price": 400.0
+                }
+            ]
+        },
+        {
+            "name": "Mercedes-Benz",
+            "children": [
+                {
+                    "name": "GL-Class",
+                    "total_selling_price": 38500.0
+                }
+            ]
+        }
+    ]
+}

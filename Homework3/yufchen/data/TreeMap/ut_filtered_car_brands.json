@@ -1,0 +1,197 @@
+{
+    "name": "ut Car Brands",
+    "children": [
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 3509850.0
+                },
+                {
+                    "name": "F-350 Super Duty",
+                    "total_selling_price": 1442650.0
+                },
+                {
+                    "name": "F-250 Super Duty",
+                    "total_selling_price": 897900.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 457800.0
+                },
+                {
+                    "name": "Fusion",
+                    "total_selling_price": 257200.0
+                }
+            ]
+        },
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 1009300.0
+                },
+                {
+                    "name": "Silverado 2500HD",
+                    "total_selling_price": 725600.0
+                },
+                {
+                    "name": "Suburban",
+                    "total_selling_price": 524150.0
+                },
+                {
+                    "name": "Equinox",
+                    "total_selling_price": 338400.0
+                },
+                {
+                    "name": "Silverado 3500HD",
+                    "total_selling_price": 276700.0
+                }
+            ]
+        },
+        {
+            "name": "GMC",
+            "children": [
+                {
+                    "name": "Sierra 2500HD",
+                    "total_selling_price": 833750.0
+                },
+                {
+                    "name": "Sierra 1500",
+                    "total_selling_price": 758800.0
+                },
+                {
+                    "name": "Sierra 3500HD",
+                    "total_selling_price": 245700.0
+                },
+                {
+                    "name": "Yukon",
+                    "total_selling_price": 127250.0
+                },
+                {
+                    "name": "Yukon XL",
+                    "total_selling_price": 126800.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Ram Pickup 2500",
+                    "total_selling_price": 306900.0
+                },
+                {
+                    "name": "Ram Pickup 1500",
+                    "total_selling_price": 239500.0
+                },
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 197100.0
+                },
+                {
+                    "name": "Journey",
+                    "total_selling_price": 105200.0
+                },
+                {
+                    "name": "Charger",
+                    "total_selling_price": 102600.0
+                }
+            ]
+        },
+        {
+            "name": "Ram",
+            "children": [
+                {
+                    "name": "1500",
+                    "total_selling_price": 568800.0
+                },
+                {
+                    "name": "2500",
+                    "total_selling_price": 273800.0
+                },
+                {
+                    "name": "3500",
+                    "total_selling_price": 73300.0
+                }
+            ]
+        },
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Camry",
+                    "total_selling_price": 173250.0
+                },
+                {
+                    "name": "Tundra",
+                    "total_selling_price": 153900.0
+                },
+                {
+                    "name": "Corolla",
+                    "total_selling_price": 115950.0
+                },
+                {
+                    "name": "RAV4",
+                    "total_selling_price": 77700.0
+                },
+                {
+                    "name": "Sienna",
+                    "total_selling_price": 58100.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Altima",
+                    "total_selling_price": 152250.0
+                },
+                {
+                    "name": "Titan",
+                    "total_selling_price": 137700.0
+                },
+                {
+                    "name": "Sentra",
+                    "total_selling_price": 103000.0
+                },
+                {
+                    "name": "Maxima",
+                    "total_selling_price": 80600.0
+                },
+                {
+                    "name": "Murano",
+                    "total_selling_price": 59800.0
+                }
+            ]
+        },
+        {
+            "name": "Jeep",
+            "children": [
+                {
+                    "name": "Wrangler",
+                    "total_selling_price": 145450.0
+                },
+                {
+                    "name": "Liberty",
+                    "total_selling_price": 112400.0
+                },
+                {
+                    "name": "Grand Cherokee",
+                    "total_selling_price": 83900.0
+                },
+                {
+                    "name": "Patriot",
+                    "total_selling_price": 51900.0
+                },
+                {
+                    "name": "Compass",
+                    "total_selling_price": 33500.0
+                }
+            ]
+        }
+    ]
+}

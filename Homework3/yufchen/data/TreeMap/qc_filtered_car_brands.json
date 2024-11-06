@@ -1,0 +1,193 @@
+{
+    "name": "qc Car Brands",
+    "children": [
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "Escape",
+                    "total_selling_price": 1444600.0
+                },
+                {
+                    "name": "F-150",
+                    "total_selling_price": 1327650.0
+                },
+                {
+                    "name": "Edge",
+                    "total_selling_price": 1084600.0
+                },
+                {
+                    "name": "Mustang",
+                    "total_selling_price": 850000.0
+                },
+                {
+                    "name": "Focus",
+                    "total_selling_price": 791500.0
+                }
+            ]
+        },
+        {
+            "name": "Dodge",
+            "children": [
+                {
+                    "name": "Grand Caravan",
+                    "total_selling_price": 469050.0
+                },
+                {
+                    "name": "Journey",
+                    "total_selling_price": 366750.0
+                },
+                {
+                    "name": "Charger",
+                    "total_selling_price": 209800.0
+                },
+                {
+                    "name": "Ram Pickup 1500",
+                    "total_selling_price": 81000.0
+                },
+                {
+                    "name": "Durango",
+                    "total_selling_price": 80000.0
+                }
+            ]
+        },
+        {
+            "name": "Hyundai",
+            "children": [
+                {
+                    "name": "Elantra",
+                    "total_selling_price": 276700.0
+                },
+                {
+                    "name": "Tucson",
+                    "total_selling_price": 153900.0
+                },
+                {
+                    "name": "Santa Fe",
+                    "total_selling_price": 150100.0
+                },
+                {
+                    "name": "Sonata",
+                    "total_selling_price": 128250.0
+                },
+                {
+                    "name": "Accent",
+                    "total_selling_price": 85300.0
+                }
+            ]
+        },
+        {
+            "name": "Jeep",
+            "children": [
+                {
+                    "name": "Wrangler",
+                    "total_selling_price": 345150.0
+                },
+                {
+                    "name": "Grand Cherokee",
+                    "total_selling_price": 189200.0
+                },
+                {
+                    "name": "Cherokee",
+                    "total_selling_price": 146000.0
+                },
+                {
+                    "name": "Compass",
+                    "total_selling_price": 81700.0
+                },
+                {
+                    "name": "Patriot",
+                    "total_selling_price": 49600.0
+                }
+            ]
+        },
+        {
+            "name": "Chrysler",
+            "children": [
+                {
+                    "name": "300",
+                    "total_selling_price": 364600.0
+                },
+                {
+                    "name": "200",
+                    "total_selling_price": 218200.0
+                },
+                {
+                    "name": "Town and Country",
+                    "total_selling_price": 202300.0
+                },
+                {
+                    "name": "Sebring",
+                    "total_selling_price": 5900.0
+                },
+                {
+                    "name": "PT Cruiser",
+                    "total_selling_price": 3600.0
+                }
+            ]
+        },
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 327100.0
+                },
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 86600.0
+                },
+                {
+                    "name": "Equinox",
+                    "total_selling_price": 80000.0
+                },
+                {
+                    "name": "Malibu",
+                    "total_selling_price": 48750.0
+                },
+                {
+                    "name": "Cobalt",
+                    "total_selling_price": 35200.0
+                }
+            ]
+        },
+        {
+            "name": "Buick",
+            "children": [
+                {
+                    "name": "Regal",
+                    "total_selling_price": 180500.0
+                },
+                {
+                    "name": "Verano",
+                    "total_selling_price": 96500.0
+                },
+                {
+                    "name": "Enclave",
+                    "total_selling_price": 38200.0
+                },
+                {
+                    "name": "LaCrosse",
+                    "total_selling_price": 13500.0
+                },
+                {
+                    "name": "Rendezvous",
+                    "total_selling_price": 4200.0
+                }
+            ]
+        },
+        {
+            "name": "FIAT",
+            "children": [
+                {
+                    "name": "500",
+                    "total_selling_price": 157100.0
+                },
+                {
+                    "name": "500L",
+                    "total_selling_price": 106500.0
+                }
+            ]
+        }
+    ]
+}

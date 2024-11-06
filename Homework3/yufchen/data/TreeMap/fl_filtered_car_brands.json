@@ -1,0 +1,205 @@
+{
+    "name": "fl Car Brands",
+    "children": [
+        {
+            "name": "Ford",
+            "children": [
+                {
+                    "name": "F-150",
+                    "total_selling_price": 21126995.0
+                },
+                {
+                    "name": "Fusion",
+                    "total_selling_price": 17918806.0
+                },
+                {
+                    "name": "Escape",
+                    "total_selling_price": 14848041.0
+                },
+                {
+                    "name": "Explorer",
+                    "total_selling_price": 14399052.0
+                },
+                {
+                    "name": "Mustang",
+                    "total_selling_price": 14350581.0
+                }
+            ]
+        },
+        {
+            "name": "Toyota",
+            "children": [
+                {
+                    "name": "Camry",
+                    "total_selling_price": 33998428.0
+                },
+                {
+                    "name": "Corolla",
+                    "total_selling_price": 21380013.0
+                },
+                {
+                    "name": "Sienna",
+                    "total_selling_price": 9717055.0
+                },
+                {
+                    "name": "RAV4",
+                    "total_selling_price": 8365090.0
+                },
+                {
+                    "name": "Highlander",
+                    "total_selling_price": 6254050.0
+                }
+            ]
+        },
+        {
+            "name": "Chevrolet",
+            "children": [
+                {
+                    "name": "Impala",
+                    "total_selling_price": 12153256.0
+                },
+                {
+                    "name": "Cruze",
+                    "total_selling_price": 10664275.0
+                },
+                {
+                    "name": "Silverado 1500",
+                    "total_selling_price": 9923245.0
+                },
+                {
+                    "name": "Suburban",
+                    "total_selling_price": 7925854.0
+                },
+                {
+                    "name": "Camaro",
+                    "total_selling_price": 7544700.0
+                }
+            ]
+        },
+        {
+            "name": "Nissan",
+            "children": [
+                {
+                    "name": "Altima",
+                    "total_selling_price": 40266403.0
+                },
+                {
+                    "name": "Maxima",
+                    "total_selling_price": 17012079.0
+                },
+                {
+                    "name": "Rogue",
+                    "total_selling_price": 8448301.0
+                },
+                {
+                    "name": "Sentra",
+                    "total_selling_price": 6264575.0
+                },
+                {
+                    "name": "Murano",
+                    "total_selling_price": 4879003.0
+                }
+            ]
+        },
+        {
+            "name": "Lexus",
+            "children": [
+                {
+                    "name": "RX 350",
+                    "total_selling_price": 22784950.0
+                },
+                {
+                    "name": "ES 350",
+                    "total_selling_price": 20045850.0
+                },
+                {
+                    "name": "IS 250",
+                    "total_selling_price": 18136050.0
+                },
+                {
+                    "name": "GS 350",
+                    "total_selling_price": 9752850.0
+                },
+                {
+                    "name": "LS 460",
+                    "total_selling_price": 6323750.0
+                }
+            ]
+        },
+        {
+            "name": "BMW",
+            "children": [
+                {
+                    "name": "3 Series",
+                    "total_selling_price": 20101150.0
+                },
+                {
+                    "name": "5 Series",
+                    "total_selling_price": 11585075.0
+                },
+                {
+                    "name": "X5",
+                    "total_selling_price": 6912900.0
+                },
+                {
+                    "name": "X3",
+                    "total_selling_price": 3468025.0
+                },
+                {
+                    "name": "7 Series",
+                    "total_selling_price": 2977025.0
+                }
+            ]
+        },
+        {
+            "name": "Mercedes-Benz",
+            "children": [
+                {
+                    "name": "C-Class",
+                    "total_selling_price": 16306000.0
+                },
+                {
+                    "name": "E-Class",
+                    "total_selling_price": 11038382.0
+                },
+                {
+                    "name": "S-Class",
+                    "total_selling_price": 6648501.0
+                },
+                {
+                    "name": "M-Class",
+                    "total_selling_price": 5261400.0
+                },
+                {
+                    "name": "GL-Class",
+                    "total_selling_price": 4834850.0
+                }
+            ]
+        },
+        {
+            "name": "Hyundai",
+            "children": [
+                {
+                    "name": "Sonata",
+                    "total_selling_price": 17566550.0
+                },
+                {
+                    "name": "Elantra",
+                    "total_selling_price": 11762246.0
+                },
+                {
+                    "name": "Genesis",
+                    "total_selling_price": 4539327.0
+                },
+                {
+                    "name": "Santa Fe",
+                    "total_selling_price": 3423892.0
+                },
+                {
+                    "name": "Accent",
+                    "total_selling_price": 3219400.0
+                }
+            ]
+        }
+    ]
+}

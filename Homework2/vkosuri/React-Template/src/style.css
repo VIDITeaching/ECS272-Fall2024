@@ -1,0 +1,202 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  background-color: #000;
+  color: #fff;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
+}
+
+/* Dashboard container */
+.dashboard {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+}
+
+/* Header - exactly 5% */
+.dashboard-header {
+  height: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.dashboard-header h1 {
+  font-size: 1.3rem;
+  color: #fff;
+  font-weight: normal;
+  white-space: nowrap;
+  text-align: center;
+  letter-spacing: 0.5px;
+  opacity: 0.95;
+}
+
+/* Main layout */
+.dashboard-layout {
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Top section - Sankey (61%) */
+.top-section {
+  height: 61%;
+  min-height: 61%;
+}
+
+.top-section .chart-container {
+  width: 100%;
+  height: 100%;
+  padding: 10px 20px; /* More horizontal padding for Sankey */
+}
+
+/* Bottom section - Bar and Pie (18% each) */
+.bottom-section {
+  height: 34%; /* 18% + 18% = 34% total for bottom section */
+  display: flex;
+  gap: 5px;
+}
+
+/* Chart containers */
+.chart-container {
+  background-color: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Half width for bottom charts */
+.half-width {
+  width: 50%;
+}
+
+/* Chart titles */
+.chart-container h2 {
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 8px;
+  font-weight: normal;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+/* Chart wrappers */
+.chart-wrapper {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* Specific wrapper styles */
+.sankey-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.bar-wrapper {
+  height: 50% !important; /* Force half height */
+  margin: auto 0; /* Center vertically */
+}
+
+.pie-wrapper {
+  height: 100%;
+}
+
+/* SVG styling */
+svg {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+
+/* Chart axis and text colors */
+.axis text {
+  fill: #fff;
+}
+
+.axis line,
+.axis path {
+  stroke: rgba(255, 255, 255, 0.2);
+}
+
+/* Legend styling */
+.legend text {
+  fill: #fff;
+  font-size: 0.8rem;
+}
+
+/* Remove scrollbars */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure consistent black background */
+.chart-container,
+.dashboard,
+body,
+html {
+  background-color: #000;
+}
+
+/* Bottom section specific styles */
+.bottom-section .chart-container {
+  padding: 10px;
+}
+
+/* Chart specific text styles */
+.chart-title {
+  fill: #fff;
+  font-size: 0.9rem;
+}
+
+.axis-label {
+  fill: #fff;
+  font-size: 0.8rem;
+}
+
+/* Sankey specific styles */
+.sankey-node text {
+  fill: #fff;
+  font-size: 0.8rem;
+}
+
+.sankey-link {
+  fill: none;
+  stroke-opacity: 0.3;
+}
+
+/* Responsive font sizes */
+@media (max-width: 1280px) {
+  .dashboard-header h1 {
+    font-size: 1.1rem;
+  }
+  
+  .chart-container h2 {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .chart-container h2 {
+    font-size: 1rem;
+  }
+}

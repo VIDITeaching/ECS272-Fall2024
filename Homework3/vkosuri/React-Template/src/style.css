@@ -1,0 +1,280 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  background-color: #000;
+  color: #fff;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
+}
+
+/* Dashboard container */
+.dashboard {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+}
+
+/* Header - exactly 5% */
+.dashboard-header {
+  height: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.dashboard-header h1 {
+  font-size: 1.3rem;
+  color: #fff;
+  font-weight: normal;
+  white-space: nowrap;
+  text-align: center;
+  letter-spacing: 0.5px;
+  opacity: 0.95;
+}
+
+/* Active Filters Section */
+.active-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.filter-tag:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tag-label {
+  color: rgba(255, 255, 255, 0.7);
+  margin-right: 4px;
+}
+
+.tag-value {
+  font-weight: 500;
+}
+
+.remove-tag {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 6px;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.remove-tag:hover {
+  color: #fff;
+}
+
+/* Main layout */
+.dashboard-layout {
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Top section - Sankey (61%) */
+.top-section {
+  height: 61%;
+  min-height: 61%;
+}
+
+.top-section .chart-container {
+  width: 100%;
+  height: 100%;
+  padding: 10px 20px;
+}
+
+/* Bottom section - Bar and Pie (34% total) */
+.bottom-section {
+  height: 34%;
+  display: flex;
+  gap: 5px;
+}
+
+/* Chart containers */
+.chart-container {
+  background-color: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Half width for bottom charts */
+.half-width {
+  width: 50%;
+}
+
+/* Chart titles */
+.chart-container h2 {
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 8px;
+  font-weight: normal;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+/* Chart wrappers */
+.chart-wrapper {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* Specific wrapper styles */
+.sankey-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.bar-wrapper {
+  height: 50% !important;
+  margin: auto 0;
+}
+
+.pie-wrapper {
+  height: 100%;
+}
+
+/* SVG styling */
+svg {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+
+/* Navigation buttons */
+.back-to-overview {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.back-to-overview:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  pointer-events: none;
+  font-size: 0.8rem;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-header {
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Chart axis and text colors */
+.axis text {
+  fill: #fff;
+}
+
+.axis line, .axis path {
+  stroke: rgba(255, 255, 255, 0.2);
+}
+
+/* Legend styling */
+.legend text {
+  fill: #fff;
+  font-size: 0.8rem;
+}
+
+/* Sankey specific styles */
+.sankey-node text {
+  fill: #fff;
+  font-size: 0.8rem;
+}
+
+.sankey-link {
+  fill: none;
+  stroke-opacity: 0.3;
+  transition: stroke-opacity 0.3s ease;
+}
+
+/* Interactive elements */
+.interactive-element {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+/* Transitions */
+.transitioning {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Remove scrollbars */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive font sizes */
+@media (max-width: 1280px) {
+  .dashboard-header h1 {
+    font-size: 1.1rem;
+  }
+ 
+  .chart-container h2 {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+ 
+  .chart-container h2 {
+    font-size: 1rem;
+  }
+}

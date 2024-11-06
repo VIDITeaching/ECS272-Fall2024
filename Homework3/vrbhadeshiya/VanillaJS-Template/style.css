@@ -1,0 +1,60 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+#app{
+  height: 100vh;
+  width: 100vw;
+}
+
+.d-flex{
+  display: flex;
+}
+
+.flex-column{
+  flex-direction: column;
+}
+
+.flex-nowrap{
+  flex-wrap: nowrap;
+}
+
+#main-container{
+  height: 100%;
+}
+
+/* Ensure the bar chart container and SVG fill the available space */
+#bar-chart-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-container {
+  width: 100%;
+  height: 100%;
+  position: relative; /* Allows the container to take up the full space */
+}
+
+#note-card{
+  margin: 1rem 1rem;
+
+}
+
+#bar-chart-scrollable {
+  overflow-x: auto;
+  overflow-y: hidden; /* Ensure no vertical scroll */
+  white-space: nowrap;
+}
+

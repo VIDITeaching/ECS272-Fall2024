@@ -1,11 +1,14 @@
 import BarChart from './components/BarChart'
 import Parallel from './components/Parallel'
 import Dendrogram from './components/Dendrogram'
+import MentalSelect from './components/MentalSelect'
 import Notes from './components/Notes'
 import { NotesWithReducer, CountProvider } from './components/NotesWithReducer';
 import {Grid, Divider} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
+import { useEffect, useState, useRef } from 'react';
+
 
 // Adjust the color theme for material ui
 const theme = createTheme({
@@ -22,15 +25,22 @@ const theme = createTheme({
 // For how Grid works, refer to https://mui.com/material-ui/react-grid/
 
 function Layout() {
+
+  const [mentalDisorder, setMentalDisorder] = useState("Depression"); // state to track selected item
+  const [selectedYear, setSelectedYear] = useState(null);
+
   return (
     <Grid container id="main-container" style={{ height: '100vh', flexDirection: 'column' }}>
   <Grid container item style={{ height: '50%'}}>
+    <Grid item xs={1}>
+      <MentalSelect setMentalDisorder={setMentalDisorder}/>
+    </Grid>
     <Grid item xs={5}>
-      <BarChart  />   
+      <BarChart  mentalDisorder={mentalDisorder} selectedYear={selectedYear} setSelectedYear={setSelectedYear}/>   
     </Grid>
     <Divider orientation="vertical" sx={{ height: '100%', width: '2px', bgcolor: 'black' }} />
-    <Grid item xs={6}>
-      <Parallel/>
+    <Grid item xs={5.5}>
+      <Parallel mentalDisorder={mentalDisorder}/>
     </Grid>
   </Grid>
   <Divider sx={{ 
@@ -40,7 +50,7 @@ function Layout() {
       }} /> 
   <Grid container item style={{ height: '45%', overflow: 'hidden' }}>
     <Grid item xs={12} style={{ height: '100%' }}>
-      <Dendrogram />
+      <Dendrogram selectedYear={selectedYear}/>
     </Grid>
   </Grid>
 </Grid>

@@ -1,0 +1,50 @@
+Age,Gender,Education Level,Marital Status,Income,Credit Score,Loan Amount,Loan Purpose,Employment Status,Years at Current Job,Payment History,Debt-to-Income Ratio,Assets Value,Number of Dependents,City,State,Country,Previous Defaults,Marital Status Change,Risk Rating
+49,Male,PhD,Divorced,72799,688,45713,Business,Unemployed,19,Poor,0.154313296,120228,0,Port Elizabeth,AS,Cyprus,2,2,Low
+57,Female,Bachelor's,Widowed,,690,33835,Auto,Employed,6,Fair,0.148919643,55849,0,North Catherine,OH,Turkmenistan,3,2,Medium
+21,Non-binary,Master's,Single,55687,600,36623,Home,Employed,8,Fair,0.362398017,180700,3,South Scott,OK,Luxembourg,3,2,Medium
+59,Male,Bachelor's,Single,26508,622,26541,Personal,Unemployed,2,Excellent,0.454964381,157319,3,Robinhaven,PR,Uganda,4,2,Medium
+25,Non-binary,Bachelor's,Widowed,49427,766,36528,Personal,Unemployed,10,Fair,0.143242424,287140,,New Heather,IL,Namibia,3,1,Low
+30,Non-binary,PhD,Divorced,,717,15613,Business,Unemployed,5,Fair,0.29598445,,4,Brianland,TN,Iceland,3,1,Medium
+31,Non-binary,Master's,Widowed,45280,672,6553,Personal,Self-employed,1,Good,0.378889937,,,West Lindaview,MD,Bouvet Island (Bouvetoya),0,1,Low
+18,Male,Bachelor's,Widowed,93678,,,Business,Unemployed,10,Poor,0.396635724,246597,1,Melissahaven,MA,Honduras,1,1,Low
+32,Non-binary,Bachelor's,Widowed,20205,710,,Auto,Unemployed,4,Fair,0.335964978,227599,0,North Beverly,DC,Pitcairn Islands,4,2,Low
+55,Male,Bachelor's,Married,32190,600,29918,Personal,Self-employed,5,Excellent,0.484333305,130507,4,Davidstad,VT,Thailand,,2,Low
+42,Non-binary,Master's,Single,116212,707,24771,Home,Employed,11,Excellent,0.114133748,212198,3,Matthewborough,NH,French Guiana,0,2,Medium
+37,Non-binary,Master's,Divorced,78855,718,,Home,Self-employed,17,Poor,0.193921289,272522,,Orrstad,OH,Antarctica (the territory South of 60 deg S),3,2,Low
+60,Female,PhD,Divorced,,686,15497,Personal,Self-employed,18,Poor,0.328174707,47603,4,West Kelseymouth,NM,Eritrea,2,2,High
+68,Male,High School,Divorced,79454,688,43365,Personal,Self-employed,15,Good,0.329281544,61967,,Dakotafurt,IA,Grenada,3,0,Medium
+29,Male,High School,Divorced,119510,,5013,Auto,Employed,17,Poor,0.499721861,50568,,Deborahtown,AZ,Solomon Islands,2,2,Medium
+68,Female,PhD,Divorced,,,42951,Auto,Self-employed,6,Fair,0.550745935,67070,4,East Kristin,MH,Guadeloupe,2,2,Low
+55,Male,High School,Married,70978,706,36970,Personal,Unemployed,19,Excellent,0.266940909,54041,3,Christophermouth,MO,Tonga,1,0,Medium
+18,Female,Master's,Widowed,102628,654,25442,Home,Unemployed,8,Poor,0.161832579,,3,West Patrick,IA,Taiwan,1,2,Medium
+60,Non-binary,Bachelor's,Divorced,,738,37001,Business,Employed,7,Fair,0.338970973,53055,,Johnsonstad,MS,Malawi,1,2,Low
+56,Non-binary,PhD,Married,21084,702,22039,Personal,Employed,19,Fair,0.231046374,226053,2,East James,MP,Isle of Man,0,2,Medium
+26,Female,PhD,Divorced,51460,,29970,Business,Unemployed,19,Excellent,0.430232588,252797,1,West Jack,DE,Tonga,3,0,Medium
+22,Non-binary,PhD,Widowed,100169,796,,Home,Employed,15,Poor,0.174743185,259802,3,Lake Alicia,UT,Kenya,2,0,Medium
+37,Non-binary,PhD,Single,,664,34904,Auto,Self-employed,12,Excellent,0.106281464,152686,,Lake Timothy,PR,Zambia,3,0,Medium
+64,Non-binary,Bachelor's,Divorced,118318,702,41029,Business,Unemployed,10,Poor,0.228351473,,1,West Meghanshire,KS,Oman,3,1,Low
+55,Female,High School,Divorced,61811,641,43859,Auto,Self-employed,18,Excellent,0.199707086,185670,,Aprilland,NH,Uruguay,,0,Low
+41,Male,PhD,Single,94796,742,,Business,Unemployed,16,Good,0.355808376,129119,2,Brittanyton,VI,Gambia,3,0,Low
+36,Non-binary,PhD,Single,85355,667,18834,Auto,Employed,8,Poor,0.198897711,,4,Michaelborough,CO,Iran,2,2,Medium
+41,Male,PhD,Married,93133,791,14052,Business,Employed,13,Poor,0.282850057,82774,0,Lewisland,AZ,South Georgia and the South Sandwich Islands,1,0,Low
+64,Female,PhD,Married,,749,38635,Personal,Self-employed,16,Fair,0.320230266,,3,West James,OR,Palau,0,1,Low
+64,Male,PhD,Married,,636,21086,Auto,Employed,13,Fair,0.460985402,261445,,South Ryan,IA,Tokelau,4,2,Low
+34,Male,PhD,Married,115201,,21315,Personal,Unemployed,10,Poor,0.243942664,81794,1,Marchaven,VA,Saint Pierre and Miquelon,1,2,Medium
+49,Non-binary,High School,Divorced,109882,,35938,Home,Unemployed,3,Excellent,0.489437675,237388,,Pattersonshire,GA,Hungary,2,0,Low
+48,Non-binary,PhD,Married,46408,632,48403,Personal,Unemployed,16,Excellent,0.185325306,93647,3,South Jason,KS,Guyana,1,0,Low
+69,Non-binary,PhD,Single,38065,,15818,Business,Self-employed,8,Poor,0.391979313,107451,3,South Peterbury,ID,Cote d'Ivoire,0,1,Low
+57,Female,Bachelor's,Widowed,,673,16398,Business,Self-employed,8,Fair,0.483784345,159119,1,West Michael,TN,Nauru,1,0,Low
+46,Non-binary,High School,Widowed,,637,6382,Auto,Self-employed,2,Good,0.5443904,156010,4,Kevinbury,NM,Guam,2,1,Low
+49,Male,Bachelor's,Divorced,117392,685,,Business,Self-employed,12,Good,0.470600519,261093,3,North Michael,HI,Burundi,1,0,Medium
+57,Female,Master's,Single,54754,604,11947,Home,Self-employed,13,Good,0.287418594,282006,,Berryland,VT,Thailand,2,0,High
+41,Non-binary,High School,Divorced,109379,606,5252,Home,Self-employed,16,Poor,0.454458037,,2,South Josefurt,OR,Belize,,2,Low
+47,Female,High School,Single,33065,783,6895,Auto,Self-employed,2,Fair,0.116680916,158428,3,West Sharon,AL,Seychelles,2,0,Low
+64,Male,Master's,Single,,,,Personal,Unemployed,16,Excellent,0.458481351,108664,,Lake Joshuahaven,MO,Sao Tome and Principe,,1,Low
+35,Female,High School,Single,101496,715,16971,Home,Employed,17,Fair,0.53378731,271400,1,Michaelburgh,TX,Anguilla,,0,Medium
+35,Female,PhD,Divorced,42787,,14949,Home,Employed,19,Excellent,0.224991083,227655,4,West Donna,WY,Svalbard & Jan Mayen Islands,2,2,Low
+18,Female,Master's,Divorced,,748,14522,Home,Unemployed,14,Good,0.562809958,176629,,Campbellfort,AL,China,1,2,Low
+21,Male,Bachelor's,Widowed,73952,631,49525,Auto,Unemployed,3,Excellent,0.143644091,32912,0,West Denisebury,KY,French Guiana,1,2,Low
+67,Non-binary,Master's,Divorced,54247,,5011,Personal,Unemployed,7,Excellent,0.344651883,239162,3,Mataside,AZ,Iceland,0,0,Low
+49,Male,Bachelor's,Married,85689,,,Personal,Unemployed,2,Excellent,0.336009427,232433,0,Camposland,WA,Niue,0,0,Medium
+30,Female,Bachelor's,Divorced,59593,691,,Business,Unemployed,8,Good,0.424079453,279118,3,Mckeeborough,RI,Martinique,2,0,Low
+28,Non-binary,Bachelor's,Married,69237,,46898,Personal,Employed,12,Excellent,0.516255497,89494,1,Conniehaven,VT,Tajikistan,3,2,Low

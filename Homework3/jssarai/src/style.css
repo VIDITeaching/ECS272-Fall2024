@@ -1,0 +1,104 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+#main-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.plot-container1{
+  width: 50vw;
+  height: 70vh;
+}
+
+.plot-container2{
+  width: 50vw;
+  height: 50vh;
+}
+
+.plot-container3{
+  width: 50vw;
+  height: 50vh;
+}
+
+.chart-container{
+  height: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+
+.move {
+  animation-name: move;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+
+@keyframes move {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(30%);
+    opacity: 1;
+  }
+  50.001% {
+    opacity: 0;
+    transform: translateX(-10vw);
+  }
+  50.002% {
+    opacity: 1;
+    transform: translateX(-10vw);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/*
+.enter {
+  transform: translateX(-30%);
+  transition: .3s linear;
+}
+
+.enter.right {
+  transform: translateX(0%);
+}
+
+.exit {
+  transform: translateX(0%);
+  transition: .3s linear;
+}
+
+.exit.left {
+  transform: translateX(30%);
+}
+*/

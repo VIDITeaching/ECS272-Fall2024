@@ -126,14 +126,13 @@ function Layout() {
             <Sankey/>
           </Grid>
         </Grid>
-        {/* TODO: adjust grid spacing */}
         <Grid container spacing={2} item xs sm md lg xl
           display='flex' justifyContent='center'>
-          <Grid item xs={12} sm={12} md={12} lg={8} xl={8}>
-            <SmallMultiples/>
-          </Grid>
           <Grid item xs={12} sm={12} md={12} lg xl>
             <Histogram/>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={8} xl={8}>
+            <SmallMultiples/>
           </Grid>
         </Grid>
       </Grid>

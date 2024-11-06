@@ -6,6 +6,8 @@ import { isEmpty } from 'lodash';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import DataContext from '../stores/DataContext.ts';
 import SelectedDataContext from '../stores/SelectedDataContext.ts';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
 import { ComponentSize, DataRow, BooleanEnum, COL_TO_ENUM_MAP, ALL_NODES, COL_TO_LABEL_MAP } from '../types.ts';
 
@@ -25,7 +27,7 @@ export default function Sankey() {
     'gradeTrend',
   ];
 
-  const margin = { top: 50, right: 120, bottom: 20, left: 120 }; //TODO: margin based on relative units
+  const margin = { top: 100, right: 120, bottom: 20, left: 120 }; //TODO: margin based on relative units
   // const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const NODE_WIDTH = 24;
   // TODO: all nodes should have different colors.
@@ -197,6 +199,18 @@ export default function Sankey() {
 
     let svg = d3.select('#sankey-diagram-svg').append('g');
 
+    const title = svg.append('g')
+      .append('text') // adding the text
+      .attr('transform', `translate(${size.width / 2}, ${margin.top * 0.4})`)
+      .attr('dy', '0.5rem') // relative distance from the indicated coordinates.
+      .attr('font-size', '1.5rem')
+      .attr('text-anchor', 'middle')
+      .attr('font-weight', 'bold')
+      .text('How different factors affect student grade') // text content    
+
+    const sankeyNode = svg.append('g')
+      .attr('transform', `translate(0, ${margin.top})`);
+
     // Render nodes
     const nodeRects = svg.append('g')
       .selectAll()
@@ -306,11 +320,27 @@ export default function Sankey() {
       .text(c => c.label)
       .on('click', (e, d) => handleColumnClick(e, d));
   }
-
+  const handleResetFilters = () => {
+    setSelectedData({selectedNodes: [], selectedCols: []});
+  }
   return (
     <>
-      <div ref={graphRef} className='chart-container'>
-        <svg id='sankey-diagram-svg' width='100%' height='100%'></svg>
+      <div className='chart-container'>
+        <Grid container height='100%'>
+          <Grid item xs ref={graphRef} >
+            <svg id='sankey-diagram-svg' width='100%' height='100%'></svg>
+          </Grid>
+          <Grid item xs={1} marginRight={2} marginBottom={5} alignContent='end'>
+            <p> Click on nodes to filter by node value. <br/><br/> Click column title to reset selected nodes for column.
+            </p>
+            <Button variant='contained' onClick={handleResetFilters} style={{
+                  whiteSpace: 'nowrap',
+                  minWidth: 'auto',
+                  textTransform: 'none'
+                }}>Reset all filters
+            </Button>
+          </Grid>
+        </Grid>
       </div>
     </>
   )

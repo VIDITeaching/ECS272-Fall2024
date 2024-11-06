@@ -19,7 +19,7 @@ export default function SmallMultiples() {
   const NUM_GRADE_PERIODS = 3;
 
   // const margin = { top: 10, right: 10, bottom: 20, left: 25 };
-  const margin = { top: 50, right: 20, bottom: 100, left: 60 };
+  const margin = { top: 80, right: 20, bottom: 80, left: 60 };
 
   // Component size, not window size. Depends on grid size.
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
@@ -89,7 +89,7 @@ export default function SmallMultiples() {
       .style('text-anchor', 'end')
       .attr('dx', '-0.75em')
       .attr('dy', '0.5em')
-      .attr('transform', 'rotate(-30)');
+      .attr('transform', 'rotate(-25)');
 
     const selectedColLabel = COL_TO_LABEL_MAP.get(selectedCol.value);
 
@@ -103,23 +103,25 @@ export default function SmallMultiples() {
     const yLabel = subChartNode.append('g')
       .attr('transform', `translate(${margin.left / 2}, ${margin.top + (size.height - margin.top - margin.bottom) / 2}) rotate(-90)`)
       .append('text')
-      .text('Grade (out of 20)')
       .attr('font-size', '.8rem')
-      .attr('text-anchor', 'middle');
+      .attr('text-anchor', 'middle')
+      .attr('font-weight', 'bold')
+      .text('Grade (out of 20)');
 
     const chartTitle = subChartNode.append('g')
     .append('text')
       .attr('transform', `translate(${margin.left + (boxWidth - margin.left)/ 2}, ${margin.top * 0.6})`)
       .attr('text-anchor', 'middle')
-      .attr('font-size', '.8rem')
+      .attr('font-size', '0.8rem')
       .attr('font-weight', 'bold')
       .text(selectedColLabel + ' v. ' + gradePeriodColumn + ' grade');
     
     const xLabel = subChartNode.append('g')
       .append('text')
-        .attr('transform', `translate(${margin.left + (boxWidth - margin.left)/ 2}, ${size.height - margin.bottom / 3})`)
+        .attr('transform', `translate(${margin.left + (boxWidth - margin.left)/ 2}, ${size.height - margin.bottom / 8})`)
         .attr('text-anchor', 'middle')
         .attr('font-size', '.8rem')
+        .attr('font-weight', 'bold')
         .text(selectedColLabel);
   
 
@@ -198,7 +200,7 @@ export default function SmallMultiples() {
     <>
       <div className='chart-container'>
         <Grid container direction='column' height='100%'>
-          <Grid item xs={1} alignContent='center' paddingLeft={3} display='flex'>
+          <Grid item xs={1} alignItems='center' paddingLeft={3} display='flex'>
             <label className='select-label'>Select column to see its relationship with grades:</label>
             <Select
               options={colOptions}

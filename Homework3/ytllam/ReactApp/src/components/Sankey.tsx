@@ -13,6 +13,7 @@ export default function Sankey() {
   // Get data from context
   const data = useContext(DataContext);
   const { selectedData, setSelectedData } = useContext(SelectedDataContext);
+  const { selectedNodes, selectedCols } = selectedData;
 
   // TODO: determine what columns to show
   // TODO: Stretch goal - give users ability to select between groups of related columns
@@ -40,9 +41,6 @@ export default function Sankey() {
   // Important: ref cannot be read while rendering, must be done in event handler or useEffect().
   const graphRef = useRef<HTMLDivElement>(null);
   useResizeObserver({ ref: graphRef, onResize });
-
-  const [selectedNodes, setSelectedNodes] = useState([]);
-  const [selectedCols, setSelectedCols] = useState([]);
 
   useEffect(() => {
     // if (isEmpty(data)) return;
@@ -77,7 +75,7 @@ export default function Sankey() {
     });
 
     renderGraph([...nodes], [...links]);
-  }, [data, selectedNodes, selectedCols, size]) // For some reason if we don't include size then data will not render.
+  }, [data, selectedData, size]) // For some reason if we don't include size then data will not render.
 
   /**
    *  Determines order of nodes on sankey chart.
@@ -104,21 +102,35 @@ export default function Sankey() {
     return selectedCols.includes(d.column);
   }
   
+  // On column click: deselect all nodes in column
+  const handleColumnClick = (e, d) => {
+    setSelectedData({
+      selectedNodes: selectedNodes.filter(n => !(n.column === d.column)),
+      selectedCols: selectedCols.filter(c => !(c === d.column))
+    })
+  }
+
   // On node click: select and highlight node
   const handleNodeClick = (e, d) => {
-    let newNodes;
-    if (nodeSelected(d)) {
+    let newNodes = selectedNodes;
+    let newCols = selectedCols;
+
+    if (nodeSelected(d)) { // Deselect node
       newNodes = selectedNodes.filter(n => !(n.column === d.column && n.val === d.val));
-      if (!newNodes.some(n => n.column === d.column)) { // if no more nodes selected for column, unselect column
-        setSelectedCols(selectedCols.filter(c => c !== d.column));
+      if (!newNodes.some(n => n.column === d.column)) { // If no more nodes selected for column, unselect column
+        newCols = selectedCols.filter(c => c !== d.column);
       }
-    } else {
-      if (!colSelected(d)) {
-        setSelectedCols([...selectedCols, d.column]);
+    } else { // Select node
+      if (!colSelected(d)) { // Select column if not already selected
+        newCols = [...selectedCols, d.column];
       }
       newNodes = [...selectedNodes, d];
     }
-    setSelectedNodes(newNodes);
+
+    setSelectedData({
+      selectedNodes: newNodes,
+      selectedCols: newCols,
+    });
 
     /** NOTE: 
      * Original plan: Highlight links that satisfy all selected nodes.
@@ -157,20 +169,10 @@ export default function Sankey() {
     */
   }
 
-  // On column click: deselect all nodes in column
-  const handleColumnClick = (e, d) => {
-    setSelectedCols(selectedCols.filter(c => !(c === d.column)));
-    setSelectedNodes(selectedNodes.filter(n => !(n.column === d.column)));
-  }
-
   // for logging changes in state
   useEffect(() => {
     // console.log("nodes", selectedNodes);
     // console.log("cols", selectedCols);
-    setSelectedData({
-      selectedNodes: selectedNodes,
-      selectedCols: selectedCols
-    });
   }, [selectedNodes, selectedCols])
 
   function renderGraph(nodes, links) {

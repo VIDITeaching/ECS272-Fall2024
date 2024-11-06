@@ -13,7 +13,7 @@ import { ComponentSize, DataRow, BooleanEnum, COL_TO_ENUM_MAP, ALL_NODES, COL_TO
 export default function Histogram() {
   // Get data from context
   const data = useContext(DataContext);
-  const { selectedData, setSelectedData} = useContext(SelectedDataContext);
+  const { selectedData, setSelectedData } = useContext(SelectedDataContext);
   const { selectedNodes, selectedCols } = selectedData;
   const SCORE_DOMAIN = [0, 20];
   const BAR_SPACING = 4;
@@ -141,9 +141,9 @@ export default function Histogram() {
     <>
       <div className='chart-container'>
         <Grid container direction='column' height='100%'>
-          <Grid container item xs={1} justifyContent='center' height='100%' paddingLeft={4} paddingRight={4}>
+          <Grid container item xs={1} justifyContent='center' height='100%' paddingLeft={3} paddingRight={3}>
             <Grid item xs={10} height='3rem' alignContent='center' display='flex' alignItems='center'>
-              <p><span className='filter-label'>{filterLabel || 'No filters selected'}</span></p>
+              <p><span className='filter-label'>Applied filters: {filterLabel || 'None'}</span></p>
             </Grid>
             <Grid item xs={2} textAlign='right' alignContent='center'>
               <p onClick={handleResetFilters}>Reset filters</p>

@@ -30,7 +30,10 @@ const theme = createTheme({
 // For how Grid works, refer to https://mui.com/material-ui/react-grid/
 function Layout() {
   const [data, setData] = useState<types.DataRow[]>([]);
-  const [selectedData, setSelectedData] = useState([]);
+  const [selectedData, setSelectedData] = useState({
+    selectedNodes: [],
+    selectedCols: [],
+  });
 
   useEffect(() => {
     const readCSV = async () => {

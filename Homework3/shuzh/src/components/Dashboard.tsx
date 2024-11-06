@@ -39,9 +39,13 @@ interface StudentData {
   G3: number;
 }
 
-export default function ParallelCoordinates() {
+interface ParallelCoordinatesProps {
+  onDataFiltered: (filteredData: StudentData[]) => void
+}
+
+export default function ParallelCoordinates({ onDataFiltered }: ParallelCoordinatesProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [data, setData] = useState<StudentData[]>([]); // Specify StudentData[] as the type
+  const [data, setData] = useState<StudentData[]>([]);
 
   useEffect(() => {
     // Function to read the CSV file and process data
@@ -176,6 +180,8 @@ export default function ParallelCoordinates() {
       svg.selectAll('circle')
         .attr('fill', '#FFFFF0')
         .attr('r', 5);
+
+      onDataFiltered(data) // Reset to all data when not hovering
     };
     
     // Add click interaction to axes
@@ -196,6 +202,11 @@ export default function ParallelCoordinates() {
           .style('stroke', '#ddd')
           .style('opacity', 0.3);
 
+        const filteredData = data.filter((pathData: any) => {
+          const pathValue = pathData[dimension as keyof typeof pathData]
+          return Math.abs(y[dimension](pathValue) - y[dimension](value)) < 1
+        })
+
         // Highlight paths that pass through the clicked point
         pathGroup.selectAll('path')
           .filter((pathData: any) => {
@@ -215,6 +226,8 @@ export default function ParallelCoordinates() {
           .filter((_, i, nodes) => nodes[i] !== this)
           .attr('fill', '#FFFFF0')
           .attr('r', 5);
+          
+        onDataFiltered(filteredData)
       })
       .on('mouseout', resetVisualization);
 
@@ -270,12 +283,14 @@ export default function ParallelCoordinates() {
       .style('font-weight', 'bold')
       .style('font-size', '12px')
       .text('Workday Alcohol Consumption')
-    // Cleanup SVG when the data or component changes
+    
+    
+      // Cleanup SVG when the data or component changes
     return () => {
       d3.select(svgRef.current).selectAll('*').remove();
     };
 
-  }, [data]); // Re-run when `data` changes
+  },[data, onDataFiltered]); // Re-run when `data` changes
 
   const styles: { [key: string]: CSSProperties } = {
     title: {

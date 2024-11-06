@@ -12,13 +12,16 @@ interface AlcoholDistribution {
   count: number
 }
 
-export default function Component() {
-  const [data, setData] = useState<StudentData[]>([])
+interface AlcoholConsumptionChartsProps {
+  data: StudentData[]
+}
+
+export default function AlcoholConsumptionCharts({ data }: AlcoholConsumptionChartsProps) {
   const svgRefDalc = useRef<SVGSVGElement>(null)
   const svgRefWalc = useRef<SVGSVGElement>(null)
   const [selectedSegment, setSelectedSegment] = useState<number | null>(null)
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchData = async () => {
       const csvData = await d3.csv<StudentData>("../../data/student-mat.csv", (d) => ({
         Dalc: +d.Dalc,
@@ -28,7 +31,7 @@ export default function Component() {
     }
 
     fetchData()
-  }, [])
+  }, [])*/
 
   useEffect(() => {
     if (data.length > 0) {
@@ -197,6 +200,7 @@ export default function Component() {
     title: {
       textAlign: 'center', 
       width: window.innerWidth /2,
+      marginTop: '-10px',
     },
   }
   return (

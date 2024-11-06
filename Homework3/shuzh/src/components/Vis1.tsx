@@ -13,8 +13,11 @@ interface StackedData {
   [key: string]: number
 }
 
-export default function Component() {
+type AlcoholType = 'Dalc' | 'Walc'
+
+export default function AlcoholConsumptionChart() {
   const [data, setData] = useState<StackedData[]>([])
+  const [alcoholType, setAlcoholType] = useState<AlcoholType>('Walc')
   const svgRef = useRef<SVGSVGElement>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
 
@@ -26,27 +29,27 @@ export default function Component() {
         Walc: +d.Walc,
       }))
 
-      const processedData = processData(csvData)
+      const processedData = processData(csvData, alcoholType)
       setData(processedData)
     }
 
     fetchData()
-  }, [])
+  }, [alcoholType])
 
   useEffect(() => {
     if (data.length > 0) {
       drawChart()
     }
-  }, [data])
+  }, [data, alcoholType])
 
-  const processData = (rawData: StudentData[]): StackedData[] => {
+  const processData = (rawData: StudentData[], type: AlcoholType): StackedData[] => {
     const gradeDistribution: { [key: number]: { [key: number]: number } } = {}
 
     rawData.forEach((student) => {
       if (!gradeDistribution[student.G3]) {
         gradeDistribution[student.G3] = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
       }
-      gradeDistribution[student.G3][student.Walc]++
+      gradeDistribution[student.G3][student[type]]++
     })
 
     return Object.entries(gradeDistribution).map(([G3, counts]) => ({
@@ -99,10 +102,10 @@ export default function Component() {
       .attr("height", (d) => y(d[0]) - y(d[1]))
       .attr("width", x.bandwidth())
       .on("mouseover", function(event, d) {
-        const walcLevel = d3.select(this.parentNode).datum().key
+        const alcoholLevel = d3.select(this.parentNode).datum().key
         const count = d[1] - d[0]
         tooltip.style("opacity", 1)
-        tooltip.html(`Grade: ${d.data.G3}<br>Walc: ${walcLevel}<br>Count: ${count}`)
+        tooltip.html(`Grade: ${d.data.G3}<br>${alcoholType}: ${alcoholLevel}<br>Count: ${count}`)
           .style("left", (event.pageX + 10) + "px")
           .style("top", (event.pageY - 28) + "px")
 
@@ -110,7 +113,7 @@ export default function Component() {
         d3.select(this)
           .transition()
           .duration(200)
-          .attr("fill", d3.color(color(walcLevel))?.brighter(1))
+          .attr("fill", d3.color(color(alcoholLevel))?.brighter(1))
       })
       .on("mousemove", (event) => {
         tooltip
@@ -121,11 +124,11 @@ export default function Component() {
         tooltip.style("opacity", 0)
 
         // Revert color highlight
-        const walcLevel = d3.select(this.parentNode).datum().key
+        const alcoholLevel = d3.select(this.parentNode).datum().key
         d3.select(this)
           .transition()
           .duration(200)
-          .attr("fill", color(walcLevel))
+          .attr("fill", color(alcoholLevel))
       })
 
 
@@ -174,7 +177,7 @@ export default function Component() {
       .attr("x", width - 24)
       .attr("y", 9.5)
       .attr("dy", "0.32em")
-      .text((d) => `Dalc ${d}`)
+      .text((d) => `${alcoholType} ${d}`)
   }
 
   
@@ -182,6 +185,7 @@ export default function Component() {
     title: {
       textAlign: 'center', 
       width: window.innerWidth /2,
+      marginTop: '-10px',
     },
     graph: {
       width: window.innerWidth /2,
@@ -197,11 +201,24 @@ export default function Component() {
       opacity: 0,
       transition: 'opacity 0.3s',
     },
+    select: {
+      marginBottom: '10px',
+      marginLeft: '20%',
+      fontSize: '12px',
+    },
   }
 
   return (
     <div>
       <h3 style={styles.title}>Impact of Alcohol Consumption on Student Grades</h3>
+      <select 
+        value={alcoholType} 
+        onChange={(e) => setAlcoholType(e.target.value as AlcoholType)}
+        style={styles.select}
+      >
+        <option value="Dalc">Workday Alcohol Consumption (Dalc)</option>
+        <option value="Walc">Weekend Alcohol Consumption (Walc)</option>
+      </select>
       <svg ref={svgRef} style={styles.graph}></svg>
       <div ref={tooltipRef} style={styles.tooltip} role="tooltip"></div>
     </div>

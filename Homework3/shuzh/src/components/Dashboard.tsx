@@ -152,14 +152,22 @@ export default function ParallelCoordinates({ onDataFiltered }: ParallelCoordina
       .append('g')
       .attr('transform', d => `translate(${x(d)})`)
       .each(function(d) {
-        d3.select(this).call(d3.axisLeft(y[d]));
+        let axis = d3.axisLeft(y[d])
+        
+        if (d === 'G1' || d === 'G2') {
+          const domain = y[d].domain()
+          const ticks = d3.range(Math.floor(domain[0]), Math.ceil(domain[1]) + 1)
+          axis = axis.tickValues(ticks)
+        }
+        
+        d3.select(this).call(axis)
     
         // Append a text element
         const text = d3.select(this).append('text')
           .style('text-anchor', 'middle')
           .attr('y', -22)
           .style('fill', 'black');
-    
+
         // Bind the title to two tspans
         const titleLines = dimensionTitles[d].split('\n');
     
@@ -179,7 +187,7 @@ export default function ParallelCoordinates({ onDataFiltered }: ParallelCoordina
     
       svg.selectAll('circle')
         .attr('fill', '#FFFFF0')
-        .attr('r', 5);
+        .attr('r', 4);
 
       onDataFiltered(data) // Reset to all data when not hovering
     };
@@ -187,7 +195,7 @@ export default function ParallelCoordinates({ onDataFiltered }: ParallelCoordina
     // Add click interaction to axes
     svg.selectAll('.tick')
       .append('circle')
-      .attr('r', 5)
+      .attr('r', 4)
       .attr('fill', '#FFFFF0')
       .attr('stroke', '#000')
       .attr('stroke-width', 1)
@@ -207,6 +215,8 @@ export default function ParallelCoordinates({ onDataFiltered }: ParallelCoordina
           return Math.abs(y[dimension](pathValue) - y[dimension](value)) < 1
         })
 
+        const hasLines = filteredData.length > 0
+
         // Highlight paths that pass through the clicked point
         pathGroup.selectAll('path')
           .filter((pathData: any) => {
@@ -218,14 +228,14 @@ export default function ParallelCoordinates({ onDataFiltered }: ParallelCoordina
           
         // Highlight the clicked circle
         d3.select(this)
-        .attr('fill', '#FFD700')
-        .attr('r', 8);
+        .attr('fill', hasLines ? '#FFD700' : 'red')
+        .attr('r', 6);
 
         // Reset other circles
         svg.selectAll('circle')
           .filter((_, i, nodes) => nodes[i] !== this)
           .attr('fill', '#FFFFF0')
-          .attr('r', 5);
+          .attr('r', 4);
           
         onDataFiltered(filteredData)
       })

@@ -13,25 +13,30 @@ interface AlcoholDistribution {
 }
 
 interface AlcoholConsumptionChartsProps {
-  data: StudentData[]
+  data?: StudentData[]
 }
 
-export default function AlcoholConsumptionCharts({ data }: AlcoholConsumptionChartsProps) {
+export default function AlcoholConsumptionCharts({ data: propData }: AlcoholConsumptionChartsProps) {
   const svgRefDalc = useRef<SVGSVGElement>(null)
   const svgRefWalc = useRef<SVGSVGElement>(null)
   const [selectedSegment, setSelectedSegment] = useState<number | null>(null)
+  const [data, setData] = useState<StudentData[]>([])
 
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
-      const csvData = await d3.csv<StudentData>("../../data/student-mat.csv", (d) => ({
-        Dalc: +d.Dalc,
-        Walc: +d.Walc,
-      }))
-      setData(csvData)
+      if (propData && propData.length > 0) {
+        setData(propData)
+      } else {
+        const csvData = await d3.csv<StudentData>("../../data/student-mat.csv", (d) => ({
+          Dalc: +d.Dalc,
+          Walc: +d.Walc,
+        }))
+        setData(csvData)
+      }
     }
 
     fetchData()
-  }, [])*/
+  }, [propData])
 
   useEffect(() => {
     if (data.length > 0) {
@@ -106,7 +111,7 @@ export default function AlcoholConsumptionCharts({ data }: AlcoholConsumptionCha
       .on("mouseover", (event, d) => {
         d3.select(event.currentTarget)
           .transition()
-          .duration(200)
+          .duration(500)
           .attr("d", d3.arc<d3.PieArcDatum<AlcoholDistribution>>()
             .innerRadius(0)
             .outerRadius(radius * 0.85))
@@ -127,7 +132,7 @@ export default function AlcoholConsumptionCharts({ data }: AlcoholConsumptionCha
         if (d.data.value !== selectedSegment) {
           d3.select(event.currentTarget)
             .transition()
-            .duration(200)
+            .duration(500)
             .attr("d", arc)
         }
 
@@ -141,7 +146,7 @@ export default function AlcoholConsumptionCharts({ data }: AlcoholConsumptionCha
       .enter()
       .append("text")
       .attr("dy", ".35em")
-      .text(d => `${d.data.count}`)
+      .text(d => d.data.count > 0 ? `${d.data.count}` : '')
     
     label.attr("transform", d => {
       const pos = outerArc.centroid(d)
@@ -176,8 +181,14 @@ export default function AlcoholConsumptionCharts({ data }: AlcoholConsumptionCha
           setSelectedSegment(selectedSegment === value ? null : value)
           svg.selectAll("path")
             .transition()
-            .duration(200)
-            .attr("d", arc)
+            .duration(750)
+            .attrTween("d", function(d) {
+              const interpolate = d3.interpolate(this._current, d)
+              this._current = interpolate(0)
+              return function(t) {
+                return (d.data.value === newSelectedSegment ? arcGeneratorSelected : arcGenerator)(interpolate(t))
+              }
+            })
         })
 
       legendItem.append("rect")
@@ -193,7 +204,8 @@ export default function AlcoholConsumptionCharts({ data }: AlcoholConsumptionCha
       .style("font-size", "10px") // Set smaller font size
       .style("fill", "black"); // Optional: Set text color
     });
-
+    
+    arcs.selectAll("path").each(function(d) { this._current = d; })
   }
 
   const styles: { [key: string]: CSSProperties } = {

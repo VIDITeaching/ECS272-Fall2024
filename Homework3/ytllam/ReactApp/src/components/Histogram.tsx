@@ -2,25 +2,27 @@ import { useEffect, useState, useContext, useRef } from 'react';
 import * as d3 from 'd3';
 import * as d3sankey from 'd3-sankey';
 import * as style from '../style.css'
-import { isEmpty } from 'lodash';
+import { invertBy, isEmpty } from 'lodash';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import DataContext from '../stores/DataContext.ts';
 import SelectedDataContext from '../stores/SelectedDataContext.ts';
+import Grid from '@mui/material/Grid';
 
 import { ComponentSize, DataRow, BooleanEnum, COL_TO_ENUM_MAP, ALL_NODES, COL_TO_LABEL_MAP } from '../types.ts';
 
 export default function Histogram() {
   // Get data from context
   const data = useContext(DataContext);
-  const { selectedData } = useContext(SelectedDataContext);
+  const { selectedData, setSelectedData} = useContext(SelectedDataContext);
+  const { selectedNodes, selectedCols } = selectedData;
   const SCORE_DOMAIN = [0, 20];
   const BAR_SPACING = 4;
 
-  const margin = { top: 10, right: 20, bottom: 50, left: 20 };
+  const margin = { top: 10, right: 20, bottom: 50, left: 50 };
 
   // Component size, not window size. Depends on grid size.
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
-
+  const [filterLabel, setFilterLabel] = useState('');
   // On window resize, call setSize with delay of 200 milliseconds
   const onResize = useDebounceCallback((size: ComponentSize) => setSize(size), 200)
   // If ref is created with useRef(null), React will map it to node in JSX on render.
@@ -37,35 +39,51 @@ export default function Histogram() {
     d3.select('#histogram-svg').selectAll('*').remove();
 
     // Generate list of filters
-    const filters = selectedData.map(n => {
-      const col = n.column;
-      // TODO: OR filters in same column
-      // TODO: create strings for displaying filters
-      // const colType = COL_TO_ENUM_MAP.get(col);
-      const filter = d => d[col] === n.val;
-      return filter;
+    const filters = [];
+    const filterStrings = [];
+
+    selectedCols.forEach(col => { // for each selected column,
+      const selectedNodesForCol = selectedNodes.filter(n => n.column === col);
+      const filtersForCol =  selectedNodesForCol.map(n => d => d[col] === n.val); // get selected sankey nodes for the column
+
+      if (filtersForCol.length === Object.values(COL_TO_ENUM_MAP.get(col)).length) return;
+
+      const colValLabels = invertBy(COL_TO_ENUM_MAP.get(col));
+      const valStringsForCol = selectedNodesForCol.map(n => `'${colValLabels[n.val][0]}'`); // create predicate for selected value
+      
+      const filterStringForCol = `( ${COL_TO_LABEL_MAP.get(col)} = ${valStringsForCol.join(' || ')} )`;
+
+      filters.push(filtersForCol);
+      filterStrings.push(filterStringForCol);
     });
 
-    console.log('filters', filters);
+    setFilterLabel(filterStrings.join(' && '));
+
     let filteredData;
     if (!isEmpty(filters)) {
-      filteredData = data.filter(d => filters.every(f => f(d)));
+      filteredData = data.filter(d => 
+        filters.every(colFilters => // AND filters between columns
+          !isEmpty(colFilters)
+          && colFilters.some(colValueFilter => colValueFilter(d)) // OR filters within columns
+        )
+      );
     } else {
       filteredData = data;
     }
+    // console.log('fd', filteredData);
 
     renderGraph(filteredData);
   }, [data, selectedData, size]) // For some reason if we don't include size then data will not render.
 
   // for logging changes in state
   useEffect(() => {
-    // console.log("histogram render");
+    // console.log('histogram render');
   }, [])
 
   function renderGraph(filteredData) {
-    // console.log("filtered", filteredData);
+    // console.log('filtered', filteredData);
     let svg = d3.select('#histogram-svg').append('g');
-                // .attr("transform", `translate(${margin.left}, ${margin.top})`);
+                // .attr('transform', `translate(${margin.left}, ${margin.top})`);
     
     const bin = d3.bin()
       .domain(SCORE_DOMAIN)
@@ -78,7 +96,7 @@ export default function Histogram() {
       .range([margin.left, size.width - margin.right]);
 
     svg.append('g')
-      .attr("transform", `translate(0, ${size.height - margin.bottom})`)
+      .attr('transform', `translate(0, ${size.height - margin.bottom})`)
       .call(d3.axisBottom(x).tickValues(Array.from(Array(SCORE_DOMAIN[1]).keys())));
     
     const y = d3.scaleLinear()
@@ -114,11 +132,27 @@ export default function Histogram() {
     //      (note: timestepping between grades will stretch y axis unless the scale is fixed to max bin freq over all periods)
   }
 
+  const handleResetFilters = () => {
+    setSelectedData({selectedNodes: [], selectedCols: []});
+  }
+
   // TODO: convert to scaleBand so ticks are middle aligned
   return (
     <>
-      <div ref={graphRef} className='chart-container'>
-        <svg id='histogram-svg' width='100%' height='100%'></svg>
+      <div className='chart-container'>
+        <Grid container direction='column' height='100%'>
+          <Grid container item xs={1} justifyContent='center' height='100%' paddingLeft={4} paddingRight={4}>
+            <Grid item xs={10} height='3rem' alignContent='center' display='flex' alignItems='center'>
+              <p><span className='filter-label'>{filterLabel || 'No filters selected'}</span></p>
+            </Grid>
+            <Grid item xs={2} textAlign='right' alignContent='center'>
+              <p onClick={handleResetFilters}>Reset filters</p>
+            </Grid>
+          </Grid>
+          <Grid item xs ref={graphRef} >
+            <svg id='histogram-svg' width='100%' height='100%'></svg>
+          </Grid>
+        </Grid>
       </div>
     </>
   )

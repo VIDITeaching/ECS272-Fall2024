@@ -24,7 +24,7 @@ export default function Sankey() {
     'gradeTrend',
   ];
 
-  const margin = { top: 50, right: 150, bottom: 20, left: 150 }; //TODO: margin based on relative units
+  const margin = { top: 50, right: 120, bottom: 20, left: 120 }; //TODO: margin based on relative units
   // const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const NODE_WIDTH = 24;
   // TODO: all nodes should have different colors.
@@ -167,7 +167,10 @@ export default function Sankey() {
   useEffect(() => {
     // console.log("nodes", selectedNodes);
     // console.log("cols", selectedCols);
-    setSelectedData(selectedNodes);
+    setSelectedData({
+      selectedNodes: selectedNodes,
+      selectedCols: selectedCols
+    });
   }, [selectedNodes, selectedCols])
 
   function renderGraph(nodes, links) {

@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import * as d3 from 'd3';
-import * as d3sankey from 'd3-sankey';
 import * as style from '../style.css'
 import { invertBy } from 'lodash';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
@@ -14,7 +13,6 @@ import { ComponentSize, DataRow, BooleanEnum, COL_TO_ENUM_MAP, ALL_NODES, COL_TO
 export default function SmallMultiples() {
   // Get data from context
   const data = useContext(DataContext);
-  const { selectedData } = useContext(SelectedDataContext);
 
   const SCORE_DOMAIN = [0, 20];
   const NUM_GRADE_PERIODS = 3;
@@ -51,7 +49,7 @@ export default function SmallMultiples() {
   // for logging changes in state
   useEffect(() => {
     // console.log('histogram render');
-  }, [selectedData, ])
+  }, [])
 
   function renderGraph() {
     let svg = d3.select('#small-multiples-svg')
@@ -84,8 +82,6 @@ export default function SmallMultiples() {
       .attr('dx', '-0.75em')
       .attr('dy', '0.5em')
       .attr('transform', 'rotate(-30)');
-
-    console.log(Object.keys(COL_TO_ENUM_MAP.get(selectedCol)));
 
     const y = d3.scaleLinear()
       .domain(SCORE_DOMAIN)
@@ -160,18 +156,18 @@ export default function SmallMultiples() {
   // TODO: hide scatter points when display too small
   return (
     <>
-      <div ref={graphRef} className='chart-container'>
+      <div className='chart-container'>
         <Grid container direction='column' height='100%'>
           <Grid item xs={1} alignContent='center' justifyContent='center' display='flex'>
             <label className='select-label'>Select column:</label>
             <select id='box-plot-select' className='select-label'
-              value={selectedCol} defaultValue={'gradeTrend'} onChange={e => setSelectedCol(e.target.value)}>
+              value={selectedCol} onChange={e => setSelectedCol(e.target.value)}>
               {colOptions.map(c => 
-                <option id={c}>{c}</option>
+                <option id={c} key={c}>{c}</option>
               )}
             </select>
           </Grid>
-          <Grid item xs>
+          <Grid item xs ref={graphRef} >
             <svg id='small-multiples-svg' width='100%' height='100%'></svg>
           </Grid>
         </Grid>

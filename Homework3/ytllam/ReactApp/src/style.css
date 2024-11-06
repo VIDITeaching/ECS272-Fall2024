@@ -101,14 +101,16 @@ body {
 /* onClick interrupts onHover event */
 
 .transparentLink {
-  mix-blend-mode: soft-light;
+  /* safari renders soft-light as transparent for some reason?? */
+  /* mix-blend-mode: soft-light; */
   stroke-opacity: 0.25;
   transition: stroke-opacity 400ms;
 }
 
 .defaultLink {
-  mix-blend-mode: soft-light;
-  stroke-opacity: 0.6;
+  /* safari renders soft-light as transparent for some reason?? */
+  /* mix-blend-mode: soft-light; */
+  stroke-opacity: 0.8;
   transition: stroke-opacity 400ms;
 }
 

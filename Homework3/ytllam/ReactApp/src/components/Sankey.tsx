@@ -280,7 +280,7 @@ export default function Sankey() {
       .attr('opacity', 0.4)
       .attr('stroke', 'gray');
 
-    // TODO: add hover to column labels
+    // TODO: add hover to column labels to show they're clickable
     // Add labels to columns
     let columnCoords = [];
     SELECTED_COLUMNS.forEach(c => {

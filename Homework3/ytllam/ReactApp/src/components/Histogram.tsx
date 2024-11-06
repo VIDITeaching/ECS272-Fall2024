@@ -122,12 +122,10 @@ export default function Histogram() {
       .attr('fill', 'teal');
 
     // TODO: add chart, axis titles
-    // TODO: add tooltip for total number on top of bar
-    // TODO: highlight bar on hover
+    // TODO: highlight bar and show total on top of bar on mouseover
     // TODO: add timestep for data shift
     // TODO: color scheme for bars?
     // TODO: display message when no students satisfy filters
-    // TODO: list selected filters
     // TODO: add dropdown/radio button for grade period G1/G2/G3 and/or timestep between G1/G2/G3.
     //      (note: timestepping between grades will stretch y axis unless the scale is fixed to max bin freq over all periods)
   }
@@ -136,14 +134,14 @@ export default function Histogram() {
     setSelectedData({selectedNodes: [], selectedCols: []});
   }
 
-  // TODO: convert to scaleBand so ticks are middle aligned
+  // TODO: convert to scaleBand so ticks are middle aligned. ie change from histogram to bar chart
   return (
     <>
       <div className='chart-container'>
         <Grid container direction='column' height='100%'>
           <Grid container item xs={1} justifyContent='center' height='100%' paddingLeft={3} paddingRight={3}>
             <Grid item xs={10} height='3rem' alignContent='center' display='flex' alignItems='center'>
-              <p><span className='filter-label'>Applied filters: {filterLabel || 'None'}</span></p>
+              <p><span className='filter-label'>Applied filters (hover for full list): {filterLabel || 'None'}</span></p>
             </Grid>
             <Grid item xs={2} textAlign='right' alignContent='center'>
               <p onClick={handleResetFilters}>Reset filters</p>

@@ -6,6 +6,7 @@ import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import DataContext from '../stores/DataContext.ts';
 import SelectedDataContext from '../stores/SelectedDataContext.ts';
 import Grid from '@mui/material/Grid';
+import Select from 'react-select';
 
 
 import { ComponentSize, DataRow, BooleanEnum, COL_TO_ENUM_MAP, ALL_NODES, COL_TO_LABEL_MAP } from '../types.ts';
@@ -18,13 +19,20 @@ export default function SmallMultiples() {
   const NUM_GRADE_PERIODS = 3;
 
   // const margin = { top: 10, right: 10, bottom: 20, left: 25 };
-  const margin = { top: 50, right: 20, bottom: 100, left: 30 };
+  const margin = { top: 50, right: 20, bottom: 100, left: 60 };
 
   // Component size, not window size. Depends on grid size.
   const [size, setSize] = useState<ComponentSize>({ width: 0, height: 0 });
-  const [selectedCol, setSelectedCol] = useState('gradeTrend');
-  const colOptions = Array.from(COL_TO_ENUM_MAP.keys()); // this map only contains categorical variables
-  const colEnumType = COL_TO_ENUM_MAP.get(selectedCol);
+  const [selectedCol, setSelectedCol] = useState({
+    label: COL_TO_LABEL_MAP.get('gradeTrend'),
+    value: 'gradeTrend'
+  });
+  const colOptions = Array.from(COL_TO_LABEL_MAP.entries()).map(([colName, colLabel]) => ({
+    label: colLabel,
+    value: colName
+  }));
+  console.log('co', colOptions) // this map only contains categorical variables
+  const colEnumType = COL_TO_ENUM_MAP.get(selectedCol.value);
   const colValues = Object.values(colEnumType);
   const colValToLabels = invertBy(colEnumType);
   const boxWidth = size.width / (NUM_GRADE_PERIODS);
@@ -83,6 +91,8 @@ export default function SmallMultiples() {
       .attr('dy', '0.5em')
       .attr('transform', 'rotate(-30)');
 
+    const selectedColLabel = COL_TO_LABEL_MAP.get(selectedCol.value);
+
     const y = d3.scaleLinear()
       .domain(SCORE_DOMAIN)
       .range([size.height - margin.bottom, margin.top]);
@@ -90,9 +100,32 @@ export default function SmallMultiples() {
       .attr('transform', `translate(${margin.left}, 0)`)
       .call(d3.axisLeft(y))
 
+    const yLabel = subChartNode.append('g')
+      .attr('transform', `translate(${margin.left / 2}, ${margin.top + (size.height - margin.top - margin.bottom) / 2}) rotate(-90)`)
+      .append('text')
+      .text('Grade (out of 20)')
+      .attr('font-size', '.8rem')
+      .attr('text-anchor', 'middle');
+
+    const chartTitle = subChartNode.append('g')
+    .append('text')
+      .attr('transform', `translate(${margin.left + (boxWidth - margin.left)/ 2}, ${margin.top * 0.6})`)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '.8rem')
+      .attr('font-weight', 'bold')
+      .text(selectedColLabel + ' v. ' + gradePeriodColumn + ' grade');
+    
+    const xLabel = subChartNode.append('g')
+      .append('text')
+        .attr('transform', `translate(${margin.left + (boxWidth - margin.left)/ 2}, ${size.height - margin.bottom / 3})`)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', '.8rem')
+        .text(selectedColLabel);
+  
+
     // Get statistics
     colValues.forEach(v => {
-      const sortedGrades = data.filter(d => d[selectedCol] === v)
+      const sortedGrades = data.filter(d => d[selectedCol.value] === v)
         .map(d => d[gradePeriodColumn])
         .sort((a, b) => a - b);
       const min = sortedGrades[0];
@@ -147,25 +180,32 @@ export default function SmallMultiples() {
     return boxPlotForValue;
   }
 
-  // TODO: label rows/columns. Rows might need slanted labels if > bandwidth.
   // TODO: add crosshair that renders across all 3 graphs for comparing across grade periods
   // TODO: pick contrasty colors for boxes/datapoints
   // TODO: add chart, axis titles
-  // TODO: add tooltip for total number on top of bar
-  // TODO: highlight bar on hover
   // TODO: hide scatter points when display too small
+
+  // https://github.com/JedWatson/react-select/issues/4201#issuecomment-874098561
+  const reactSelectStyle = {
+    menu: (base) => ({
+      ...base,
+      width: "max-content",
+      minWidth: "100%"
+    }),
+  }
+
   return (
     <>
       <div className='chart-container'>
         <Grid container direction='column' height='100%'>
-          <Grid item xs={1} alignContent='center' justifyContent='center' display='flex'>
-            <label className='select-label'>Select column:</label>
-            <select id='box-plot-select' className='select-label'
-              value={selectedCol} onChange={e => setSelectedCol(e.target.value)}>
-              {colOptions.map(c => 
-                <option id={c} key={c}>{c}</option>
-              )}
-            </select>
+          <Grid item xs={1} alignContent='center' paddingLeft={3} display='flex'>
+            <label className='select-label'>Select column to see its relationship with grades:</label>
+            <Select
+              options={colOptions}
+              value={selectedCol}
+              onChange={e => setSelectedCol(e)}
+              styles={reactSelectStyle}
+            />
           </Grid>
           <Grid item xs ref={graphRef} >
             <svg id='small-multiples-svg' width='100%' height='100%'></svg>

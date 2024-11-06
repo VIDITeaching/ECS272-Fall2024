@@ -2,7 +2,7 @@ import Example from './components/sampleComponents/Example.tsx';
 import Sankey from './components/Sankey.tsx';
 import Viz1 from './components/Viz1.tsx';
 import Viz2 from './components/Viz2.tsx';
-import Histogram from './components/Histogram.tsx';
+import BarChart from './components/BarChart.tsx';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
@@ -129,7 +129,7 @@ function Layout() {
         <Grid container spacing={2} item xs sm md lg xl
           display='flex' justifyContent='center'>
           <Grid item xs={12} sm={12} md={12} lg xl>
-            <Histogram/>
+            <BarChart/>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={8} xl={8}>
             <SmallMultiples/>

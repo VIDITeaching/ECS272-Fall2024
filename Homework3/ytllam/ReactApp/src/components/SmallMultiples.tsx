@@ -4,7 +4,6 @@ import * as style from '../style.css'
 import { invertBy } from 'lodash';
 import { useResizeObserver, useDebounceCallback } from 'usehooks-ts';
 import DataContext from '../stores/DataContext.ts';
-import SelectedDataContext from '../stores/SelectedDataContext.ts';
 import Grid from '@mui/material/Grid';
 import Select from 'react-select';
 
@@ -15,7 +14,7 @@ export default function SmallMultiples() {
   // Get data from context
   const data = useContext(DataContext);
 
-  const SCORE_DOMAIN = [0, 20];
+  const GRADE_DOMAIN = [0, 20];
   const NUM_GRADE_PERIODS = 3;
 
   // const margin = { top: 10, right: 10, bottom: 20, left: 25 };
@@ -31,7 +30,7 @@ export default function SmallMultiples() {
     label: colLabel,
     value: colName
   }));
-  console.log('co', colOptions) // this map only contains categorical variables
+
   const colEnumType = COL_TO_ENUM_MAP.get(selectedCol.value);
   const colValues = Object.values(colEnumType);
   const colValToLabels = invertBy(colEnumType);
@@ -94,7 +93,7 @@ export default function SmallMultiples() {
     const selectedColLabel = COL_TO_LABEL_MAP.get(selectedCol.value);
 
     const y = d3.scaleLinear()
-      .domain(SCORE_DOMAIN)
+      .domain(GRADE_DOMAIN)
       .range([size.height - margin.bottom, margin.top]);
     const yAxis = subChartNode.append('g')
       .attr('transform', `translate(${margin.left}, 0)`)
@@ -103,16 +102,15 @@ export default function SmallMultiples() {
     const yLabel = subChartNode.append('g')
       .attr('transform', `translate(${margin.left / 2}, ${margin.top + (size.height - margin.top - margin.bottom) / 2}) rotate(-90)`)
       .append('text')
-      .attr('font-size', '.8rem')
+      .attr('font-size', '1rem')
       .attr('text-anchor', 'middle')
-      .attr('font-weight', 'bold')
       .text('Grade (out of 20)');
 
     const chartTitle = subChartNode.append('g')
     .append('text')
       .attr('transform', `translate(${margin.left + (boxWidth - margin.left)/ 2}, ${margin.top * 0.6})`)
       .attr('text-anchor', 'middle')
-      .attr('font-size', '0.8rem')
+      .attr('font-size', '1.1rem')
       .attr('font-weight', 'bold')
       .text(selectedColLabel + ' v. ' + gradePeriodColumn + ' grade');
     
@@ -120,8 +118,7 @@ export default function SmallMultiples() {
       .append('text')
         .attr('transform', `translate(${margin.left + (boxWidth - margin.left)/ 2}, ${size.height - margin.bottom / 8})`)
         .attr('text-anchor', 'middle')
-        .attr('font-size', '.8rem')
-        .attr('font-weight', 'bold')
+        .attr('font-size', '1rem')
         .text(selectedColLabel);
   
 

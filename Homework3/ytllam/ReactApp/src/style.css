@@ -90,7 +90,25 @@ body {
   /* transition: opacity 400ms; */
 }
 
+.tooltip {
+  -webkit-filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, .2));
+  background-color: ghostwhite;
+  border-radius: 4px;
+  padding: 10px 20px;
+  position: absolute;
+  z-index: 999;
+}
+
 .hoveredLink {
+  -webkit-filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, .2));
+  mix-blend-mode: normal;
+  stroke-opacity: 1;
+  transition: stroke-opacity 400ms;
+}
+
+.highlightedLink {
   -webkit-filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, 0.2));
   filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, .2));
   mix-blend-mode: normal;

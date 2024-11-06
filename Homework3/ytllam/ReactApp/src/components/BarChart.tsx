@@ -85,7 +85,7 @@ export default function BarChart() {
   const binnedData = bin(filteredData);
 
   const gradeDomain = Array.from({ length: GRADE_DOMAIN[1] + 1 }, (_, i) => i);
-  console.log(gradeDomain);
+  // console.log(gradeDomain);
   const x = d3.scaleBand()
   .domain(gradeDomain)
   .range([margin.left, size.width - margin.right])
@@ -168,7 +168,7 @@ export default function BarChart() {
       .style('display', 'none');
     // console.log(binnedData.map(b => b.length));
 
-    console.log('bin',binnedData)
+    // console.log('bin',binnedData)
     const chartBars = svg.append('g')
       .attr('id', 'chart-bars')
       .selectAll('rect')
@@ -196,7 +196,7 @@ export default function BarChart() {
       .attr('text-anchor', 'middle')
       .attr('font-size', '1.2rem')
       .attr('font-weight', 'bold')
-      .text('Selected student grade distribution for ' + gradePeriod.label);
+      .text('Grades of selected students for ' + gradePeriod.label);
     
     const xLabel = svg.append('g')
       .append('text')

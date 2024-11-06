@@ -50,6 +50,11 @@ export default function Sankey() {
 
     // Reset graph
     d3.select('#sankey-diagram-svg').selectAll('*').remove();
+
+    // Reset tooltip
+    d3.select('#links-tooltip').selectAll('div').remove();
+    d3.select('#nodes-tooltip').selectAll('div').remove();
+    
     
     const nodes = ALL_NODES.filter(n => SELECTED_COLUMNS.includes(n.column));
     const links = SELECTED_COLUMNS.flatMap((_, i) => {
@@ -75,6 +80,20 @@ export default function Sankey() {
       });
       return cross;
     });
+
+    // Add tooltips separate from svg
+    const nodesTooltip = d3.select('#sankey-container')
+        .append('div')
+        .attr('id', 'nodes-tooltip')
+        .style('opacity', 0)
+        .classed('tooltip', true);
+    
+    const linksTooltip = d3.select('#sankey-container')
+      .append('div')
+      .attr('id', 'links-tooltip')
+      .style('opacity', 0)
+      .classed('tooltip', true);
+    
 
     renderGraph([...nodes], [...links]);
   }, [data, selectedData, size]) // For some reason if we don't include size then data will not render.
@@ -166,18 +185,19 @@ export default function Sankey() {
         return nodeSelected(newNodes, l.source) && nodeSelected(newNodes, l.target);
       }
     }));
-    console.log(newLinks);
+    // console.log(newLinks);
     setSelectedLinks(newLinks);
     */
   }
 
   // for logging changes in state
   useEffect(() => {
-    // console.log("nodes", selectedNodes);
-    // console.log("cols", selectedCols);
+    // console.log('nodes', selectedNodes);
+    // console.log('cols', selectedCols);
   }, [selectedNodes, selectedCols])
 
   function renderGraph(nodes, links) {
+
     // Define and configure Sankey generator
     const sankey = d3sankey.sankey()
         .nodeId(d => d.id)
@@ -197,12 +217,12 @@ export default function Sankey() {
     // console.log('trNodes', transformedData.nodes);
     // console.log('trLinks', transformedData.links);
 
-    let svg = d3.select('#sankey-diagram-svg').append('g');
+    const svg = d3.select('#sankey-diagram-svg').append('g');
 
     const title = svg.append('g')
-      .append('text') // adding the text
+      .append('text')
       .attr('transform', `translate(${size.width / 2}, ${margin.top * 0.4})`)
-      .attr('dy', '0.5rem') // relative distance from the indicated coordinates.
+      .attr('dy', '0.5rem')
       .attr('font-size', '1.5rem')
       .attr('text-anchor', 'middle')
       .attr('font-weight', 'bold')
@@ -222,7 +242,7 @@ export default function Sankey() {
         .attr('width', n => n.x1 - n.x0)
         .attr('fill', n => color(n.id))
         // Highlight selected node. If none selected, highlight all by default.
-        // TODO: convert to class
+        // TODO: convert style to class
         .attr('opacity', n => isEmpty(selectedNodes) ? 1 : nodeSelected(n) ? 1 : 0.4)
         .on('click', (e, d) => handleNodeClick(e, d));
 
@@ -234,16 +254,11 @@ export default function Sankey() {
       .append('path')
         .attr('fill', 'none')
         .attr('d', d3sankey.sankeyLinkHorizontal())
-        // TODO: color flows as gradient from source to target.
         .attr('stroke', l => color(l.source.id)) // color flow by value of previous
         .classed('defaultLink', isEmpty(selectedNodes))
         .classed('transparentLink', !isEmpty(selectedNodes))
         .attr('stroke-width', l => l.width);
-
-    // Add tooltip to nodes.
-    nodeRects.append('title')
-    .text(n => `${n.label}\n${n.value}`);
-
+    
     // Add mouseover to nodes.
     // Need to use function instead of arrow function due to scoping for d3.select(this)
     nodeRects.on('mouseover', function (e, d) {
@@ -255,10 +270,12 @@ export default function Sankey() {
 
       const linkHighlighted = (l) => (l.source.id === d.id || l.target.id === d.id);
       linkPaths.data(transformedData.links)
-        .classed('hoveredLink', l => linkHighlighted(l))
+        .classed('highlightedLink', l => linkHighlighted(l))
         .classed('defaultLink', false)
         .classed('transparentLink', l => !linkHighlighted(l));
+      d3.select('#nodes-tooltip').style('opacity', 100);
     });
+
     nodeRects.on('mouseout', function (e, d) {
       nodeRects.data(transformedData.nodes)
         .classed('hoveredNode', false)
@@ -266,18 +283,61 @@ export default function Sankey() {
         .classed('selectedNonHoveredNode', false);
       
       linkPaths.data(transformedData.links)
-        .classed('hoveredLink', false)
+        .classed('highlightedLink', false)
         .classed('defaultLink', isEmpty(selectedNodes))
         .classed('transparentLink', !isEmpty(selectedNodes));
+      d3.select('#nodes-tooltip').style('opacity', 0);
+    });
+
+    nodeRects.on('mousemove', function (e, d) {
+      const [x, y] = d3.pointer(e);
+      console.log(d);
+      d3.select('#nodes-tooltip')
+        .html(`${COL_TO_LABEL_MAP.get(d.column)} = \"${d.label}\": \n${d.value} students`)
+        .style("left", (x + 15) + "px")
+        .style("top", (y + 15) + "px")
+    });
+
+    // Add mouseover to links.
+    // Need to use function instead of arrow function due to scoping for d3.select(this)
+    linkPaths.on('mouseover', function (e, d) {
+      linkPaths.data(transformedData.links)
+        .classed('highlightedLink', false)
+        .classed('defaultLink', false)
+        .classed('transparentLink', true);
+
+      d3.select(this)
+        .classed('transparentLink', false)
+        .classed('hoveredLink', true);
+      
+      d3.select('#links-tooltip').style('opacity', 100);
     });
     
-    // Add tooltip to links.
-    linkPaths.append('title')
-    .text(l => `${l.source.column}=${l.source.label} --> ${l.target.column}=${l.target.label}: \n${l.value}`);
+    linkPaths.on('mouseout', function (e, d) {
+      nodeRects.data(transformedData.nodes)
+        .classed('hoveredNode', false)
+        .classed('nonHoveredNode', false)
+        .classed('selectedNonHoveredNode', false);
+      
+      linkPaths.data(transformedData.links)
+        .classed('hoveredLink', false)
+        .classed('highlightedLink', false)
+        .classed('defaultLink', isEmpty(selectedNodes))
+        .classed('transparentLink', !isEmpty(selectedNodes));
 
-    // TODO: add hover for highlight/value to links
+      d3.select('#links-tooltip').style('opacity', 0);
+    });
+
+    linkPaths.on('mousemove', function (e, d) {
+      const [x, y] = d3.pointer(e);
+      d3.select('#links-tooltip')
+        .html(`${COL_TO_LABEL_MAP.get(d.source.column)}=\"${d.source.label}\" && ${COL_TO_LABEL_MAP.get(d.source.column)}=\"${d.target.label}\": \n${d.value} students`)
+        .style("left", (x + 15) + "px")
+        .style("top", (y + 15) + "px")
+    });
+    
     // Add labels to nodes
-    let nodeLabels = svg.append('g');
+    const nodeLabels = svg.append('g');
     nodeLabels.selectAll()
       .data(transformedData.nodes)
       .join('text')
@@ -286,7 +346,7 @@ export default function Sankey() {
         .attr('dy', '0.35em')
         .attr('text-anchor', n => 'start')
         .attr('font-size', '.8rem')
-        .text(n => n.label + ': ' + n.value); // TODO: show frequency on link hover
+        .text(n => n.label);
     // drop shadow text for visibility
     nodeLabels.selectAll('text')
       .clone(true).lower()
@@ -306,7 +366,7 @@ export default function Sankey() {
         y: topNodeForCol.y0,
       });
     });
-    let columnLabels = svg.append('g');
+    const columnLabels = svg.append('g');
     columnLabels.selectAll('g')
     .data(columnCoords)
     .enter()
@@ -327,11 +387,11 @@ export default function Sankey() {
     <>
       <div className='chart-container'>
         <Grid container height='100%'>
-          <Grid item xs ref={graphRef} >
+          <Grid item xs ref={graphRef}  id='sankey-container'>
             <svg id='sankey-diagram-svg' width='100%' height='100%'></svg>
           </Grid>
-          <Grid item xs={1} marginRight={2} marginBottom={5} alignContent='end'>
-            <p> Click on nodes to filter by node value. <br/><br/> Click column title to reset selected nodes for column.
+          <Grid item xs={1} marginRight={3} marginBottom={5} alignContent='end'>
+            <p> Hover on nodes or links to view number of students. <br/><br/> Click on nodes to filter by node value. <br/><br/> Click column title to reset selected nodes for column.
             </p>
             <Button variant='contained' onClick={handleResetFilters} style={{
                   whiteSpace: 'nowrap',

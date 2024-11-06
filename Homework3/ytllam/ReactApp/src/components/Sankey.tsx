@@ -391,7 +391,11 @@ export default function Sankey() {
             <svg id='sankey-diagram-svg' width='100%' height='100%'></svg>
           </Grid>
           <Grid item xs={1} marginRight={3} marginBottom={5} alignContent='end'>
-            <p> Hover on nodes or links to view number of students. <br/><br/> Click on nodes to filter by node value. <br/><br/> Click column title to reset selected nodes for column.
+            <p> Hover on nodes or links to view number of students. <br/><br/>
+                Click on nodes to filter by node value. <br/><br/> 
+                Click column title to reset selected nodes for column. <br/><br/>
+                Bar chart will be updated with grades of students that meet selected filters. 
+                Hover over bar for number of students.
             </p>
             <Button variant='contained' onClick={handleResetFilters} style={{
                   whiteSpace: 'nowrap',

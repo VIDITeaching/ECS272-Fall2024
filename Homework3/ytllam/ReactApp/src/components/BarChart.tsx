@@ -181,6 +181,9 @@ export default function BarChart() {
       .attr('height', 0)
       .attr('y', d => y(d.length)) // d.length is size of bin.
       .attr('height', d => Math.abs(y(0) - y(d.length)));
+    
+    chartBars.append('title') // tooltip for frequency
+    .text(d => d.length + ' students')
 
     // Add chart, axis titles
     const yLabel = svg.append('g')

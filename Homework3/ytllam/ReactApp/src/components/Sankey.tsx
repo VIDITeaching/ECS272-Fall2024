@@ -17,7 +17,6 @@ export default function Sankey() {
   const { selectedData, setSelectedData } = useContext(SelectedDataContext);
   const { selectedNodes, selectedCols } = selectedData;
 
-  // TODO: determine what columns to show
   // TODO: Stretch goal - give users ability to select between groups of related columns
   // > 6 columns seems to make the links overflow depending on node order.
   const SELECTED_COLUMNS = [
@@ -37,7 +36,6 @@ export default function Sankey() {
   const margin = { top: 100, right: 120, bottom: 20, left: 120 }; //TODO: margin based on relative units
   // const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const NODE_WIDTH = 24;
-  // TODO: all nodes should have different colors.
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
   // Component size, not window size. Depends on grid size.

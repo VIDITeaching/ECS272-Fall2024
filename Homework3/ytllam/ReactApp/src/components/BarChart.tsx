@@ -142,6 +142,11 @@ export default function BarChart() {
 
   }, [filteredData, gradePeriod])
 
+  useEffect(() => {
+    d3.select('#chart-title')
+    .text('Grades of selected students for ' + gradePeriod.label);
+  }, [filteredData, gradePeriod])
+
   function renderGraph() {
     let svg = d3.select('#histogram-svg').append('g');
                 // .attr('transform', `translate(${margin.left}, ${margin.top})`);
@@ -198,6 +203,7 @@ export default function BarChart() {
 
     const chartTitle = svg.append('g')
     .append('text')
+      .attr('id', 'chart-title')
       .attr('transform', `translate(${margin.left + (size.width - margin.left)/ 2}, ${margin.top * 0.6})`)
       .attr('text-anchor', 'middle')
       .attr('font-size', '1.2rem')
@@ -212,9 +218,6 @@ export default function BarChart() {
         .text('Student grade (out of 20)');
       
     // TODO: highlight bar and show total on top of bar on mouseover
-    // TODO: add timestep when changing between grade period
-    // TODO: color scheme for bars?
-    //      (note: timestepping between grades will stretch y axis unless the scale is fixed to max bin freq over all periods)
   }
 
   // For react-select
@@ -247,7 +250,6 @@ export default function BarChart() {
     })
   }
 
-  // TODO: convert to scaleBand so ticks are middle aligned. ie change from histogram to bar chart
   return (
     <>
       <div className='chart-container'>

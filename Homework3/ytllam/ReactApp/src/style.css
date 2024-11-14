@@ -127,7 +127,4 @@ body {
   filter: drop-shadow( 0px 0px 0px rgba(36, 36, 36, 0.1));
 }
 
-/* TODO: Fix classes for highlighting selections */
-/* TODO: Fix transitions flashing. */
-
 /* https://stackoverflow.com/questions/6092239/css3-one-way-transition */

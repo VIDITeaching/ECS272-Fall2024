@@ -180,8 +180,6 @@ export default function SmallMultiples() {
   }
 
   // TODO: add crosshair that renders across all 3 graphs for comparing across grade periods
-  // TODO: pick contrasty colors for boxes/datapoints
-  // TODO: add chart, axis titles
   // TODO: hide scatter points when display too small
 
   // https://github.com/JedWatson/react-select/issues/4201#issuecomment-874098561

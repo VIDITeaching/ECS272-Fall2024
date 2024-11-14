@@ -40,7 +40,9 @@ export default function BarChart() {
     const selectedNodesForCol = selectedNodes.filter(n => n.column === col);
     const filtersForCol =  selectedNodesForCol.map(n => d => d[col] === n.val); // get selected sankey nodes for the column
 
-    if (filtersForCol.length === Object.values(COL_TO_ENUM_MAP.get(col)).length) return;
+    // short circuit comparisons if all possible values selected
+    if (filtersForCol.length === Object.values(COL_TO_ENUM_MAP.get(col)).length)
+      return [d => true];
 
     const colValLabels = invertBy(COL_TO_ENUM_MAP.get(col));
     const valStringsForCol = selectedNodesForCol.map(n => `'${colValLabels[n.val][0]}'`); // create predicate for selected value
@@ -56,6 +58,7 @@ export default function BarChart() {
     const selectedNodesForCol = selectedNodes.filter(n => n.column === col);
     const filtersForCol =  selectedNodesForCol.map(n => d => d[col] === n.val); // get selected sankey nodes for the column
 
+    // short circuit comparisons if all possible values selected
     if (filtersForCol.length === Object.values(COL_TO_ENUM_MAP.get(col)).length) return;
 
     const colValLabels = invertBy(COL_TO_ENUM_MAP.get(col));

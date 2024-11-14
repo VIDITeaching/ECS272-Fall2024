@@ -27,6 +27,13 @@ export default function Sankey() {
     'gradeTrend',
   ];
 
+  const SELECTED_COLUMNS_COLORS = {
+    'goOut': d3.scaleOrdinal(d3.schemeBlues[Object.values(COL_TO_ENUM_MAP.get('goOut')).length]), // diverging
+    'studyTime': d3.scaleOrdinal(d3.schemeGreens[Object.values(COL_TO_ENUM_MAP.get('studyTime')).length]), // sequential
+    'failures':  d3.scaleOrdinal(d3.schemeReds[Object.values(COL_TO_ENUM_MAP.get('failures')).length]), // sequential
+    'gradeTrend': d3.scaleOrdinal(Object.values(COL_TO_ENUM_MAP.get('gradeTrend')), ['#e63c25', '#7b12b0', '#bab9c7', '#134ded']) // red/blue
+  }
+
   const margin = { top: 100, right: 120, bottom: 20, left: 120 }; //TODO: margin based on relative units
   // const margin = { top: 0, right: 0, bottom: 0, left: 0 };
   const NODE_WIDTH = 24;
@@ -233,6 +240,7 @@ export default function Sankey() {
 
     // Render nodes
     const nodeRects = svg.append('g')
+      .attr('id', 'node-rects')
       .selectAll()
       .data(transformedData.nodes)
       .join('rect')
@@ -240,10 +248,11 @@ export default function Sankey() {
         .attr('y', n => n.y0)
         .attr('height', n => n.y1 - n.y0)
         .attr('width', n => n.x1 - n.x0)
-        .attr('fill', n => color(n.id))
-        // Highlight selected node. If none selected, highlight all by default.
-        // TODO: convert style to class
-        .attr('opacity', n => isEmpty(selectedNodes) ? 1 : nodeSelected(n) ? 1 : 0.4)
+        .attr('fill', n => SELECTED_COLUMNS_COLORS[n.column](n.val))
+        // Highlight selected nodes. If none selected, highlight all by default.
+        .classed('defaultNode', isEmpty(selectedNodes))
+        .classed('selectedNode', n => nodeSelected(n))
+        .classed('nonSelectedNode', n => !isEmpty(selectedNodes) && !nodeSelected(n))
         .on('click', (e, d) => handleNodeClick(e, d));
 
     // Render links
@@ -254,7 +263,7 @@ export default function Sankey() {
       .append('path')
         .attr('fill', 'none')
         .attr('d', d3sankey.sankeyLinkHorizontal())
-        .attr('stroke', l => color(l.source.id)) // color flow by value of previous
+        .attr('stroke', l => SELECTED_COLUMNS_COLORS[l.source.column](l.source.val)) // color flow by value of previous
         .classed('defaultLink', isEmpty(selectedNodes))
         .classed('transparentLink', !isEmpty(selectedNodes))
         .attr('stroke-width', l => l.width);
@@ -264,9 +273,10 @@ export default function Sankey() {
     nodeRects.on('mouseover', function (e, d) {
       const nodeHighlighted = (n) => (n.id === d.id);
       nodeRects.data(transformedData.nodes)
+        .classed('defaultNode', false)
         .classed('hoveredNode', n => nodeHighlighted(n))
-        .classed('nonHoveredNode', n => !nodeHighlighted(n) && !nodeSelected(n))
-        .classed('selectedNonHoveredNode', n => !nodeHighlighted(n) && nodeSelected(n));;
+        .classed('selectedNode', n => !nodeHighlighted(n) && nodeSelected(n))
+        .classed('nonSelectedNode', n => !nodeHighlighted(n) && !nodeSelected(n))
 
       const linkHighlighted = (l) => (l.source.id === d.id || l.target.id === d.id);
       linkPaths.data(transformedData.links)
@@ -278,9 +288,10 @@ export default function Sankey() {
 
     nodeRects.on('mouseout', function (e, d) {
       nodeRects.data(transformedData.nodes)
+        .classed('defaultNode', isEmpty(selectedNodes))
         .classed('hoveredNode', false)
-        .classed('nonHoveredNode', false)
-        .classed('selectedNonHoveredNode', false);
+        .classed('selectedNode', n => nodeSelected(n))
+        .classed('nonSelectedNode', n => !isEmpty(selectedNodes) && !nodeSelected(n));
       
       linkPaths.data(transformedData.links)
         .classed('highlightedLink', false)
@@ -291,7 +302,6 @@ export default function Sankey() {
 
     nodeRects.on('mousemove', function (e, d) {
       const [x, y] = d3.pointer(e);
-      console.log(d);
       d3.select('#nodes-tooltip')
         .html(`${COL_TO_LABEL_MAP.get(d.column)} = \"${d.label}\": \n${d.value} students`)
         .style("left", (x + 15) + "px")
@@ -382,6 +392,12 @@ export default function Sankey() {
   }
   const handleResetFilters = () => {
     setSelectedData({selectedNodes: [], selectedCols: []});
+    const nodeRects = d3.select('#node-rects');
+    nodeRects
+      .classed('defaultNode', true)
+      .classed('hoveredNode', false)
+      .classed('selectedNode', false)
+      .classed('nonSelectedNode', false);
   }
   return (
     <>

@@ -68,28 +68,6 @@ body {
   /* background-color: lightblue; */
 }
 
-.defaultNode {
-  opacity: 1;
-  transition: opacity 400ms;
-}
-
-.hoveredNode {
-  opacity: 1;
-  -webkit-filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, 0.2));
-  filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, .2));
-  transition: opacity 400ms;
-}
-
-.selectedNonHoveredNode {
-  opacity: 1;
-  transition: opacity 400ms;
-}
-
-.nonHoveredNode {
-  opacity: 0.5;
-  /* transition: opacity 400ms; */
-}
-
 .tooltip {
   -webkit-filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, 0.2));
   filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, .2));
@@ -100,12 +78,30 @@ body {
   z-index: 999;
 }
 
+.defaultNode {
+  opacity: 0.9;
+}
+
+.hoveredNode {
+  -webkit-filter: drop-shadow( 0px 0px 6px rgba(0, 0, 0, 0.8));
+  filter: drop-shadow( 0px 0px 6px rgba(0, 0, 0, .8));
+}
+
+.selectedNode {
+  opacity: 1;
+  -webkit-filter: drop-shadow( 0px 0px 3px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow( 0px 0px 3px rgba(0, 0, 0, 0.65));
+}
+
+.nonSelectedNode {
+  opacity: 0.1;
+}
+
 .hoveredLink {
-  -webkit-filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, 0.2));
-  filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, .2));
+  -webkit-filter: drop-shadow( 0px 0px 4px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow( 0px 0px 4px rgba(0, 0, 0, .4));
   mix-blend-mode: normal;
   stroke-opacity: 1;
-  transition: stroke-opacity 400ms;
 }
 
 .highlightedLink {
@@ -113,7 +109,6 @@ body {
   filter: drop-shadow( 0px 0px 5px rgba(0, 0, 0, .2));
   mix-blend-mode: normal;
   stroke-opacity: 0.8;
-  transition: stroke-opacity 400ms;
 }
 
 /* onClick interrupts onHover event */
@@ -122,14 +117,14 @@ body {
   /* safari renders soft-light as transparent for some reason?? */
   /* mix-blend-mode: soft-light; */
   stroke-opacity: 0.25;
-  transition: stroke-opacity 400ms;
 }
 
 .defaultLink {
   /* safari renders soft-light as transparent for some reason?? */
   /* mix-blend-mode: soft-light; */
-  stroke-opacity: 0.8;
-  transition: stroke-opacity 400ms;
+  stroke-opacity: 0.6;
+  -webkit-filter: drop-shadow( 0px 0px 0rem rgba(36, 36, 36, 0.1));
+  filter: drop-shadow( 0px 0px 0px rgba(36, 36, 36, 0.1));
 }
 
 /* TODO: Fix classes for highlighting selections */
